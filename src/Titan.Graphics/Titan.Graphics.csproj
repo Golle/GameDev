@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
@@ -14,8 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Titan.Graphics\Titan.Graphics.csproj" />
-    <ProjectReference Include="..\Titan.Windows\Titan.Windows.csproj" />
+    <ProjectReference Include="..\Titan.D3D11\Titan.D3D11.csproj" />
   </ItemGroup>
 
 </Project>

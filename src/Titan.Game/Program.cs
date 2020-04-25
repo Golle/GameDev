@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using Titan.D3D11;
 
 namespace Titan.Game
 {
@@ -6,7 +7,7 @@ namespace Titan.Game
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine($"Hello World from DirectX 11 SDK version {SdkVersion.GetVersion()}");
         }
     }
 }
