@@ -9,10 +9,19 @@ namespace Titan.D3D11.Bindings
     {
         [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true, EntryPoint = "D3D11SwapChainGetBuffer_")]
         internal static extern HRESULT GetBuffer(
-            IntPtr swapChain,
-            uint buffer,
-            Guid riid,
+            [In] IntPtr swapChain,
+            [In] uint buffer,
+            [In] Guid riid,
             [Out] out IntPtr backBuffer
         );
+
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true, EntryPoint = "SwapChainPresent_")]
+        public static extern void Present(
+            [In] IntPtr swapChain,
+            [In] uint syncInterval,
+            [In] uint flags
+            );
     }
+
 }

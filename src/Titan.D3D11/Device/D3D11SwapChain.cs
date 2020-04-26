@@ -7,7 +7,6 @@ namespace Titan.D3D11.Device
     internal class D3D11SwapChain : ID3D11SwapChain
     {
         private readonly IntPtr _handle;
-
         public D3D11SwapChain(IntPtr handle)
         {
             _handle = handle;
@@ -26,6 +25,11 @@ namespace Titan.D3D11.Device
                 throw new Win32Exception((int)result.Code, "SwapChain GetBuffer failed");
             }
             return new D3D11BackBuffer(backBuffer);
+        }
+
+        public void Present()
+        {
+            D3D11SwapChainBindings.Present(_handle, 1, 0);
         }
     }
 }

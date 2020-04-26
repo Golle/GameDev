@@ -16,5 +16,15 @@ namespace Titan.D3D11.Device
         {
             CommonBindings.ReleaseComObject(_handle);
         }
+
+        public void SetRenderTargets(ID3D11RenderTargetView renderTarget)
+        {
+            D3D11DeviceContextBindings.DeviceContextOMSetRenderTargets_(_handle, 1, new[]{renderTarget.Handle}, IntPtr.Zero);
+        }
+
+        public void ClearRenderTargetView(ID3D11RenderTargetView renderTarget, in Color color)
+        {
+            D3D11DeviceContextBindings.ClearRenderTargetView(_handle, renderTarget.Handle, color);
+        }
     }
 }

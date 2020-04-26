@@ -5,15 +5,15 @@ namespace Titan.D3D11.Device
 {
     internal class D3D11RenderTargetView : ID3D11RenderTargetView
     {
-        private readonly IntPtr _handle;
+        public IntPtr Handle { get; }
         public D3D11RenderTargetView(IntPtr handle)
         {
-            _handle = handle;
+            Handle = handle;
         }
 
         public void Dispose()
         {
-            CommonBindings.ReleaseComObject(_handle);
+            CommonBindings.ReleaseComObject(Handle);
         }
     }
 }

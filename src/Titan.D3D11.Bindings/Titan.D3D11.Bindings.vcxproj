@@ -167,6 +167,7 @@
   <ItemGroup>
     <ClCompile Include="common.cpp" />
     <ClCompile Include="D3D11Device.cpp" />
+    <ClCompile Include="D3D11DeviceContext.cpp" />
     <ClCompile Include="D3D11SwapChain.cpp" />
   </ItemGroup>
   <ItemGroup>
