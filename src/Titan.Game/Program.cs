@@ -19,11 +19,24 @@ namespace Titan.Game
                     Y = 300,
                     X = 300
                 });
-            
-            window.ShowWindow();
+
 
             
             
+            
+            window.ShowWindow();
+            
+            var device = new D3D11DeviceFactory()
+                .Create(new CreateDeviceArguments
+                {
+                    Adapter = IntPtr.Zero,
+                    RefreshRate = 144,
+                    Window = window
+                });
+
+
+
+
             Message message = default;
             while (true)
             {

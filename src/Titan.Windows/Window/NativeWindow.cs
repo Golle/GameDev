@@ -5,11 +5,16 @@ namespace Titan.Windows.Window
 {
     internal class NativeWindow : IWindow
     {
-        public IntPtr Handle { get; }  
+        public IntPtr Handle { get; }
+        public int Width { get; }
+        public int Height { get; }
+        public bool Windowed => true; // This will change later
 
-        public NativeWindow(IntPtr handle)
+        public NativeWindow(IntPtr handle, int width, int height)
         {
             Handle = handle;
+            Width = width;
+            Height = height;
         }
 
 

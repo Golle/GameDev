@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Titan.Graphics", "src\Titan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Titan.D3D11", "src\Titan.D3D11\Titan.D3D11.csproj", "{73AC7BAF-D9CD-4172-870D-02F516CD5D7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.Windows", "src\Titan.Windows\Titan.Windows.csproj", "{DA6EBF80-35D5-4725-A2AA-CA5479EA7655}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Titan.Windows", "src\Titan.Windows\Titan.Windows.csproj", "{DA6EBF80-35D5-4725-A2AA-CA5479EA7655}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Titan.D3D11.Bindings", "src\Titan.D3D11.Bindings\Titan.D3D11.Bindings.vcxproj", "{04DFF82F-9FEE-427C-BB7C-DE970BF1C10B}"
 EndProject
