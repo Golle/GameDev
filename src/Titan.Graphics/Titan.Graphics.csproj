@@ -13,6 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Titan.D3D11\Titan.D3D11.csproj" />
   </ItemGroup>
 
