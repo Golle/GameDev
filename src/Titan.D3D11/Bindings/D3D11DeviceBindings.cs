@@ -9,25 +9,25 @@ namespace Titan.D3D11.Bindings
     {
         [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern HRESULT D3D11CreateDeviceBinding_(
-            IntPtr adapter, 
-            D3D_DRIVER_TYPE driverType, 
-            IntPtr hModule, 
-            uint flags,
-            D3D_FEATURE_LEVEL[] featureLevel,
-            uint featureLevels, 
-            uint sdkVersion,
+            [In] IntPtr adapter,
+            [In] D3D_DRIVER_TYPE driverType,
+            [In] IntPtr hModule,
+            [In] uint flags,
+            [In] D3D_FEATURE_LEVEL[] featureLevel,
+            [In] uint featureLevels,
+            [In] uint sdkVersion,
             [Out] out IntPtr device, 
             [Out] out D3D_FEATURE_LEVEL pFeatureLevel,
             [Out] out IntPtr context
             );
 
         [DllImport(Constants.D3D11Dll, SetLastError = true)]
-        public static extern HRESULT D3D11CreateDeviceAndSwapChain_(
+        public static extern unsafe HRESULT D3D11CreateDeviceAndSwapChain_(
             [In] IntPtr adapter,
             [In] D3D_DRIVER_TYPE driverType,
             [In] IntPtr hModule,
             [In] uint flags,
-            [In] D3D_FEATURE_LEVEL[] featureLevel,
+            [In] D3D_FEATURE_LEVEL* featureLevel,
             [In] uint featureLevels,
             [In] uint sdkVerion, 
             [In] in DXGI_SWAP_CHAIN_DESC pSwapChainDesc,
