@@ -1,5 +1,5 @@
 using System;
-using Titan.D3D11;
+using Titan.D3D11.Bindings;
 using Titan.D3D11.Device;
 using Titan.Windows.Window;
 
