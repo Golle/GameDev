@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Titan.Game": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

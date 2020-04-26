@@ -1,5 +1,6 @@
 using System;
 using Titan.D3D11;
+using Titan.D3D11.Device;
 using Titan.Windows.Window;
 
 namespace Titan.Game
@@ -25,8 +26,8 @@ namespace Titan.Game
             
             
             window.ShowWindow();
-            
-            var device = new D3D11DeviceFactory()
+
+            new D3D11DeviceFactory()
                 .Create(new CreateDeviceArguments
                 {
                     Adapter = IntPtr.Zero,
@@ -37,12 +38,15 @@ namespace Titan.Game
 
 
 
+
+
             Message message = default;
             while (true)
             {
                 if (window.GetMessage(ref message))
                 {
                     Console.WriteLine($"Message {message.Value}");
+                    
                 }
             }
         }

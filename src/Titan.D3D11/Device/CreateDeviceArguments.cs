@@ -1,7 +1,7 @@
 using System;
 using Titan.Windows.Window;
 
-namespace Titan.D3D11
+namespace Titan.D3D11.Device
 {
     public class CreateDeviceArguments
     {

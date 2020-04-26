@@ -1,4 +1,4 @@
-namespace Titan.D3D11
+namespace Titan.D3D11.Device
 {
     public interface ID3D11DeviceFactory
     {

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using Titan.D3D11.Bindings;
 using Titan.D3D11.Bindings.Models;
 
-namespace Titan.D3D11
+namespace Titan.D3D11.Device
 {
     public class D3D11DeviceFactory : ID3D11DeviceFactory
     {
@@ -28,11 +28,6 @@ namespace Titan.D3D11
             desc.SwapEffect = DXGI_SWAP_EFFECT.DXGI_SWAP_EFFECT_DISCARD;
             desc.Flags = DXGI_SWAP_CHAIN_FLAG.DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-            IntPtr swapChain = default;
-            IntPtr device = default;
-            IntPtr context = default;
-            D3D_FEATURE_LEVEL featureLevel = default;
-
             var result = D3D11DeviceBindings.D3D11CreateDeviceAndSwapChain_(
                 arguments.Adapter,
                 D3D_DRIVER_TYPE.D3D_DRIVER_TYPE_HARDWARE,
@@ -42,17 +37,17 @@ namespace Titan.D3D11
                 0,
                 SdkVersion.GetVersion(),
                 in desc,
-                out swapChain,
-                out device,
-                out featureLevel,
-                out context
+                out var swapChain,
+                out var device,
+                out var featureLevel,
+                out var context
             );
             if (result.Failed)
             {
                 throw new Win32Exception((int)result.Code, "D3D11CreateDeviceAndSwapChain failed");
             }
 
-            return new D3D11Device(new D3D11SwapChain());
+            return new D3D11Device(device, featureLevel, new D3D11SwapChain(swapChain), new D3D11DeviceContext(context));
         }
     }
 }
