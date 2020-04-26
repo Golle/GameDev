@@ -1,4 +1,5 @@
 using System;
+using Titan.D3D11;
 using Titan.D3D11.Bindings;
 using Titan.D3D11.Device;
 using Titan.Windows.Window;
@@ -20,20 +21,19 @@ namespace Titan.Game
                     Y = 300,
                     X = 300
                 });
-
-
-            
-            
             
             window.ShowWindow();
 
-            new D3D11DeviceFactory()
+            var device = new D3D11DeviceFactory()
                 .Create(new CreateDeviceArguments
                 {
                     Adapter = IntPtr.Zero,
                     RefreshRate = 144,
                     Window = window
                 });
+
+            using var backBuffer = device.SwapChain.GetBuffer(0, D3D11Resources.D3D11Texture2D);
+            using var renderTargetsView = device.CreateRenderTargetView(backBuffer);
 
 
 
@@ -46,7 +46,7 @@ namespace Titan.Game
                 if (window.GetMessage(ref message))
                 {
                     Console.WriteLine($"Message {message.Value}");
-                    
+
                 }
             }
         }
