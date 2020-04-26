@@ -22,9 +22,11 @@ namespace Titan.Game
             
             window.ShowWindow();
 
+            
+            
+            Message message = default;
             while (true)
             {
-                Message message = default;
                 if (window.GetMessage(ref message))
                 {
                     Console.WriteLine($"Message {message.Value}");

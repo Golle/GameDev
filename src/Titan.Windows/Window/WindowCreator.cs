@@ -7,6 +7,8 @@ namespace Titan.Windows.Window
 {
     public class WindowCreator : IWindowCreator
     {
+        // Prevent the delegate from being garbage collected
+        private static readonly User32.WndProcDelegate DefaultWindowProcedure = User32.DefWindowProcA;
         public IWindow CreateWindow(CreateWindowArguments arguments)
         {
             var wndClassExA = new WNDCLASSEXA
@@ -15,7 +17,7 @@ namespace Titan.Windows.Window
                 CbSize = Marshal.SizeOf<WNDCLASSEXA>(),
                 HCursor = IntPtr.Zero,
                 HIcon = IntPtr.Zero,
-                LpFnWndProc = Marshal.GetFunctionPointerForDelegate(new User32.WndProcDelegate(User32.DefWindowProcA)),
+                LpFnWndProc = Marshal.GetFunctionPointerForDelegate(DefaultWindowProcedure),
                 CbWndExtra = 0,
                 HIconSm = IntPtr.Zero,
                 HInstance = Marshal.GetHINSTANCE(GetType().Module),
