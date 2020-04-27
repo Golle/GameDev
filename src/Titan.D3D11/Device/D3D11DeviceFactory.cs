@@ -34,13 +34,15 @@ namespace Titan.D3D11.Device
             IntPtr device;
             D3D_FEATURE_LEVEL featureLevel;
             IntPtr context;
+            var flags = arguments.Debug ? D3D11_CREATE_DEVICE_FLAG.D3D11_CREATE_DEVICE_DEBUG : D3D11_CREATE_DEVICE_FLAG.D3D11_CREATE_DEVICE_DEFAULT;
+
             unsafe
             {
                 result = D3D11DeviceBindings.D3D11CreateDeviceAndSwapChain_(
                     arguments.Adapter,
                     D3D_DRIVER_TYPE.D3D_DRIVER_TYPE_HARDWARE,
                     IntPtr.Zero,
-                    0,
+                    flags,
                     null,
                     0,
                     D3D11CommonBindings.D3D11SdkVersion(),

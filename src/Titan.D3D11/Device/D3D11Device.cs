@@ -1,7 +1,9 @@
 using System;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using Titan.D3D11.Bindings;
 using Titan.D3D11.Bindings.Models;
+using Titan.D3D11.InfoQueue;
 using Titan.Windows;
 
 namespace Titan.D3D11.Device
@@ -36,6 +38,18 @@ namespace Titan.D3D11.Device
                 throw new Win32Exception($"Device D3D11CreateRenderTargetView failed with code: 0x{result.Code.ToString("X")}");
             }
             return new D3D11RenderTargetView(renderTargetView);
+        }
+
+        public ID3D11InfoQueue CreateInfoQueue()
+        {
+            var result = D3D11CommonBindings.QueryInterface_(_handle, D3D11Resources.D3D11InfoQueue, out var infoQueue);
+            if (result.Failed)
+            {
+                var err = Marshal.GetLastWin32Error();
+                throw new Win32Exception($"Device CreateInfoQueue failed with code: 0x{result.Code.ToString("X")}");
+            }
+
+            return new D3D11InfoQueue(infoQueue);
         }
 
         public void Dispose()

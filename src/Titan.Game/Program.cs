@@ -29,14 +29,15 @@ namespace Titan.Game
                 {
                     Adapter = IntPtr.Zero,
                     RefreshRate = 144,
-                    Window = window
+                    Window = window,
+                    Debug = true
                 });
 
             using var backBuffer = device.SwapChain.GetBuffer(0, D3D11Resources.D3D11Texture2D);
             using var renderTargetsView = device.CreateRenderTargetView(backBuffer);
 
             device.Context.SetRenderTargets(renderTargetsView);
-
+            using var infoQueue = device.CreateInfoQueue();
             var red = new Color
             {
                 Red = 1f,

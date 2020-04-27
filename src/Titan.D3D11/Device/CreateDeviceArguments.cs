@@ -7,7 +7,7 @@ namespace Titan.D3D11.Device
     {
         public IWindow Window { get; set; }
         public IntPtr Adapter { get; set; }
-
         public uint RefreshRate { get; set; }
+        public bool Debug { get; set; }
     }
 }

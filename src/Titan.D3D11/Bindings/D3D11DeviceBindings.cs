@@ -26,7 +26,7 @@ namespace Titan.D3D11.Bindings
             [In] IntPtr adapter,
             [In] D3D_DRIVER_TYPE driverType,
             [In] IntPtr hModule,
-            [In] uint flags,
+            [In] D3D11_CREATE_DEVICE_FLAG flags,
             [In] D3D_FEATURE_LEVEL* featureLevel,
             [In] uint featureLevels,
             [In] uint sdkVerion, 
