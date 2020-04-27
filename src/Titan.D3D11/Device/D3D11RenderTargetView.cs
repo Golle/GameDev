@@ -13,7 +13,7 @@ namespace Titan.D3D11.Device
 
         public void Dispose()
         {
-            CommonBindings.ReleaseComObject(Handle);
+            D3D11CommonBindings.ReleaseComObject(Handle);
         }
     }
 }

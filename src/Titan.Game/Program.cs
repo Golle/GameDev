@@ -10,7 +10,7 @@ namespace Titan.Game
     {
         static void Main(string[] args)
         {
-            Console.WriteLine($"Hello World from DirectX 11 SDK version {SdkVersion.GetVersion()}");
+            Console.WriteLine($"Hello World from DirectX 11 SDK version {D3D11CommonBindings.D3D11SdkVersion()}");
 
             var window = new WindowCreator()
                 .CreateWindow(new CreateWindowArguments

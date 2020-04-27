@@ -14,7 +14,7 @@ namespace Titan.D3D11.Device
 
         public void Dispose()
         {
-            CommonBindings.ReleaseComObject(_handle);
+            D3D11CommonBindings.ReleaseComObject(_handle);
         }
 
         public void SetRenderTargets(ID3D11RenderTargetView renderTarget)

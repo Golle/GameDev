@@ -42,7 +42,7 @@ namespace Titan.D3D11.Device
         {
             SwapChain.Dispose();
             Context.Dispose();
-            CommonBindings.ReleaseComObject(_handle);
+            D3D11CommonBindings.ReleaseComObject(_handle);
         }
     }
 }

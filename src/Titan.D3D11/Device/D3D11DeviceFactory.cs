@@ -43,7 +43,7 @@ namespace Titan.D3D11.Device
                     0,
                     null,
                     0,
-                    SdkVersion.GetVersion(),
+                    D3D11CommonBindings.D3D11SdkVersion(),
                     in desc,
                     out swapChain,
                     out device,
