@@ -11,7 +11,7 @@ namespace Titan.D3D11.Device
         public ID3D11Device Create(CreateDeviceArguments arguments)
         {
             DXGI_SWAP_CHAIN_DESC desc = default;
-            desc.BufferCount = 1;
+            desc.BufferCount = 2;
             desc.BufferDesc.Width= (uint) arguments.Window.Width;
             desc.BufferDesc.Height = (uint) arguments.Window.Height;
             desc.BufferDesc.Format = DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -26,7 +26,7 @@ namespace Titan.D3D11.Device
             desc.BufferUsage = DXGI_USAGE.DXGI_USAGE_RENDER_TARGET_OUTPUT;
             desc.OutputWindow = arguments.Window.Handle;
             desc.Windowed = arguments.Window.Windowed ? 1 : 0;
-            desc.SwapEffect = DXGI_SWAP_EFFECT.DXGI_SWAP_EFFECT_DISCARD;
+            desc.SwapEffect = DXGI_SWAP_EFFECT.DXGI_SWAP_EFFECT_FLIP_DISCARD;
             desc.Flags = DXGI_SWAP_CHAIN_FLAG.DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
             HRESULT result;
@@ -54,7 +54,7 @@ namespace Titan.D3D11.Device
             }
             if (result.Failed)
             {
-                throw new Win32Exception((int)result.Code, "D3D11CreateDeviceAndSwapChain failed");
+                throw new Win32Exception($"D3D11CreateDeviceAndSwapChain failed with code : 0x{ result.Code.ToString("X")}");
             }
 
             return new D3D11Device(device, featureLevel, new D3D11SwapChain(swapChain), new D3D11DeviceContext(context));
