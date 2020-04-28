@@ -11,13 +11,16 @@ namespace Titan.Windows.Window
         private static readonly User32.WndProcDelegate DefaultWindowProcedure = User32.DefWindowProcA;
         public IWindow CreateWindow(CreateWindowArguments arguments)
         {
+            var nativeWindow = new NativeWindow(arguments.Width, arguments.Height);
+            var windowProcedure = Marshal.GetFunctionPointerForDelegate(nativeWindow.WindowProcedureDelegate);
+            GCHandle.Alloc(windowProcedure, GCHandleType.Pinned);
             var wndClassExA = new WNDCLASSEXA
             {
                 CbClsExtra = 0,
                 CbSize = Marshal.SizeOf<WNDCLASSEXA>(),
                 HCursor = IntPtr.Zero,
                 HIcon = IntPtr.Zero,
-                LpFnWndProc = Marshal.GetFunctionPointerForDelegate(DefaultWindowProcedure),
+                LpFnWndProc = windowProcedure,
                 CbWndExtra = 0,
                 HIconSm = IntPtr.Zero,
                 HInstance = Marshal.GetHINSTANCE(GetType().Module),
@@ -29,14 +32,27 @@ namespace Titan.Windows.Window
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error(), "RegisterClassExA failed");
             }
-            var windowHandle = User32.CreateWindowExA(0, wndClassExA.LpszClassName, arguments.Title, WindowStyles.WS_OVERLAPPEDWINDOW | WindowStyles.WS_VISIBLE, arguments.X,arguments.Y, arguments.Width, arguments.Height, IntPtr.Zero, IntPtr.Zero, wndClassExA.HInstance, IntPtr.Zero);
+            
+            nativeWindow.Handle = User32.CreateWindowExA(
+                0, 
+                wndClassExA.LpszClassName, 
+                arguments.Title, 
+                WindowStyles.WS_OVERLAPPEDWINDOW | WindowStyles.WS_VISIBLE, 
+                arguments.X, 
+                arguments.Y, 
+                arguments.Width, 
+                arguments.Height, 
+                IntPtr.Zero, 
+                IntPtr.Zero, 
+                wndClassExA.HInstance, 
+                IntPtr.Zero
+                );
 
-            if (windowHandle == IntPtr.Zero)
+            if (nativeWindow.Handle == IntPtr.Zero)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error(), "CreateWindowExA failed");
             }
-
-            return new NativeWindow(windowHandle, arguments.Width, arguments.Height);
+            return nativeWindow;
         }
     }
 }

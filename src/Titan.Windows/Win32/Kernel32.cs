@@ -5,20 +5,20 @@ namespace Titan.Windows.Win32
 {
     internal class User32
     {
-        private const string User32Dll = "user32";
+        internal delegate IntPtr WndProcDelegate(IntPtr hWnd, WindowsMessage msg, UIntPtr wParam, UIntPtr lParam);
 
-        internal delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, UIntPtr wParam, UIntPtr lParam);
+        private const string User32Dll = "user32";
 
         [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern ushort RegisterClassExA(
             [In] ref WNDCLASSEXA wndClassEx
-            );
+        );
 
         [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern int ShowWindow(
-            IntPtr hWnd, 
+            IntPtr hWnd,
             ShowWindow nCmdShow
-            );
+        );
 
         [DllImport(User32Dll, SetLastError = true)]
         public static extern IntPtr CreateWindowExA(
@@ -34,36 +34,48 @@ namespace Titan.Windows.Win32
             IntPtr hMenu,
             IntPtr hInstance,
             IntPtr lpParam
-            );
+        );
 
         [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern IntPtr DefWindowProcA(
-            IntPtr hWnd, 
-            uint msg,
-            UIntPtr wParam,
-            UIntPtr lParam
-            );
+            [In] IntPtr hWnd,
+            [In] WindowsMessage msg,
+            [In] UIntPtr wParam,
+            [In] UIntPtr lParam
+        );
 
         [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool PeekMessageA(
-            ref MSG lpMsg, 
-            IntPtr hWnd,
-            uint wMsgFilterMin, 
-            uint wMsgFilterMax, 
-            uint removeMessage
-            );
+            [Out] out MSG lpMsg,
+            [In] IntPtr hWnd,
+            [In] uint wMsgFilterMin,
+            [In] uint wMsgFilterMax,
+            [In] uint removeMessage
+        );
 
         [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool TranslateMessage(
             [In] ref MSG lpMsg
-            );
+        );
 
         [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern IntPtr DispatchMessage(
             [In] ref MSG lpMsg
-            );
+        );
 
+        [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern void PostQuitMessage(
+            [In] int nExitCode
+        );
+
+        [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool DestroyWindow(
+            [In] in IntPtr handle
+        );
+
+        
     }
 }

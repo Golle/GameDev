@@ -12,8 +12,5 @@ EXTERN_C DLLEXPORT ULONG ReleaseComObject(IUnknown* unknown)
 
 EXTERN_C DLLEXPORT HRESULT QueryInterface_(IUnknown* unknown, const IID &iid, void ** ppObject)
 {
-
-    D3D11_CREATE_DEVICE_FLAG
-    
     return unknown->QueryInterface(iid, ppObject);
 }

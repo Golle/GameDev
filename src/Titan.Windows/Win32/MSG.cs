@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 namespace Titan.Windows.Win32
@@ -7,7 +7,7 @@ namespace Titan.Windows.Win32
     internal struct MSG
     {
         internal IntPtr Hwnd;
-        internal uint Message;
+        internal WindowsMessage Message;
         internal IntPtr WParam;
         internal IntPtr LParam;
         internal ulong Time;

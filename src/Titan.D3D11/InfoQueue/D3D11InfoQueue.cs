@@ -12,6 +12,9 @@ namespace Titan.D3D11.InfoQueue
             _handle = handle;
         }
 
+        // not sure how to implement the get message function, will do when needed.
+        //public void GetMessage();
+
         public void Dispose()
         {
             D3D11CommonBindings.ReleaseComObject(_handle);

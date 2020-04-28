@@ -1,9 +1,12 @@
 using System;
+using Titan.Windows.Input;
 
 namespace Titan.Windows.Window
 {
-    public interface IWindow
+    public interface IWindow : IDisposable
     {
+        IKeyboard Keyboard { get; }
+
         IntPtr Handle { get; }
         int Width { get; }
         int Height { get; }
@@ -12,6 +15,6 @@ namespace Titan.Windows.Window
         void SetTitle(string title);
         void HideWindow();
         void ShowWindow();
-        bool GetMessage(ref Message message);
+        bool Update();
     }
 }
