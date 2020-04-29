@@ -6,6 +6,7 @@ namespace Titan.Windows.Window
     public interface IWindow : IDisposable
     {
         IKeyboard Keyboard { get; }
+        IMouse Mouse { get; }
 
         IntPtr Handle { get; }
         int Width { get; }

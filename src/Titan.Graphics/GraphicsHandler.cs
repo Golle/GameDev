@@ -71,10 +71,11 @@ namespace Titan.Graphics
                     Console.Write(character);
                 }
 
-                if (_window.Keyboard.IsKeyReleased(KeyCode.Up))
-                {
-                    Console.WriteLine("UP RELEASED; trololol ! " + i++);
-                }
+                var mouse = _window.Mouse;
+                var mousePosition = mouse.Position;
+                
+                _window.SetTitle($"x: {mousePosition.X} y: {mousePosition.Y}, left: {mouse.LeftButtonDown}, right: {mouse.RightButtonDown}");
+
                 _device.Context.ClearRenderTargetView(_renderTarget, color);
                 _device.SwapChain.Present();
             }

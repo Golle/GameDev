@@ -7,6 +7,7 @@ namespace Titan.Windows.Window
     internal class NativeWindow : IWindow
     {
         public IKeyboard Keyboard => _keyboard;
+        public IMouse Mouse => _mouse;
         public IntPtr Handle { get; internal set; }
         public int Width { get; }
         public int Height { get; }
@@ -14,18 +15,21 @@ namespace Titan.Windows.Window
         
         // Create a delegate that have the same lifetime as the native window to prevent the GC to move it
         public User32.WndProcDelegate WindowProcedureDelegate { get; }
-        private NativeKeyboard _keyboard;
+        private readonly NativeKeyboard _keyboard;
+        private readonly NativeMouse _mouse;
+
         public NativeWindow(int width, int height)
         {
             Width = width;
             Height = height;
             _keyboard = new NativeKeyboard();
+            _mouse = new NativeMouse();
             WindowProcedureDelegate = WindowProcedure;
         }
 
         public void SetTitle(string title)
         {
-
+            User32.SetWindowTextA(Handle, title);
         }
 
         public void HideWindow()
@@ -74,9 +78,42 @@ namespace Titan.Windows.Window
                 case WindowsMessage.WM_CHAR:
                     _keyboard.OnChar((char)wParam);
                     break;
+
+
+                // Mouse events, we can use wParam to read the state for mouse buttons. Might be better?
+
+                case WindowsMessage.WM_MOUSEMOVE:
+                    _mouse.OnMouseMove(GetMouseCoordinates((int)lParam));
+                    break;
+                case WindowsMessage.WM_LBUTTONDOWN:
+                    _mouse.OnLeftMouseButtonDown(GetMouseCoordinates((int)lParam));
+                    break;
+                case WindowsMessage.WM_LBUTTONUP:
+                    _mouse.OnLeftMouseButtonUp(GetMouseCoordinates((int)lParam));
+                    break;
+                case WindowsMessage.WM_RBUTTONDOWN:
+                    _mouse.OnRightMouseButtonDown(GetMouseCoordinates((int)lParam));
+                    break;
+                case WindowsMessage.WM_RBUTTONUP:
+                    _mouse.OnRightMouseButtonUp(GetMouseCoordinates((int)lParam));
+                    break;
+
+                // Add support to track mouse outside of window
+                case WindowsMessage.WM_MOUSELEAVE:
+                    break;
+                case WindowsMessage.WM_MOUSEWHEEL:
+
+                    break;
+                //case WindowsMessage.WM_LBUTTONDBLCLK:
+                //case WindowsMessage.WM_RBUTTONDBLCLK:
             }
 
             return User32.DefWindowProcA(hWnd, message, wParam, lParam);
+        }
+
+        private static (int x, int y) GetMouseCoordinates(int lParam)
+        {
+            return (lParam & 0xffff, (lParam >> 16) & 0xffff);
         }
 
         public void Dispose()

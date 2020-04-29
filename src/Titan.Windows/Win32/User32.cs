@@ -73,9 +73,14 @@ namespace Titan.Windows.Win32
         [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool DestroyWindow(
-            [In] in IntPtr handle
+            [In] IntPtr hWnd
         );
 
-        
+        [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetWindowTextA(
+            [In] IntPtr hWnd,
+            [In] string lpString
+        );
     }
 }
