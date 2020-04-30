@@ -16,4 +16,8 @@
     <None Remove="README.md" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Titan.Core\Titan.Core.csproj" />
+  </ItemGroup>
+
 </Project>

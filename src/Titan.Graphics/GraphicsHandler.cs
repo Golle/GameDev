@@ -1,4 +1,7 @@
 using System;
+using System.Diagnostics;
+using Titan.Core.EventSystem;
+using Titan.Core.GameLoop.Events;
 using Titan.D3D11;
 using Titan.D3D11.Device;
 using Titan.Windows.Input;
@@ -10,15 +13,19 @@ namespace Titan.Graphics
     {
         private readonly IWindowCreator _windowCreator;
         private readonly ID3D11DeviceFactory _d3D11DeviceFactory;
-        
+        private readonly IEventManager _eventManager;
+        private readonly IInputManager _inputManager;
+
         private IWindow _window;
         private ID3D11Device _device;
         private ID3D11RenderTargetView _renderTarget;
 
-        public GraphicsHandler(IWindowCreator windowCreator, ID3D11DeviceFactory d3D11DeviceFactory)
+        public GraphicsHandler(IWindowCreator windowCreator, ID3D11DeviceFactory d3D11DeviceFactory, IEventManager eventManager, IInputManager inputManager)
         {
             _windowCreator = windowCreator;
             _d3D11DeviceFactory = d3D11DeviceFactory;
+            _eventManager = eventManager;
+            _inputManager = inputManager;
         }
 
         public bool Initialize(string title, int width, int height)
@@ -49,34 +56,43 @@ namespace Titan.Graphics
 
         public void Run()
         {
+            var lastTicks = Stopwatch.GetTimestamp();
             _window.ShowWindow();
             while (_window.Update())
             {
+                var ticks = Stopwatch.GetTimestamp();
+                var elapsedTicks = ticks - lastTicks;
+                _eventManager.PublishImmediate(new UpdateEvent(elapsedTicks));
+
+                _eventManager.Update();
+
                 var color = new Color { Alpha = 1f };
-                if (_window.Keyboard.IsKeyDown(KeyCode.A))
+                if (_inputManager.Keyboard.IsKeyDown(KeyCode.A))
                 {
                     color.Red = 1f;
                 }
-                if (_window.Keyboard.IsKeyDown(KeyCode.S))
+                if (_inputManager.Keyboard.IsKeyDown(KeyCode.S))
                 {
                     color.Green = 1f;
                 }
-                if (_window.Keyboard.IsKeyDown(KeyCode.D))
+                if (_inputManager.Keyboard.IsKeyDown(KeyCode.D))
                 {
                     color.Blue = 1f;
                 }
-                while (_window.Keyboard.TryGetChar(out var character))
+                while (_inputManager.Keyboard.TryGetChar(out var character))
                 {
-                    Console.Write(character);
+                    //Console.Write(character);
                 }
 
-                var mouse = _window.Mouse;
+                var mouse = _inputManager.Mouse;
                 var mousePosition = mouse.Position;
                 
                 _window.SetTitle($"x: {mousePosition.X} y: {mousePosition.Y}, left: {mouse.LeftButtonDown}, right: {mouse.RightButtonDown}");
 
                 _device.Context.ClearRenderTargetView(_renderTarget, color);
                 _device.SwapChain.Present();
+                
+                lastTicks = ticks;
             }
         }
 

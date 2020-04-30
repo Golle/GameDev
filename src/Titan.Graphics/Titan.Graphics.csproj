@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Titan.Core\Titan.Core.csproj" />
     <ProjectReference Include="..\Titan.D3D11\Titan.D3D11.csproj" />
   </ItemGroup>
 

@@ -1,13 +1,9 @@
 using System;
-using Titan.Windows.Input;
 
 namespace Titan.Windows.Window
 {
     public interface IWindow : IDisposable
     {
-        IKeyboard Keyboard { get; }
-        IMouse Mouse { get; }
-
         IntPtr Handle { get; }
         int Width { get; }
         int Height { get; }

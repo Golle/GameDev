@@ -1,13 +1,15 @@
 using System;
+using System.ComponentModel.Design;
+using System.Runtime.InteropServices;
+using Titan.Core.EventSystem;
 using Titan.Windows.Input;
 using Titan.Windows.Win32;
+using Titan.Windows.Window.Events;
 
 namespace Titan.Windows.Window
 {
     internal class NativeWindow : IWindow
     {
-        public IKeyboard Keyboard => _keyboard;
-        public IMouse Mouse => _mouse;
         public IntPtr Handle { get; internal set; }
         public int Width { get; }
         public int Height { get; }
@@ -15,15 +17,13 @@ namespace Titan.Windows.Window
         
         // Create a delegate that have the same lifetime as the native window to prevent the GC to move it
         public User32.WndProcDelegate WindowProcedureDelegate { get; }
-        private readonly NativeKeyboard _keyboard;
-        private readonly NativeMouse _mouse;
-
-        public NativeWindow(int width, int height)
+        
+        private readonly IEventManager _eventManager;
+        public NativeWindow(int width, int height, IEventManager eventManager)
         {
+            _eventManager = eventManager;
             Width = width;
             Height = height;
-            _keyboard = new NativeKeyboard();
-            _mouse = new NativeMouse();
             WindowProcedureDelegate = WindowProcedure;
         }
 
@@ -44,7 +44,6 @@ namespace Titan.Windows.Window
 
         public bool Update()
         {
-            _keyboard.Update();
             while (User32.PeekMessageA(out var msg, IntPtr.Zero, 0, 0, 1))
             {
                 if (msg.Message == WindowsMessage.WM_QUIT)
@@ -65,37 +64,37 @@ namespace Titan.Windows.Window
                     User32.PostQuitMessage(0);
                     return IntPtr.Zero;
                 case WindowsMessage.WM_KILLFOCUS:
-                    _keyboard.ClearState();
+                    _eventManager.Publish(new WindowLostFocusEvent());
                     break;
                 case WindowsMessage.WM_KEYDOWN:
                 case WindowsMessage.WM_SYSKEYDOWN:
-                    _keyboard.OnKeyDown((KeyCode)wParam);
+                    KeyDown((KeyCode) wParam, (lParam.ToUInt32() & 0x40000000) > 0);
                     break;
                 case WindowsMessage.WM_KEYUP:
                 case WindowsMessage.WM_SYSKEYUP:
-                    _keyboard.OnKeyUp((KeyCode)wParam);
+                    _eventManager.Publish(new KeyReleasedEvent((KeyCode)wParam));
                     break;
                 case WindowsMessage.WM_CHAR:
-                    _keyboard.OnChar((char)wParam);
+                    _eventManager.Publish(new CharacterTypedEvent((char)wParam));
                     break;
 
 
                 // Mouse events, we can use wParam to read the state for mouse buttons. Might be better?
 
                 case WindowsMessage.WM_MOUSEMOVE:
-                    _mouse.OnMouseMove(GetMouseCoordinates((int)lParam));
+                    _eventManager.Publish(new MouseMovedEvent(GetMouseCoordinates((int)lParam)));
                     break;
                 case WindowsMessage.WM_LBUTTONDOWN:
-                    _mouse.OnLeftMouseButtonDown(GetMouseCoordinates((int)lParam));
+                    _eventManager.Publish(new MouseLeftButtonPressedEvent(GetMouseCoordinates((int)lParam)));
                     break;
                 case WindowsMessage.WM_LBUTTONUP:
-                    _mouse.OnLeftMouseButtonUp(GetMouseCoordinates((int)lParam));
+                    _eventManager.Publish(new MouseLeftButtonReleasedEvent(GetMouseCoordinates((int)lParam)));
                     break;
                 case WindowsMessage.WM_RBUTTONDOWN:
-                    _mouse.OnRightMouseButtonDown(GetMouseCoordinates((int)lParam));
+                    _eventManager.Publish(new MouseRightButtonPressedEvent(GetMouseCoordinates((int)lParam)));
                     break;
                 case WindowsMessage.WM_RBUTTONUP:
-                    _mouse.OnRightMouseButtonUp(GetMouseCoordinates((int)lParam));
+                    _eventManager.Publish(new MouseRightButtonReleasedEvent(GetMouseCoordinates((int)lParam)));
                     break;
 
                 // Add support to track mouse outside of window
@@ -109,6 +108,18 @@ namespace Titan.Windows.Window
             }
 
             return User32.DefWindowProcA(hWnd, message, wParam, lParam);
+        }
+
+        private void KeyDown(KeyCode keyCode, bool repeat)
+        {
+            if (repeat)
+            {
+                _eventManager.Publish(new KeyAutoRepeatEvent(keyCode));
+            }
+            else
+            {
+                _eventManager.Publish(new KeyPressedEvent(keyCode));
+            }
         }
 
         private static (int x, int y) GetMouseCoordinates(int lParam)

@@ -1,17 +1,26 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using Titan.Core.EventSystem;
 using Titan.Windows.Win32;
 
 namespace Titan.Windows.Window
 {
     public class WindowCreator : IWindowCreator
     {
+        private readonly IEventManager _eventManager;
+
         // Prevent the delegate from being garbage collected
         private static readonly User32.WndProcDelegate DefaultWindowProcedure = User32.DefWindowProcA;
+
+        public WindowCreator(IEventManager eventManager)
+        {
+            _eventManager = eventManager;
+        }
+
         public IWindow CreateWindow(CreateWindowArguments arguments)
         {
-            var nativeWindow = new NativeWindow(arguments.Width, arguments.Height);
+            var nativeWindow = new NativeWindow(arguments.Width, arguments.Height, _eventManager);
             var windowProcedure = Marshal.GetFunctionPointerForDelegate(nativeWindow.WindowProcedureDelegate);
             GCHandle.Alloc(windowProcedure, GCHandleType.Pinned);
             var wndClassExA = new WNDCLASSEXA
