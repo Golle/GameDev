@@ -30,7 +30,7 @@ namespace Titan.Core.EventSystem
 
         public void Update()
         {
-            if (_eventQueue.TryDequeue(out var @event))
+            while(_eventQueue.TryDequeue(out var @event))
             {
                 PublishImmediate(@event);
             }
