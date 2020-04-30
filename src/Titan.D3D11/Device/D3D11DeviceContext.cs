@@ -17,6 +17,16 @@ namespace Titan.D3D11.Device
             D3D11CommonBindings.ReleaseComObject(_handle);
         }
 
+        public void SetVertexBuffers(uint startSlot, ID3D11Buffer[] vertexBuffers, uint strides)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Draw(uint vertexCount, uint startLocation)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SetRenderTargets(ID3D11RenderTargetView renderTarget)
         {
             D3D11DeviceContextBindings.DeviceContextOMSetRenderTargets_(_handle, 1, new[]{renderTarget.Handle}, IntPtr.Zero);

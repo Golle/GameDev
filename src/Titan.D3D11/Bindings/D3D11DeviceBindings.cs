@@ -44,6 +44,19 @@ namespace Titan.D3D11.Bindings
             [In] D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
             [Out] out IntPtr renderTargetView
         );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern unsafe HRESULT D3D11CreateBuffer_(
+            [In] IntPtr device,
+            [In] D3D11_BUFFER_DESC* pDesc,
+            [In] D3D11_SUBRESOURCE_DATA* pInitialData,
+            [Out] out IntPtr ppBUffer
+        );
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct D3D11_SUBRESOURCE_DATA
+    {
     }
 
     [StructLayout(LayoutKind.Explicit, Size = 20)] // Size = 20 is in 64 bit architecture, wont work in x86.

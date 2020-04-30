@@ -13,7 +13,6 @@ namespace Titan.Graphics
         
         private IWindow _window;
         private ID3D11Device _device;
-        private ID3D11BackBuffer _backBuffer;
         private ID3D11RenderTargetView _renderTarget;
 
         public GraphicsHandler(IWindowCreator windowCreator, ID3D11DeviceFactory d3D11DeviceFactory)
@@ -38,16 +37,16 @@ namespace Titan.Graphics
                     Debug = true,
                     Window = _window
                 });
-             
-            _backBuffer = _device.SwapChain.GetBuffer(0, D3D11Resources.D3D11Texture2D);
-            _renderTarget = _device.CreateRenderTargetView(_backBuffer);
+
+            using (var backBuffer = _device.SwapChain.GetBuffer(0, D3D11Resources.D3D11Texture2D))
+            {
+                _renderTarget = _device.CreateRenderTargetView(backBuffer);
+            }
             
             _device.Context.SetRenderTargets(_renderTarget);
-
             return true;
         }
 
-        private int i = 0;
         public void Run()
         {
             _window.ShowWindow();
@@ -84,7 +83,6 @@ namespace Titan.Graphics
         public void Dispose()
         {
             _renderTarget.Dispose();
-            _backBuffer.Dispose();
             _device.Dispose();
         }
     }

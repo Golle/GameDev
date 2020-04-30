@@ -44,3 +44,11 @@ EXTERN_C DLLEXPORT HRESULT D3D11CreateRenderTargetView_(
 {
 	return device->CreateRenderTargetView(pResource, pDesc, ppRTView);
 }
+EXTERN_C DLLEXPORT HRESULT D3D11CreateBuffer_(
+	ID3D11Device* device,
+	const D3D11_BUFFER_DESC* pDesc,
+	const D3D11_SUBRESOURCE_DATA* pInitialData,
+	ID3D11Buffer** ppBuffer)
+{
+	return device->CreateBuffer(pDesc, pInitialData, ppBuffer);
+}

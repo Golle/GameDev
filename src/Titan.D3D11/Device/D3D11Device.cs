@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Titan.D3D11.Bindings;
 using Titan.D3D11.Bindings.Models;
+using Titan.D3D11.Device.Models;
 using Titan.D3D11.InfoQueue;
 using Titan.Windows;
 
@@ -50,6 +51,19 @@ namespace Titan.D3D11.Device
             }
 
             return new D3D11InfoQueue(infoQueue);
+        }
+
+        public ID3D11Buffer CreateBuffer(D3D11_BUFFER_DESC desc)
+        {
+            HRESULT result;
+            IntPtr buffer = default;
+            unsafe
+            {
+                //result = D3D11DeviceBindings.D3D11CreateBuffer_(_handle, &desc, (D3D11_SUBRESOURCE_DATA*)null, out buffer);
+            }
+
+            return null;
+
         }
 
         public void Dispose()
