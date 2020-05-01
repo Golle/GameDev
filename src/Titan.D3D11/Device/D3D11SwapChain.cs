@@ -27,9 +27,9 @@ namespace Titan.D3D11.Device
             return new D3D11BackBuffer(backBuffer);
         }
 
-        public void Present()
+        public void Present(bool vSync = true)
         {
-            D3D11SwapChainBindings.Present(_handle, 1, 0);
+            D3D11SwapChainBindings.Present(_handle, vSync ? 1u : 0u, 0);
         }
     }
 }

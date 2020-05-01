@@ -6,7 +6,7 @@ using Titan.Windows.Win32;
 
 namespace Titan.Windows.Window
 {
-    public class WindowCreator : IWindowCreator
+    internal class WindowCreator : IWindowCreator
     {
         private readonly IEventManager _eventManager;
 
