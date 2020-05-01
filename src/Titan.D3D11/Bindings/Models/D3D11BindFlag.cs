@@ -1,5 +1,8 @@
-namespace Titan.D3D11.Device.Models
+using System;
+
+namespace Titan.D3D11.Bindings.Models
 {
+    [Flags]
     public enum D3D11BindFlag : ulong
     {
         VertexBuffer = 0x1L,

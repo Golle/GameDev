@@ -1,6 +1,6 @@
 using System;
 
-namespace Titan.D3D11.Device.Models
+namespace Titan.D3D11.Bindings.Models
 {
     [Flags]
     public enum D3D11ResourceMiscFlag : long

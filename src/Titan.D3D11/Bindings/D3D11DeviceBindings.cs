@@ -10,30 +10,30 @@ namespace Titan.D3D11.Bindings
         [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern HRESULT D3D11CreateDeviceBinding_(
             [In] IntPtr adapter,
-            [In] D3D_DRIVER_TYPE driverType,
+            [In] D3DDriverType driverType,
             [In] IntPtr hModule,
             [In] uint flags,
-            [In] D3D_FEATURE_LEVEL[] featureLevel,
+            [In] D3DFeatureLevel[] featureLevel,
             [In] uint featureLevels,
             [In] uint sdkVersion,
             [Out] out IntPtr device, 
-            [Out] out D3D_FEATURE_LEVEL pFeatureLevel,
+            [Out] out D3DFeatureLevel pFeatureLevel,
             [Out] out IntPtr context
             );
 
         [DllImport(Constants.D3D11Dll, SetLastError = true)]
         public static extern unsafe HRESULT D3D11CreateDeviceAndSwapChain_(
             [In] IntPtr adapter,
-            [In] D3D_DRIVER_TYPE driverType,
+            [In] D3DDriverType driverType,
             [In] IntPtr hModule,
-            [In] D3D11_CREATE_DEVICE_FLAG flags,
-            [In] D3D_FEATURE_LEVEL* featureLevel,
+            [In] D3D11CreateDeviceFlag flags,
+            [In] D3DFeatureLevel* featureLevel,
             [In] uint featureLevels,
             [In] uint sdkVerion, 
-            [In] in DXGI_SWAP_CHAIN_DESC pSwapChainDesc,
+            [In] in DxgiSwapChainDesc pSwapChainDesc,
             [Out] out IntPtr swapChain,
             [Out] out IntPtr device,
-            [Out] out D3D_FEATURE_LEVEL pFeatureLevel,
+            [Out] out D3DFeatureLevel pFeatureLevel,
             [Out] out IntPtr context
             );
 
@@ -48,7 +48,7 @@ namespace Titan.D3D11.Bindings
         [DllImport(Constants.D3D11Dll, SetLastError = true)]
         public static extern unsafe HRESULT D3D11CreateBuffer_(
             [In] IntPtr device,
-            [In] D3D11_BUFFER_DESC* pDesc,
+            [In] D3D11BufferDesc* pDesc,
             [In] D3D11_SUBRESOURCE_DATA* pInitialData,
             [Out] out IntPtr ppBUffer
         );

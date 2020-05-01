@@ -10,37 +10,37 @@ namespace Titan.D3D11.Device
     {
         public ID3D11Device Create(CreateDeviceArguments arguments)
         {
-            DXGI_SWAP_CHAIN_DESC desc = default;
+            DxgiSwapChainDesc desc = default;
             desc.BufferCount = 2;
             desc.BufferDesc.Width= (uint) arguments.Window.Width;
             desc.BufferDesc.Height = (uint) arguments.Window.Height;
-            desc.BufferDesc.Format = DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
+            desc.BufferDesc.Format = DxgiFormat.R8G8B8A8Unorm;
             desc.BufferDesc.RefreshRate.Denominator = arguments.RefreshRate;
-            desc.BufferDesc.Scaling = DXGI_MODE_SCALING.DXGI_MODE_SCALING_UNSPECIFIED;
-            desc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER.DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+            desc.BufferDesc.Scaling = DxgiModeScaling.Unspecified;
+            desc.BufferDesc.ScanlineOrdering = DxgiModeScanlineOrder.Unspecified;
             
             desc.SampleDesc.Count = 1;
             desc.SampleDesc.Quality = 0;
             
             desc.Flags = 0;
-            desc.BufferUsage = DXGI_USAGE.DXGI_USAGE_RENDER_TARGET_OUTPUT;
+            desc.BufferUsage = DxgiUsage.RenderTargetOutput;
             desc.OutputWindow = arguments.Window.Handle;
             desc.Windowed = arguments.Window.Windowed ? 1 : 0;
-            desc.SwapEffect = DXGI_SWAP_EFFECT.DXGI_SWAP_EFFECT_FLIP_DISCARD;
-            desc.Flags = DXGI_SWAP_CHAIN_FLAG.DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+            desc.SwapEffect = DxgiSwapEffect.FlipDiscard;
+            desc.Flags = DxgiSwapChainFlag.AllowModeSwitch;
 
             HRESULT result;
             IntPtr swapChain;
             IntPtr device;
-            D3D_FEATURE_LEVEL featureLevel;
+            D3DFeatureLevel featureLevel;
             IntPtr context;
-            var flags = arguments.Debug ? D3D11_CREATE_DEVICE_FLAG.D3D11_CREATE_DEVICE_DEBUG : D3D11_CREATE_DEVICE_FLAG.D3D11_CREATE_DEVICE_DEFAULT;
+            var flags = arguments.Debug ? D3D11CreateDeviceFlag.Debug : D3D11CreateDeviceFlag.Default;
 
             unsafe
             {
                 result = D3D11DeviceBindings.D3D11CreateDeviceAndSwapChain_(
                     arguments.Adapter,
-                    D3D_DRIVER_TYPE.D3D_DRIVER_TYPE_HARDWARE,
+                    D3DDriverType.Hardware,
                     IntPtr.Zero,
                     flags,
                     null,

@@ -11,11 +11,11 @@ namespace Titan.D3D11.Device
     internal class D3D11Device : ID3D11Device
     {
         private readonly IntPtr _handle;
-        public D3D_FEATURE_LEVEL FeatureLevel { get; }
+        public D3DFeatureLevel FeatureLevel { get; }
         public ID3D11SwapChain SwapChain { get; }
         public ID3D11DeviceContext Context { get; }
 
-        public D3D11Device(IntPtr handle, D3D_FEATURE_LEVEL featureLevel, ID3D11SwapChain swapChain, ID3D11DeviceContext context)
+        public D3D11Device(IntPtr handle, D3DFeatureLevel featureLevel, ID3D11SwapChain swapChain, ID3D11DeviceContext context)
         {
             _handle = handle;
             FeatureLevel = featureLevel;
@@ -52,17 +52,15 @@ namespace Titan.D3D11.Device
             return new D3D11InfoQueue(infoQueue);
         }
 
-        public ID3D11Buffer CreateBuffer(D3D11_BUFFER_DESC desc)
+        public ID3D11Buffer CreateBuffer(D3D11BufferDesc desc)
         {
             HRESULT result;
             IntPtr buffer = default;
             unsafe
             {
-                //result = D3D11DeviceBindings.D3D11CreateBuffer_(_handle, &desc, (D3D11_SUBRESOURCE_DATA*)null, out buffer);
+                result = D3D11DeviceBindings.D3D11CreateBuffer_(_handle, &desc, (D3D11_SUBRESOURCE_DATA*)null, out buffer);
             }
-
             return null;
-
         }
 
         public void Dispose()
