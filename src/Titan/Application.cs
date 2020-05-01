@@ -24,8 +24,7 @@ namespace Titan
 
         public static void Start()
         {
-            
-            var application = new T() as Application<T>;
+            var application = new T() as Application<T> ?? throw new InvalidOperationException("Failed to Create Application class");
             application.Run();
         }
 
