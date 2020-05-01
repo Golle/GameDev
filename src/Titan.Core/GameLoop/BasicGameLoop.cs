@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Threading;
 using Titan.Core.Configuration;
 using Titan.Core.EventSystem;
 using Titan.Core.GameLoop.Events;
@@ -20,7 +19,6 @@ namespace Titan.Core.GameLoop
         public void Run(Func<bool> windowUpdate)
         {
             var frequency = Stopwatch.Frequency;
-            // this should be done with ticks instead of time
 
             var fixedUpdateTicksPerSeconds = (long)((1f / _fixedUpdateFrequency) * frequency); 
             var fixedUpdateTickCount = 0L;

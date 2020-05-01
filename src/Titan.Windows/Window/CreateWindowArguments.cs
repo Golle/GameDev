@@ -1,5 +1,3 @@
-using Titan.Core.EventSystem;
-
 namespace Titan.Windows.Window
 {
     public class CreateWindowArguments

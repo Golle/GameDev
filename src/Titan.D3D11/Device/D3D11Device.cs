@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Titan.D3D11.Bindings;
 using Titan.D3D11.Bindings.Models;
-using Titan.D3D11.Device.Models;
 using Titan.D3D11.InfoQueue;
 using Titan.Windows;
 

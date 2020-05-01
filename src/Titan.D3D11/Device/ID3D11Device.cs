@@ -1,6 +1,5 @@
 using System;
 using Titan.D3D11.Bindings.Models;
-using Titan.D3D11.Device.Models;
 using Titan.D3D11.InfoQueue;
 
 namespace Titan.D3D11.Device

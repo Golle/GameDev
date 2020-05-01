@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using Titan.D3D11.Bindings.Models;
 using Titan.Windows;
 
 namespace Titan.D3D11.Bindings

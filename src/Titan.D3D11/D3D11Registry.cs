@@ -1,4 +1,3 @@
-using System;
 using Titan.Core.Ioc;
 using Titan.D3D11.Device;
 

@@ -1,7 +1,5 @@
 using System;
-using System.Diagnostics;
 using Titan.Core.EventSystem;
-using Titan.Core.GameLoop.Events;
 using Titan.D3D11;
 using Titan.D3D11.Device;
 using Titan.Windows.Input;
