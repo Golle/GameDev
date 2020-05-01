@@ -1,15 +1,15 @@
-﻿using Titan.Core.EventSystem;
+using Titan.Core.EventSystem;
 
 namespace Titan.Core.GameLoop.Events
 {
     public readonly struct FixedUpdateEvent : IEvent
     {
-        public uint Ticks { get; }
+        public float ElapsedTime { get; }
         public EventType Type => EventType.FixedUpdate;
 
-        public FixedUpdateEvent(uint ticks)
+        public FixedUpdateEvent(float elapsedTime)
         {
-            Ticks = ticks;
+            ElapsedTime = elapsedTime;
         }
     }
 }

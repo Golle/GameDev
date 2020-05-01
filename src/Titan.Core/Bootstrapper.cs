@@ -1,6 +1,7 @@
 using Titan.Core.Common;
 using Titan.Core.Configuration;
 using Titan.Core.EventSystem;
+using Titan.Core.GameLoop;
 using Titan.Core.Ioc;
 using Titan.Core.Logging;
 
@@ -27,6 +28,9 @@ namespace Titan.Core
                     // Event Manager
                     .Register<IEventManager, EventManager>()
 
+
+                    // GameLoop
+                    .Register<IGameLoop, BasicGameLoop>()
                 ;
 
         }

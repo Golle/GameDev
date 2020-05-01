@@ -51,63 +51,45 @@ namespace Titan.Graphics
             }
             
             _device.Context.SetRenderTargets(_renderTarget);
+            _window.ShowWindow();
+
             return true;
         }
 
-        public void Run()
+        public bool Update()
         {
-            var lastTicks = Stopwatch.GetTimestamp();
-            _window.ShowWindow();
-            var frames = 0;
-            var lastFps = 0;
-            var fpsTimer = 0f;
-            while (_window.Update())
+            if (_window.Update() == false)
             {
-                var ticks = Stopwatch.GetTimestamp();
-                var elapsedTicks = ticks - lastTicks;
-                fpsTimer += elapsedTicks / (float)Stopwatch.Frequency;
-
-                if (fpsTimer > 1f)
-                {
-                    lastFps = (int)(frames / fpsTimer);
-                    fpsTimer = 0f;
-                    frames = 0;
-                }
-
-                _eventManager.PublishImmediate(new UpdateEvent(elapsedTicks));
-
-                _eventManager.Update();
-
-                var color = new Color { Alpha = 1f };
-                if (_inputManager.Keyboard.IsKeyDown(KeyCode.A))
-                {
-                    color.Red = 1f;
-                }
-                if (_inputManager.Keyboard.IsKeyDown(KeyCode.S))
-                {
-                    color.Green = 1f;
-                }
-                if (_inputManager.Keyboard.IsKeyDown(KeyCode.D))
-                {
-                    color.Blue = 1f;
-                }
-                while (_inputManager.Keyboard.TryGetChar(out var character))
-                {
-                    //Console.Write(character);
-                }
-
-                var mouse = _inputManager.Mouse;
-                var mousePosition = mouse.Position;
-                
-                _window.SetTitle($"x: {mousePosition.X} y: {mousePosition.Y}, left: {mouse.LeftButtonDown}, right: {mouse.RightButtonDown}, fps: {lastFps}");
-
-                _device.Context.ClearRenderTargetView(_renderTarget, color);
-                _device.SwapChain.Present();
-                
-                lastTicks = ticks;
-                
-                frames++;
+                return false;
             }
+            
+            var color = new Color { Alpha = 1f };
+            if (_inputManager.Keyboard.IsKeyDown(KeyCode.A))
+            {
+                color.Red = 1f;
+            }
+            if (_inputManager.Keyboard.IsKeyDown(KeyCode.S))
+            {
+                color.Green = 1f;
+            }
+            if (_inputManager.Keyboard.IsKeyDown(KeyCode.D))
+            {
+                color.Blue = 1f;
+            }
+            while (_inputManager.Keyboard.TryGetChar(out var character))
+            {
+                //Console.Write(character);
+            }
+
+            var mouse = _inputManager.Mouse;
+            var mousePosition = mouse.Position;
+            
+            _window.SetTitle($"x: {mousePosition.X} y: {mousePosition.Y}, left: {mouse.LeftButtonDown}, right: {mouse.RightButtonDown}");
+
+            _device.Context.ClearRenderTargetView(_renderTarget, color);
+            _device.SwapChain.Present(true);
+
+            return true;
         }
 
         public void Dispose()
