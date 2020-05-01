@@ -27,11 +27,9 @@ namespace Titan.D3D11.Device
         {
             HRESULT result;
             IntPtr renderTargetView;
-            //D3D11_RENDER_TARGET_VIEW_DESC desc = default;
             unsafe
             {
-                result = D3D11DeviceBindings.D3D11CreateRenderTargetView_(_handle, backBuffer.Handle, (D3D11_RENDER_TARGET_VIEW_DESC*)null, out renderTargetView);
-                //result = D3D11DeviceBindings.D3D11CreateRenderTargetView_(_handle, backBuffer.Handle, &desc, out renderTargetView);
+                result = D3D11DeviceBindings.D3D11CreateRenderTargetView_(_handle, backBuffer.Handle, (D3D11RenderTargetViewDesc*)null, out renderTargetView);
             }
             if (result.Failed)
             {
@@ -45,22 +43,55 @@ namespace Titan.D3D11.Device
             var result = D3D11CommonBindings.QueryInterface_(_handle, D3D11Resources.D3D11InfoQueue, out var infoQueue);
             if (result.Failed)
             {
-                var err = Marshal.GetLastWin32Error();
                 throw new Win32Exception($"Device CreateInfoQueue failed with code: 0x{result.Code.ToString("X")}");
             }
 
             return new D3D11InfoQueue(infoQueue);
         }
 
-        public ID3D11Buffer CreateBuffer(D3D11BufferDesc desc)
+        public ID3D11Buffer CreateBuffer(D3D11BufferDesc desc, D3D11SubresourceData? subresourceData = null)
         {
             HRESULT result;
-            IntPtr buffer = default;
+            IntPtr buffer;
             unsafe
             {
-                result = D3D11DeviceBindings.D3D11CreateBuffer_(_handle, &desc, (D3D11_SUBRESOURCE_DATA*)null, out buffer);
+                if (subresourceData.HasValue)
+                {
+                    var subResource = subresourceData.Value;
+                    result = D3D11DeviceBindings.D3D11CreateBuffer_(_handle, &desc, &subResource, out buffer);
+                }
+                else
+                {
+                    result = D3D11DeviceBindings.D3D11CreateBuffer_(_handle, &desc, null, out buffer);
+                }
             }
-            return null;
+            if (result.Failed)
+            {
+                throw new Win32Exception($"Device CreateBuffer failed with code: 0x{result.Code.ToString("X")}");
+            }
+            return new D3D11Buffer(buffer);
+        }
+
+        public ID3D11VertexShader CreateVertexShader(ID3DBlob blob)
+        {
+            var result = D3D11DeviceBindings.D3D11CreateVertexShader_(_handle, blob.GetBufferPointer(), blob.GetBufferSize(), IntPtr.Zero, out var vertexShader);
+            if (result.Failed)
+            {
+                throw new Win32Exception($"Device CreateVertexShader failed with code: 0x{result.Code.ToString("X")}");
+            }
+
+            return new D3D11VertexShader(vertexShader);
+        }
+
+        public ID3D11PixelShader CreatePixelShader(ID3DBlob blob)
+        {
+            var result = D3D11DeviceBindings.D3D11CreatePixelShader_(_handle, blob.GetBufferPointer(), blob.GetBufferSize(), IntPtr.Zero, out var pixelShader);
+            if (result.Failed)
+            {
+                throw new Win32Exception($"Device CreatePixelShader failed with code: 0x{result.Code.ToString("X")}");
+            }
+
+            return new D3D11PixelShader(pixelShader);
         }
 
         public void Dispose()

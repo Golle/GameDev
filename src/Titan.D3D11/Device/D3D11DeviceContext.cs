@@ -1,5 +1,6 @@
 using System;
 using Titan.D3D11.Bindings;
+using Titan.D3D11.Bindings.Models;
 
 namespace Titan.D3D11.Device
 {
@@ -17,14 +18,14 @@ namespace Titan.D3D11.Device
             D3D11CommonBindings.ReleaseComObject(_handle);
         }
 
-        public void SetVertexBuffers(uint startSlot, ID3D11Buffer[] vertexBuffers, uint strides)
+        public void SetVertexBuffer(uint startSlot, ID3D11Buffer vertexBuffer, uint strides, uint offset)
         {
-            throw new NotImplementedException();
+            D3D11DeviceContextBindings.DeviceContextIASetVertexBuffers_(_handle, startSlot, 1, vertexBuffer.Handle, strides, offset);
         }
 
         public void Draw(uint vertexCount, uint startLocation)
         {
-            throw new NotImplementedException();
+            D3D11DeviceContextBindings.DeviceContextDraw_(_handle, vertexCount, startLocation);
         }
 
         public void SetRenderTargets(ID3D11RenderTargetView renderTarget)
@@ -35,6 +36,26 @@ namespace Titan.D3D11.Device
         public void ClearRenderTargetView(ID3D11RenderTargetView renderTarget, in Color color)
         {
             D3D11DeviceContextBindings.ClearRenderTargetView(_handle, renderTarget.Handle, color);
+        }
+
+        public void SetVertexShader(ID3D11VertexShader vertexShader)
+        {
+            D3D11DeviceContextBindings.DeviceContextVSSetShader_(_handle, vertexShader.Handle, IntPtr.Zero, 0u);
+        }
+
+        public void SetPixelShader(ID3D11PixelShader pixelShader)
+        {
+            D3D11DeviceContextBindings.DeviceContextPSSetShader_(_handle, pixelShader.Handle, IntPtr.Zero, 0u);
+        }
+
+        public void SetViewport(in D3D11Viewport viewport)
+        {
+            D3D11DeviceContextBindings.DeviceContextRSSetViewports_(_handle, 1, new[] {viewport});
+        }
+
+        public void SetPrimitiveTopology(D3D11PrimitiveTopology topology)
+        {
+            D3D11DeviceContextBindings.DeviceContextIASetPrimitiveTopology_(_handle, topology);
         }
     }
 }

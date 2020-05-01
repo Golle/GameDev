@@ -3,24 +3,25 @@ using System;
 namespace Titan.D3D11.Bindings.Models
 {
     [Flags]
-    public enum D3D11ResourceMiscFlag : long
+    public enum D3D11ResourceMiscFlag : uint
     {
-        GenerateMips = 0x1L,
-        Shared = 0x2L,
-        Texturecube = 0x4L,
-        DrawindirectArgs = 0x10L,
-        BufferAllowRawViews = 0x20L,
-        BufferStructured = 0x40L,
-        ResourceClamp = 0x80L,
-        SharedKeyedmutex = 0x100L,
-        GdiCompatible = 0x200L,
-        SharedNthandle = 0x800L,
-        RestrictedContent = 0x1000L,
-        RestrictSharedResource = 0x2000L,
-        RestrictSharedResourceDriver = 0x4000L,
-        Guarded = 0x8000L,
-        TilePool = 0x20000L,
-        Tiled = 0x40000L,
-        HwProtected = 0x80000L
+        Unspecified = 0,
+        GenerateMips = 0x1,
+        Shared = 0x2,
+        Texturecube = 0x4,
+        DrawindirectArgs = 0x10,
+        BufferAllowRawViews = 0x20,
+        BufferStructured = 0x40,
+        ResourceClamp = 0x80,
+        SharedKeyedmutex = 0x100,
+        GdiCompatible = 0x200,
+        SharedNthandle = 0x800,
+        RestrictedContent = 0x1000,
+        RestrictSharedResource = 0x2000,
+        RestrictSharedResourceDriver = 0x4000,
+        Guarded = 0x8000,
+        TilePool = 0x20000,
+        Tiled = 0x40000,
+        HwProtected = 0x80000
     }
 }

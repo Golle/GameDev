@@ -1,6 +1,8 @@
 using System;
+using System.Runtime.InteropServices;
 using Titan.Core.EventSystem;
 using Titan.D3D11;
+using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.Device;
 using Titan.Windows.Input;
 using Titan.Windows.Window;
@@ -13,17 +15,19 @@ namespace Titan.Graphics
         private readonly ID3D11DeviceFactory _d3D11DeviceFactory;
         private readonly IEventManager _eventManager;
         private readonly IInputManager _inputManager;
+        private readonly ID3DCommon _d3DCommon;
 
         private IWindow _window;
         private ID3D11Device _device;
         private ID3D11RenderTargetView _renderTarget;
 
-        public GraphicsHandler(IWindowCreator windowCreator, ID3D11DeviceFactory d3D11DeviceFactory, IEventManager eventManager, IInputManager inputManager)
+        public GraphicsHandler(IWindowCreator windowCreator, ID3D11DeviceFactory d3D11DeviceFactory, IEventManager eventManager, IInputManager inputManager, ID3DCommon d3DCommon)
         {
             _windowCreator = windowCreator;
             _d3D11DeviceFactory = d3D11DeviceFactory;
             _eventManager = eventManager;
             _inputManager = inputManager;
+            _d3DCommon = d3DCommon;
         }
 
         public bool Initialize(string title, int width, int height)
@@ -52,6 +56,55 @@ namespace Titan.Graphics
             _window.ShowWindow();
 
             return true;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Vertex
+        {
+            public float X;
+            public float Y;
+        }
+
+
+        public void DrawTestTriangle()
+        {
+
+            var vertices = new Vertex[3];
+            vertices[0] = new Vertex { X = 0f, Y = 0.5f };
+            vertices[1] = new Vertex { X = 0.5f, Y = -0.5f };
+            vertices[2] = new Vertex { X = -0.5f, Y = -0.5f };
+
+
+            D3D11BufferDesc desc = default;
+            desc.BindFlags = D3D11BindFlag.VertexBuffer;
+            desc.Usage = D3D11Usage.Default;
+            desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified;
+            desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
+            desc.ByteWidth = 3 * 4 * 2;
+            desc.StructureByteStride = 2 * 4;
+
+            using var buffer = _device.CreateBuffer(desc);
+            _device.Context.SetVertexBuffer(0, buffer, desc.StructureByteStride, 0u);
+
+
+            using var vertexShaderBlob = _d3DCommon.ReadFileToBlob("Shaders/VertexShader.cso");
+
+            using var vertexShader = _device.CreateVertexShader(vertexShaderBlob);
+            _device.Context.SetVertexShader(vertexShader);
+
+            using var pixelShaderBlob = _d3DCommon.ReadFileToBlob("Shaders/PixelShader.cso");
+            using var pixelShader = _device.CreatePixelShader(pixelShaderBlob);
+            _device.Context.SetPixelShader(pixelShader);
+
+            D3D11Viewport viewport = default;
+            viewport.Width = 1024;
+            viewport.Height = 720;
+            viewport.MinDepth = 0;
+            viewport.MaxDepth = 1;
+            _device.Context.SetViewport(viewport);
+            _device.Context.Draw((uint) vertices.Length, 0);
+            _device.Context.SetPrimitiveTopology(D3D11PrimitiveTopology.D3D10PrimitiveTopologyTrianglelist);
+
         }
 
         public bool Update()
@@ -85,6 +138,9 @@ namespace Titan.Graphics
             _window.SetTitle($"x: {mousePosition.X} y: {mousePosition.Y}, left: {mouse.LeftButtonDown}, right: {mouse.RightButtonDown}");
 
             _device.Context.ClearRenderTargetView(_renderTarget, color);
+
+            DrawTestTriangle();
+
             _device.SwapChain.Present(true);
 
             return true;

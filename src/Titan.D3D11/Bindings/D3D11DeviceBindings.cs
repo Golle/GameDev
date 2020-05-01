@@ -41,7 +41,7 @@ namespace Titan.D3D11.Bindings
         public static extern unsafe HRESULT D3D11CreateRenderTargetView_(
             [In] IntPtr device,
             [In] IntPtr pResource,
-            [In] D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
+            [In] D3D11RenderTargetViewDesc* pDesc,
             [Out] out IntPtr renderTargetView
         );
 
@@ -49,18 +49,31 @@ namespace Titan.D3D11.Bindings
         public static extern unsafe HRESULT D3D11CreateBuffer_(
             [In] IntPtr device,
             [In] D3D11BufferDesc* pDesc,
-            [In] D3D11_SUBRESOURCE_DATA* pInitialData,
+            [In] D3D11SubresourceData* pInitialData,
             [Out] out IntPtr ppBUffer
+        );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern HRESULT D3D11CreateVertexShader_(
+            [In] IntPtr device,
+            [In] IntPtr blob,
+            [In] UIntPtr byteCodeLength,
+            [In] IntPtr pClassLinkage,
+            [Out] out IntPtr ppVertexShader
+        );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern HRESULT D3D11CreatePixelShader_(
+            [In] IntPtr device,
+            [In] IntPtr blob,
+            [In] UIntPtr byteCodeLength,
+            [In] IntPtr pClassLinkage,
+            [Out] out IntPtr ppPixelShader
         );
     }
 
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct D3D11_SUBRESOURCE_DATA
-    {
-    }
-
     [StructLayout(LayoutKind.Explicit, Size = 20)] // Size = 20 is in 64 bit architecture, wont work in x86.
-    internal struct D3D11_RENDER_TARGET_VIEW_DESC
+    internal struct D3D11RenderTargetViewDesc
     {
         // this struct has union, can use FieldOffsetAttribute to mimic that behavior. For now we'll leave it at null.
     }

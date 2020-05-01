@@ -10,6 +10,8 @@ namespace Titan.D3D11.Device
         ID3D11DeviceContext Context { get; }
         ID3D11RenderTargetView CreateRenderTargetView(ID3D11BackBuffer backBuffer);
         ID3D11InfoQueue CreateInfoQueue();
-        ID3D11Buffer CreateBuffer(D3D11BufferDesc desc);
+        ID3D11Buffer CreateBuffer(D3D11BufferDesc desc, D3D11SubresourceData? subresourceData = null);
+        ID3D11VertexShader CreateVertexShader(ID3DBlob blob);
+        ID3D11PixelShader CreatePixelShader(ID3DBlob blob);
     }
 }

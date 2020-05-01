@@ -52,3 +52,26 @@ EXTERN_C DLLEXPORT HRESULT D3D11CreateBuffer_(
 {
 	return device->CreateBuffer(pDesc, pInitialData, ppBuffer);
 }
+
+EXTERN_C DLLEXPORT HRESULT D3D11CreateVertexShader_(
+	ID3D11Device * device,
+	const void* pShaderBytecode,
+	SIZE_T BytecodeLength,
+	ID3D11ClassLinkage* pClassLinkage,
+	ID3D11VertexShader** ppVertexShader
+)
+{
+	return device->CreateVertexShader(pShaderBytecode, BytecodeLength, pClassLinkage, ppVertexShader);
+}
+
+
+EXTERN_C DLLEXPORT HRESULT D3D11CreatePixelShader_(
+	ID3D11Device* device,
+	const void* pShaderBytecode,
+	SIZE_T BytecodeLength,
+	ID3D11ClassLinkage* pClassLinkage,
+	ID3D11PixelShader** ppPixelShader
+)
+{
+	return device->CreatePixelShader(pShaderBytecode, BytecodeLength, pClassLinkage, ppPixelShader);
+}

@@ -1,5 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
+using Titan.D3D11.Bindings.Models;
+using Titan.D3D11.Device;
 
 namespace Titan.D3D11.Bindings
 {
@@ -16,6 +18,55 @@ namespace Titan.D3D11.Bindings
         public static extern void ClearRenderTargetView(
             [In] IntPtr context, 
             [In] IntPtr pRenderTargetView, 
-            [In] Color color);
+            [In] Color color
+            );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern void DeviceContextIASetVertexBuffers_(
+            [In] IntPtr context,
+            [In] uint startSlot,
+            [In] uint numBuffers,
+            [In] in IntPtr ppVertexbuffers,
+            [In] in uint pStrides,
+            [In] in uint pOffsets
+        );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern void DeviceContextDraw_(
+            [In] IntPtr context,
+            [In] uint vertexCount,
+            [In] uint startLocation
+        );
+
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern void DeviceContextVSSetShader_(
+            [In] IntPtr context, 
+            [In] IntPtr pVertexShader, 
+            [In] in IntPtr ppClassInstances,
+            [In] uint numClassInstances
+            );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern void DeviceContextPSSetShader_(
+            [In] IntPtr context,
+            [In] IntPtr pPixelShader,
+            [In] in IntPtr ppClassInstances,
+            [In] uint numClassInstances
+        );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern void DeviceContextRSSetViewports_(
+            [In] IntPtr context,
+            [In] uint numViewports,
+            [In] D3D11Viewport[] viewports
+        );
+
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern void DeviceContextIASetPrimitiveTopology_(
+            [In] IntPtr context,
+            [In] D3D11PrimitiveTopology topology
+        );
     }
 }

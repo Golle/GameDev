@@ -19,6 +19,9 @@
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="common.cpp" />
+    <ClCompile Include="D3DBlobBindings.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />

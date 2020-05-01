@@ -16,8 +16,13 @@ namespace Titan.D3D11.Bindings
             [Out] out IntPtr ppObject
         );
 
-
         [DllImport(Constants.D3D11Dll)]
         public static extern uint D3D11SdkVersion();
+
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern HRESULT D3DReadFileToBlob_(
+            [In, MarshalAs(UnmanagedType.LPWStr)] string pFileName,
+            [Out] out IntPtr ppContents
+        );
     }
 }

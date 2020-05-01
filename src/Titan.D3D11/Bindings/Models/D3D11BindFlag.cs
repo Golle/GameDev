@@ -3,17 +3,17 @@ using System;
 namespace Titan.D3D11.Bindings.Models
 {
     [Flags]
-    public enum D3D11BindFlag : ulong
+    public enum D3D11BindFlag : uint
     {
-        VertexBuffer = 0x1L,
-        IndexBuffer = 0x2L,
-        ConstantBuffer = 0x4L,
-        ShaderResource = 0x8L,
-        StreamOutput = 0x10L,
-        RenderTarget = 0x20L,
-        DepthStencil = 0x40L,
-        UnorderedAccess = 0x80L,
-        Decoder = 0x200L,
-        VideoEncoder = 0x400L
+        VertexBuffer = 0x1,
+        IndexBuffer = 0x2,
+        ConstantBuffer = 0x4,
+        ShaderResource = 0x8,
+        StreamOutput = 0x10,
+        RenderTarget = 0x20,
+        DepthStencil = 0x40,
+        UnorderedAccess = 0x80,
+        Decoder = 0x200,
+        VideoEncoder = 0x400
     }
 }
