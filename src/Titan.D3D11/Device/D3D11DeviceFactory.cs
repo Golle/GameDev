@@ -12,7 +12,7 @@ namespace Titan.D3D11.Device
         {
             DxgiSwapChainDesc desc = default;
             desc.BufferCount = 2;
-            desc.BufferDesc.Width= (uint) arguments.Window.Width;
+            desc.BufferDesc.Width = (uint) arguments.Window.Width;
             desc.BufferDesc.Height = (uint) arguments.Window.Height;
             desc.BufferDesc.Format = DxgiFormat.R8G8B8A8Unorm;
             desc.BufferDesc.RefreshRate.Denominator = arguments.RefreshRate;

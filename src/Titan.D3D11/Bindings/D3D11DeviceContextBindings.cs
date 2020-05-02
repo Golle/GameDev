@@ -68,5 +68,12 @@ namespace Titan.D3D11.Bindings
             [In] IntPtr context,
             [In] D3D11PrimitiveTopology topology
         );
+
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern void DeviceContextIASetInputLayout_(
+            [In] IntPtr context,
+            [In] IntPtr inputLayout
+        );
     }
 }

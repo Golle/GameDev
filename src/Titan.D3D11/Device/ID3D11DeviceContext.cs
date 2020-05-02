@@ -13,5 +13,6 @@ namespace Titan.D3D11.Device
         void SetPixelShader(ID3D11PixelShader pixelShader);
         void SetViewport(in D3D11Viewport viewport);
         void SetPrimitiveTopology(D3D11PrimitiveTopology topology);
+        void SetInputLayout(ID3D11InputLayout inputLayout);
     }
 }

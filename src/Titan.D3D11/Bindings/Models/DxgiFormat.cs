@@ -1,6 +1,6 @@
 namespace Titan.D3D11.Bindings.Models
 {
-    internal enum DxgiFormat : uint
+    public enum DxgiFormat : uint
     {
         Unknown = 0,
         R32G32B32A32Typeless = 1,

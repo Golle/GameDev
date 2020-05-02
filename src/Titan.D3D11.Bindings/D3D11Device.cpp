@@ -75,3 +75,15 @@ EXTERN_C DLLEXPORT HRESULT D3D11CreatePixelShader_(
 {
 	return device->CreatePixelShader(pShaderBytecode, BytecodeLength, pClassLinkage, ppPixelShader);
 }
+
+EXTERN_C DLLEXPORT HRESULT D3D11CreateInputLayout_(
+	ID3D11Device* device,
+	const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,
+	UINT NumElements,
+	const void* pShaderBytecodeWithInputSignature,
+	SIZE_T bytecodeLength,
+	ID3D11InputLayout** ppInputLayout
+)
+{
+	return device->CreateInputLayout(pInputElementDescs, NumElements, pShaderBytecodeWithInputSignature, bytecodeLength, ppInputLayout);
+}

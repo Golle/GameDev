@@ -76,3 +76,11 @@ EXTERN_C DLLEXPORT void DeviceContextIASetPrimitiveTopology_(
 {
 	context->IASetPrimitiveTopology(topology);
 }
+
+EXTERN_C DLLEXPORT void DeviceContextIASetInputLayout_(
+	ID3D11DeviceContext* context,
+	ID3D11InputLayout* pInputLayout
+)
+{
+	context->IASetInputLayout(pInputLayout);
+}

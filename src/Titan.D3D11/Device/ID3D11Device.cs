@@ -13,5 +13,6 @@ namespace Titan.D3D11.Device
         ID3D11Buffer CreateBuffer(D3D11BufferDesc desc, D3D11SubresourceData? subresourceData = null);
         ID3D11VertexShader CreateVertexShader(ID3DBlob blob);
         ID3D11PixelShader CreatePixelShader(ID3DBlob blob);
+        ID3D11InputLayout CreateInputLayout(in D3D11InputElementDesc[] desc, ID3DBlob blob);
     }
 }

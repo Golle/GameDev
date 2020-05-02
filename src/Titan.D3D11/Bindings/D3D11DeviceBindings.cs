@@ -70,6 +70,16 @@ namespace Titan.D3D11.Bindings
             [In] IntPtr pClassLinkage,
             [Out] out IntPtr ppPixelShader
         );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern HRESULT D3D11CreateInputLayout_(
+            [In] IntPtr device,
+            [In] D3D11InputElementDesc[] inputElementDescs,
+            [In] uint numElements,
+            [In] IntPtr compiledShader,
+            [In] UIntPtr byteCodeLength,
+            [Out] out IntPtr ppInputLayout
+        );
     }
 
     [StructLayout(LayoutKind.Explicit, Size = 20)] // Size = 20 is in 64 bit architecture, wont work in x86.

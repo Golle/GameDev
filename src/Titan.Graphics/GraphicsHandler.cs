@@ -47,18 +47,18 @@ namespace Titan.Graphics
                     Window = _window
                 });
 
-            using (var backBuffer = _device.SwapChain.GetBuffer(0, D3D11Resources.D3D11Texture2D))
+            using (var backBuffer = _device.SwapChain.GetBuffer(0, D3D11Resources.D3D11Resource))
             {
                 _renderTarget = _device.CreateRenderTargetView(backBuffer);
             }
-            
+
             _device.Context.SetRenderTargets(_renderTarget);
             _window.ShowWindow();
 
             return true;
         }
 
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, Size = 8)]
         public struct Vertex
         {
             public float X;
@@ -66,14 +66,21 @@ namespace Titan.Graphics
         }
 
 
-        public void DrawTestTriangle()
+        public unsafe void DrawTestTriangle()
         {
 
             var vertices = new Vertex[3];
+
             vertices[0] = new Vertex { X = 0f, Y = 0.5f };
             vertices[1] = new Vertex { X = 0.5f, Y = -0.5f };
             vertices[2] = new Vertex { X = -0.5f, Y = -0.5f };
 
+            D3D11SubresourceData resourceData = default;
+
+            fixed (void* p = vertices)
+            {
+                resourceData.pSysMem = p;
+            }
 
             D3D11BufferDesc desc = default;
             desc.BindFlags = D3D11BindFlag.VertexBuffer;
@@ -83,27 +90,51 @@ namespace Titan.Graphics
             desc.ByteWidth = 3 * 4 * 2;
             desc.StructureByteStride = 2 * 4;
 
-            using var buffer = _device.CreateBuffer(desc);
+
+            using var buffer = _device.CreateBuffer(desc, resourceData);
             _device.Context.SetVertexBuffer(0, buffer, desc.StructureByteStride, 0u);
 
 
             using var vertexShaderBlob = _d3DCommon.ReadFileToBlob("Shaders/VertexShader.cso");
-
             using var vertexShader = _device.CreateVertexShader(vertexShaderBlob);
             _device.Context.SetVertexShader(vertexShader);
+            
 
             using var pixelShaderBlob = _d3DCommon.ReadFileToBlob("Shaders/PixelShader.cso");
             using var pixelShader = _device.CreatePixelShader(pixelShaderBlob);
             _device.Context.SetPixelShader(pixelShader);
 
+            var elementDesc = new[]
+            {
+                new D3D11InputElementDesc
+                {
+                    SemanticName = "POSITION",
+                    SemanticIndex = 0,
+                    Format = DxgiFormat.R32G32Float,
+                    InputSlot = 0,
+                    AlignedByteOffset = 0,
+                    InstanceDataStepRate = 0,
+                    InputSlotClass = D3D11InputClassification.PerVertexData
+                }
+            };
+
+            using var inputLayout = _device.CreateInputLayout(elementDesc, vertexShaderBlob);
+            _device.Context.SetInputLayout(inputLayout);
+
+
+            _device.Context.SetRenderTargets(_renderTarget);
+            
+            _device.Context.SetPrimitiveTopology(D3D11PrimitiveTopology.D3D11PrimitiveTopologyTrianglelist);
+
             D3D11Viewport viewport = default;
-            viewport.Width = 1024;
-            viewport.Height = 720;
+            viewport.Width = _window.Width;
+            viewport.Height = _window.Height;
             viewport.MinDepth = 0;
             viewport.MaxDepth = 1;
+
             _device.Context.SetViewport(viewport);
+
             _device.Context.Draw((uint) vertices.Length, 0);
-            _device.Context.SetPrimitiveTopology(D3D11PrimitiveTopology.D3D10PrimitiveTopologyTrianglelist);
 
         }
 

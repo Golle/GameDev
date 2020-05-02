@@ -57,5 +57,10 @@ namespace Titan.D3D11.Device
         {
             D3D11DeviceContextBindings.DeviceContextIASetPrimitiveTopology_(_handle, topology);
         }
+
+        public void SetInputLayout(ID3D11InputLayout inputLayout)
+        {
+            D3D11DeviceContextBindings.DeviceContextIASetInputLayout_(_handle, inputLayout.Handle);
+        }
     }
 }

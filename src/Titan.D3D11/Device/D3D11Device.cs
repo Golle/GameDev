@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Runtime.InteropServices;
 using Titan.D3D11.Bindings;
 using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.InfoQueue;
@@ -92,6 +91,16 @@ namespace Titan.D3D11.Device
             }
 
             return new D3D11PixelShader(pixelShader);
+        }
+
+        public ID3D11InputLayout CreateInputLayout(in D3D11InputElementDesc[] descs, ID3DBlob blob)
+        {
+            var result = D3D11DeviceBindings.D3D11CreateInputLayout_(_handle, descs, (uint)descs.Length, blob.GetBufferPointer(), blob.GetBufferSize(), out var inputLayout);
+            if (result.Failed)
+            {
+                throw new Win32Exception($"Device CreateInputLayout failed with code: 0x{result.Code.ToString("X")}");
+            }
+            return new D3D11InputLayout(inputLayout);
         }
 
         public void Dispose()
