@@ -1,12 +1,13 @@
 using System;
 using Titan.D3D11.Bindings;
 
-namespace Titan.D3D11.Device
+namespace Titan.D3D11
 {
-    internal class D3D11BackBuffer : ID3D11BackBuffer
+    internal class ComPointer : IDisposable
     {
         public IntPtr Handle { get; }
-        public D3D11BackBuffer(IntPtr handle)
+        
+        public ComPointer(IntPtr handle)
         {
             Handle = handle;
         }

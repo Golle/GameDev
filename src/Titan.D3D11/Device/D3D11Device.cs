@@ -22,13 +22,13 @@ namespace Titan.D3D11.Device
             Context = context;
         }
 
-        public ID3D11RenderTargetView CreateRenderTargetView(ID3D11BackBuffer backBuffer)
+        public ID3D11RenderTargetView CreateRenderTargetView(ID3D11Resource resource)
         {
             HRESULT result;
             IntPtr renderTargetView;
             unsafe
             {
-                result = D3D11DeviceBindings.D3D11CreateRenderTargetView_(_handle, backBuffer.Handle, (D3D11RenderTargetViewDesc*)null, out renderTargetView);
+                result = D3D11DeviceBindings.D3D11CreateRenderTargetView_(_handle, resource.Handle, (D3D11RenderTargetViewDesc*)null, out renderTargetView);
             }
             if (result.Failed)
             {

@@ -4,32 +4,26 @@ using Titan.D3D11.Bindings;
 
 namespace Titan.D3D11.Device
 {
-    internal class D3D11SwapChain : ID3D11SwapChain
+    internal class D3D11SwapChain : ComPointer, ID3D11SwapChain
     {
-        private readonly IntPtr _handle;
-        public D3D11SwapChain(IntPtr handle)
+        public D3D11SwapChain(IntPtr handle) 
+            : base(handle)
         {
-            _handle = handle;
         }
 
-        public void Dispose()
+        public ID3D11Resource GetBuffer(uint buffer, Guid riid)
         {
-            D3D11CommonBindings.ReleaseComObject(_handle);
-        }
-
-        public ID3D11BackBuffer GetBuffer(uint buffer, Guid riid)
-        {
-            var result = D3D11SwapChainBindings.GetBuffer(_handle, buffer, riid, out var backBuffer);
+            var result = D3D11SwapChainBindings.GetBuffer(Handle, buffer, riid, out var backBuffer);
             if (result.Failed)
             {
                 throw new Win32Exception((int)result.Code, "SwapChain GetBuffer failed");
             }
-            return new D3D11BackBuffer(backBuffer);
+            return new D3D11Resource(backBuffer);
         }
 
         public void Present(bool vSync = true)
         {
-            D3D11SwapChainBindings.Present(_handle, vSync ? 1u : 0u, 0);
+            D3D11SwapChainBindings.Present(Handle, vSync ? 1u : 0u, 0);
         }
     }
 }
