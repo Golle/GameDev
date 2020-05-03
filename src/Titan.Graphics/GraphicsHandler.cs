@@ -63,36 +63,58 @@ namespace Titan.Graphics
         {
             public float X;
             public float Y;
+            public float R;
+            public float G;
+            public float B;
         }
 
 
         public unsafe void DrawTestTriangle()
         {
 
-            var vertices = new Vertex[3];
-
-            vertices[0] = new Vertex { X = 0f, Y = 0.5f };
-            vertices[1] = new Vertex { X = 0.5f, Y = -0.5f };
-            vertices[2] = new Vertex { X = -0.5f, Y = -0.5f };
-
+            var vertices = new[]
+            {
+                new Vertex {X = -0.5f, Y = 0.5f, R = 1f},
+                new Vertex {X = 0.5f, Y = 0.5f, G = 1f},
+                new Vertex {X = 0.5f, Y = -0.5f, B = 1f},
+                new Vertex {X = -0.5f, Y = -0.5f, G = 1f, B = 1f}
+            };
             D3D11SubresourceData resourceData = default;
-
             fixed (void* p = vertices)
             {
                 resourceData.pSysMem = p;
             }
-
             D3D11BufferDesc desc = default;
             desc.BindFlags = D3D11BindFlag.VertexBuffer;
             desc.Usage = D3D11Usage.Default;
             desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified;
             desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
-            desc.ByteWidth = 3 * 4 * 2;
-            desc.StructureByteStride = 2 * 4;
-
-
+            desc.ByteWidth = (uint) (vertices.Length * (4 * 2 + 3*4));
+            desc.StructureByteStride = 2 * 4 + 3 * 4;
             using var buffer = _device.CreateBuffer(desc, resourceData);
             _device.Context.SetVertexBuffer(0, buffer, desc.StructureByteStride, 0u);
+
+            // index buffer
+            var indices = new short[]
+            {
+                0,1,2,
+                2,3,0
+            };
+            D3D11SubresourceData indicesResourceData = default;
+            fixed (void* p = indices)
+            {
+                indicesResourceData.pSysMem = p;
+            }
+            D3D11BufferDesc indexDesc = default;
+            indexDesc.BindFlags = D3D11BindFlag.IndexBuffer;
+            indexDesc.Usage = D3D11Usage.Default;
+            indexDesc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified;
+            indexDesc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
+            indexDesc.ByteWidth = (uint) (indices.Length * sizeof(short));
+            indexDesc.StructureByteStride = sizeof(short);
+            using var indexBuffer = _device.CreateBuffer(indexDesc, indicesResourceData);
+            _device.Context.SetIndexBuffer(indexBuffer, DxgiFormat.R16Uint, 0u);
+
 
 
             using var vertexShaderBlob = _d3DCommon.ReadFileToBlob("Shaders/VertexShader.cso");
@@ -115,6 +137,16 @@ namespace Titan.Graphics
                     AlignedByteOffset = 0,
                     InstanceDataStepRate = 0,
                     InputSlotClass = D3D11InputClassification.PerVertexData
+                },
+                new D3D11InputElementDesc
+                {
+                    SemanticName = "COLOR",
+                    SemanticIndex = 0,
+                    Format = DxgiFormat.R32G32B32Float,
+                    InputSlot = 0,
+                    AlignedByteOffset = 8u,
+                    InstanceDataStepRate = 0,
+                    InputSlotClass = D3D11InputClassification.PerVertexData
                 }
             };
 
@@ -134,7 +166,8 @@ namespace Titan.Graphics
 
             _device.Context.SetViewport(viewport);
 
-            _device.Context.Draw((uint) vertices.Length, 0);
+            //_device.Context.Draw((uint) vertices.Length, 0);
+            _device.Context.DrawIndexed((uint) indices.Length, 0, 0);
 
         }
 

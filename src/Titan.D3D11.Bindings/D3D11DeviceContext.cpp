@@ -84,3 +84,23 @@ EXTERN_C DLLEXPORT void DeviceContextIASetInputLayout_(
 {
 	context->IASetInputLayout(pInputLayout);
 }
+
+EXTERN_C DLLEXPORT void IASetIndexBuffer_(
+	ID3D11DeviceContext* context,
+	ID3D11Buffer* indexBuffer,
+	DXGI_FORMAT format,
+	UINT offset
+)
+{
+	context->IASetIndexBuffer(indexBuffer, format, offset);
+}
+
+EXTERN_C DLLEXPORT void DrawIndexed_(
+	ID3D11DeviceContext* context,
+	UINT indexCount,
+	UINT startIndexLocation,
+	INT  baseVertexLocation
+) 
+{
+	context->DrawIndexed(indexCount, startIndexLocation, baseVertexLocation);
+}

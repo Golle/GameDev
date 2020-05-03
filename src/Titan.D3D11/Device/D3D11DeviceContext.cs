@@ -55,5 +55,15 @@ namespace Titan.D3D11.Device
         {
             D3D11DeviceContextBindings.DeviceContextIASetInputLayout_(Handle, inputLayout.Handle);
         }
+
+        public void SetIndexBuffer(ID3D11Buffer buffer, DxgiFormat format, uint offset)
+        {
+            D3D11DeviceContextBindings.IASetIndexBuffer_(Handle, buffer.Handle, format, offset);
+        }
+
+        public void DrawIndexed(uint indexCount, uint startIndexLocation, int baseVertexLocation)
+        {
+            D3D11DeviceContextBindings.DrawIndexed_(Handle, indexCount, startIndexLocation, baseVertexLocation);
+        }
     }
 }

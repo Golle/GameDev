@@ -75,5 +75,21 @@ namespace Titan.D3D11.Bindings
             [In] IntPtr context,
             [In] IntPtr inputLayout
         );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern void IASetIndexBuffer_(
+            [In] IntPtr handle,
+            [In] IntPtr indexBuffer,
+            [In] DxgiFormat format,
+            [In] uint offset
+        );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern void DrawIndexed_(
+            [In] IntPtr context,
+            [In] uint indexCount,
+            [In] uint startIndexLocation,
+            [In] int baseVertexLocation
+        );
     }
 }

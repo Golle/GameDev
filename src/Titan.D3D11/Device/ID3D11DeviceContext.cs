@@ -14,5 +14,7 @@ namespace Titan.D3D11.Device
         void SetViewport(in D3D11Viewport viewport);
         void SetPrimitiveTopology(D3D11PrimitiveTopology topology);
         void SetInputLayout(ID3D11InputLayout inputLayout);
+        void SetIndexBuffer(ID3D11Buffer buffer, DxgiFormat format, uint offset);
+        void DrawIndexed(uint indexCount, uint startIndexLocation, int baseVertexLocation);
     }
 }
