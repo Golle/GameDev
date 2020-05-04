@@ -16,5 +16,6 @@ namespace Titan.D3D11.Device
         void SetInputLayout(ID3D11InputLayout inputLayout);
         void SetIndexBuffer(ID3D11Buffer buffer, DxgiFormat format, uint offset);
         void DrawIndexed(uint indexCount, uint startIndexLocation, int baseVertexLocation);
+        void SetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer);
     }
 }

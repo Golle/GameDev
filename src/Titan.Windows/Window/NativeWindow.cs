@@ -17,6 +17,8 @@ namespace Titan.Windows.Window
         public User32.WndProcDelegate WindowProcedureDelegate { get; }
         
         private readonly IEventManager _eventManager;
+
+        private POINT _mousePosition = default;
         public NativeWindow(int width, int height, IEventManager eventManager)
         {
             _eventManager = eventManager;
@@ -51,7 +53,27 @@ namespace Titan.Windows.Window
                 User32.TranslateMessage(ref msg);
                 User32.DispatchMessage(ref msg);
             }
+            UpdateMousePosition();
             return true;
+        }
+
+        private void UpdateMousePosition()
+        {
+            if (!User32.GetCursorPos(out var point))
+            {
+                return;
+            }
+
+            if (!User32.ScreenToClient(Handle, ref point))
+            {
+                return;
+            }
+
+            if (_mousePosition.X != point.X || _mousePosition.Y != point.Y)
+            {
+                _mousePosition = point;
+                _eventManager.PublishImmediate(new MouseMovedEvent(_mousePosition.X, _mousePosition.Y));
+            }
         }
 
         internal IntPtr WindowProcedure(IntPtr hWnd, WindowsMessage message, UIntPtr wParam, UIntPtr lParam)
@@ -79,9 +101,11 @@ namespace Titan.Windows.Window
 
                 // Mouse events, we can use wParam to read the state for mouse buttons. Might be better?
 
-                case WindowsMessage.WM_MOUSEMOVE:
-                    _eventManager.Publish(new MouseMovedEvent(GetMouseCoordinates((int)lParam)));
-                    break;
+
+                // VM_MOSEMOVE is slow, look at GetCursorPos and ScreenToClient
+                //case WindowsMessage.WM_MOUSEMOVE:
+                //    _eventManager.Publish(new MouseMovedEvent(GetMouseCoordinates((int)lParam)));
+                //    break;
                 case WindowsMessage.WM_LBUTTONDOWN:
                     _eventManager.Publish(new MouseLeftButtonPressedEvent(GetMouseCoordinates((int)lParam)));
                     break;

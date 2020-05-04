@@ -95,6 +95,18 @@ EXTERN_C DLLEXPORT void IASetIndexBuffer_(
 	context->IASetIndexBuffer(indexBuffer, format, offset);
 }
 
+EXTERN_C DLLEXPORT void VSSetConstantBuffers_(
+	ID3D11DeviceContext* context,
+	UINT startSlot,
+	UINT numBuffers, 
+	ID3D11Buffer * const * ppConstantBuffers
+)
+{
+	context->VSSetConstantBuffers(startSlot, numBuffers, ppConstantBuffers);
+}
+
+
+
 EXTERN_C DLLEXPORT void DrawIndexed_(
 	ID3D11DeviceContext* context,
 	UINT indexCount,

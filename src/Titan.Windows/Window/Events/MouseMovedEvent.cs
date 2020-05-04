@@ -8,6 +8,11 @@ namespace Titan.Windows.Window.Events
         public int X { get; }
         public int Y { get; }
 
+        public MouseMovedEvent(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
         public MouseMovedEvent((int x, int y) position)
         {
            (X, Y) = position;

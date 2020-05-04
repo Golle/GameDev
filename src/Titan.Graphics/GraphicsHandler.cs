@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using Titan.Core.EventSystem;
 using Titan.D3D11;
@@ -38,12 +39,13 @@ namespace Titan.Graphics
                 Title = title, 
                 Width = width
             });
+
             _device = _d3D11DeviceFactory
                 .Create(new CreateDeviceArguments
                 {
                     Adapter = IntPtr.Zero,
                     RefreshRate = 144, 
-                    Debug = true,
+                    Debug = false,
                     Window = _window
                 });
 
@@ -58,7 +60,7 @@ namespace Titan.Graphics
             return true;
         }
 
-        [StructLayout(LayoutKind.Sequential, Size = 8)]
+        [StructLayout(LayoutKind.Sequential)]
         public struct Vertex
         {
             public float X;
@@ -68,7 +70,13 @@ namespace Titan.Graphics
             public float B;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct ConstantBuffer
+        {
+            public Matrix4x4 Transformation;
+        }
 
+        private float _angle;
         public unsafe void DrawTestTriangle()
         {
 
@@ -115,6 +123,16 @@ namespace Titan.Graphics
             using var indexBuffer = _device.CreateBuffer(indexDesc, indicesResourceData);
             _device.Context.SetIndexBuffer(indexBuffer, DxgiFormat.R16Uint, 0u);
 
+
+            if (_inputManager.Keyboard.IsKeyDown(KeyCode.Up))
+            {
+                _angle += 0.01f;
+            }
+
+            if (_inputManager.Keyboard.IsKeyDown(KeyCode.Down))
+            {
+                _angle -= 0.01f;
+            }
 
 
             using var vertexShaderBlob = _d3DCommon.ReadFileToBlob("Shaders/VertexShader.cso");
@@ -165,6 +183,37 @@ namespace Titan.Graphics
             viewport.MaxDepth = 1;
 
             _device.Context.SetViewport(viewport);
+
+
+            _window.Update();
+            var mousePosition = _inputManager.Mouse.Position;
+            ConstantBuffer cb = default;
+
+            var x = mousePosition.X / (_window.Width / 2f) - 1;
+            var y = -mousePosition.Y / (_window.Height / 2f) + 1;
+            cb.Transformation =
+                Matrix4x4.Transpose(
+                    Matrix4x4.CreateRotationZ(_angle) *
+                    Matrix4x4.CreateScale(3f / 4f, 1f, 1f) *
+                    Matrix4x4.CreateTranslation(x, y, 0f)
+                );
+
+
+            D3D11BufferDesc constantBufferDesc;
+            constantBufferDesc.BindFlags = D3D11BindFlag.ConstantBuffer;
+            constantBufferDesc.Usage = D3D11Usage.Dynamic;
+            constantBufferDesc.CpuAccessFlags = D3D11CpuAccessFlag.Write;
+            constantBufferDesc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
+            constantBufferDesc.ByteWidth = (uint)sizeof(Matrix4x4);
+            constantBufferDesc.StructureByteStride = 0;
+
+            D3D11SubresourceData constantBufferResource = default;
+            constantBufferResource.pSysMem = &cb;
+            using var constantBuffer = _device.CreateBuffer(constantBufferDesc, constantBufferResource);
+
+            _device.Context.SetConstantBuffer(0, constantBuffer);
+
+
 
             //_device.Context.Draw((uint) vertices.Length, 0);
             _device.Context.DrawIndexed((uint) indices.Length, 0, 0);

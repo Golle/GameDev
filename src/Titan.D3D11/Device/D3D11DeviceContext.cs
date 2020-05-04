@@ -65,5 +65,10 @@ namespace Titan.D3D11.Device
         {
             D3D11DeviceContextBindings.DrawIndexed_(Handle, indexCount, startIndexLocation, baseVertexLocation);
         }
+
+        public void SetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer)
+        {
+            D3D11DeviceContextBindings.VSSetConstantBuffers_(Handle, startSlot, 1, constantBuffer.Handle);
+        }
     }
 }

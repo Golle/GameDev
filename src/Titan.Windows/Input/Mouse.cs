@@ -1,4 +1,6 @@
-﻿using Titan.Core.EventSystem;
+using System;
+using Titan.Core.EventSystem;
+using Titan.Windows.Win32;
 using Titan.Windows.Window.Events;
 
 namespace Titan.Windows.Input
@@ -57,6 +59,7 @@ namespace Titan.Windows.Input
 
         public void Update()
         {
+
             // noop at the moment
         }
     }

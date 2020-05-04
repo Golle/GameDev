@@ -26,7 +26,7 @@ namespace Titan.D3D11.Bindings
             [In] IntPtr context,
             [In] uint startSlot,
             [In] uint numBuffers,
-            [In] in IntPtr ppVertexbuffers,
+            [In] in IntPtr ppVertexbuffers, // this is a list of buffers, replace with IntPtr[] when we need it
             [In] in uint pStrides,
             [In] in uint pOffsets
         );
@@ -85,11 +85,21 @@ namespace Titan.D3D11.Bindings
         );
 
         [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern void VSSetConstantBuffers_(
+            [In] IntPtr handle,
+            [In] uint startSlot,
+            [In] uint numBuffers,
+            [In] in IntPtr ppConstantBuffers // this is a list of buffers, replace with IntPtr[] when we need it
+        );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
         public static extern void DrawIndexed_(
             [In] IntPtr context,
             [In] uint indexCount,
             [In] uint startIndexLocation,
             [In] int baseVertexLocation
         );
+
+
     }
 }
