@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using Titan.Core.EventSystem;
 using Titan.Windows.Input;
 using Titan.Windows.Win32;
@@ -13,18 +14,23 @@ namespace Titan.Windows.Window
         public int Height { get; }
         public bool Windowed => true; // This will change later
         
-        // Create a delegate that have the same lifetime as the native window to prevent the GC to move it
-        public User32.WndProcDelegate WindowProcedureDelegate { get; }
-        
+        public IntPtr WindowProcedureFunctionPointer { get; }
+
         private readonly IEventManager _eventManager;
 
         private POINT _mousePosition = default;
+
+        // Create a delegate that have the same lifetime as the native window to prevent the GC to move it
+        private User32.WndProcDelegate _windowProcedureDelegate;
+        private GCHandle _windowsProcedureHandle;
         public NativeWindow(int width, int height, IEventManager eventManager)
         {
             _eventManager = eventManager;
             Width = width;
             Height = height;
-            WindowProcedureDelegate = WindowProcedure;
+            _windowProcedureDelegate = WindowProcedure;
+            WindowProcedureFunctionPointer = Marshal.GetFunctionPointerForDelegate((User32.WndProcDelegate)WindowProcedure);
+            _windowsProcedureHandle = GCHandle.Alloc(WindowProcedureFunctionPointer, GCHandleType.Pinned);
         }
 
         public void SetTitle(string title)
@@ -151,6 +157,10 @@ namespace Titan.Windows.Window
 
         public void Dispose()
         {
+            if (_windowsProcedureHandle.IsAllocated)
+            {
+                _windowsProcedureHandle.Free();
+            }
             User32.DestroyWindow(Handle);
         }
     }

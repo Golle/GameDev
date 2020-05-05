@@ -1,6 +1,6 @@
 #include "common.h"
 
-EXTERN_C DLLEXPORT HRESULT D3D11SwapChainGetBuffer_(
+EXTERN_C DLLEXPORT HRESULT GetBuffer_(
 	IDXGISwapChain* swapChain,
 	UINT   buffer,
 	REFIID riid,

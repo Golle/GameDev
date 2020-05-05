@@ -10,9 +10,6 @@ namespace Titan.Windows.Window
     {
         private readonly IEventManager _eventManager;
 
-        // Prevent the delegate from being garbage collected
-        private static readonly User32.WndProcDelegate DefaultWindowProcedure = User32.DefWindowProcA;
-
         public WindowCreator(IEventManager eventManager)
         {
             _eventManager = eventManager;
@@ -21,15 +18,13 @@ namespace Titan.Windows.Window
         public IWindow CreateWindow(CreateWindowArguments arguments)
         {
             var nativeWindow = new NativeWindow(arguments.Width, arguments.Height, _eventManager);
-            var windowProcedure = Marshal.GetFunctionPointerForDelegate(nativeWindow.WindowProcedureDelegate);
-            GCHandle.Alloc(windowProcedure, GCHandleType.Pinned);
             var wndClassExA = new WNDCLASSEXA
             {
                 CbClsExtra = 0,
                 CbSize = Marshal.SizeOf<WNDCLASSEXA>(),
                 HCursor = IntPtr.Zero,
                 HIcon = IntPtr.Zero,
-                LpFnWndProc = windowProcedure,
+                LpFnWndProc = nativeWindow.WindowProcedureFunctionPointer,
                 CbWndExtra = 0,
                 HIconSm = IntPtr.Zero,
                 HInstance = Marshal.GetHINSTANCE(GetType().Module),

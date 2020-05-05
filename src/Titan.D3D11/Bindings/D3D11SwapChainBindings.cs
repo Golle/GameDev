@@ -6,7 +6,7 @@ namespace Titan.D3D11.Bindings
 {
     internal class D3D11SwapChainBindings
     {
-        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true, EntryPoint = "D3D11SwapChainGetBuffer_")]
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true, EntryPoint = "GetBuffer_")]
         internal static extern HRESULT GetBuffer(
             [In] IntPtr swapChain,
             [In] uint buffer,
