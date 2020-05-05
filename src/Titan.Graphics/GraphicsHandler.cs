@@ -65,6 +65,7 @@ namespace Titan.Graphics
         {
             public float X;
             public float Y;
+            public float Z;
             public float R;
             public float G;
             public float B;
@@ -76,16 +77,47 @@ namespace Titan.Graphics
             public Matrix4x4 Transformation;
         }
 
+        /*
+         *CreateOrthographic
+            CreateOrthographicOffCenter
+            CreatePerspective
+            CreatePerspectiveOffCenter
+            CreatePerspectiveFieldOfView
+            CreateLookAt
+         *
+         */
+        public static Matrix4x4 CreatePerspectiveLH1(float width, float height, float nearPlaneDistance, float farPlaneDistance)
+        {
+            Matrix4x4 matrix = default;
+            matrix.M11 = 2 * nearPlaneDistance / width;
+            matrix.M22 = 2 * nearPlaneDistance / height;
+            matrix.M33 = farPlaneDistance / (farPlaneDistance - nearPlaneDistance);
+            matrix.M34 = 1f;
+            matrix.M43 = nearPlaneDistance * farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
+            return matrix;
+
+        }
+
+        public unsafe struct TestStru
+        {
+            public fixed float Colors[4];
+        }
+
+
         private float _angle;
         public unsafe void DrawTestTriangle()
         {
 
             var vertices = new[]
             {
-                new Vertex {X = -0.5f, Y = 0.5f, R = 1f},
-                new Vertex {X = 0.5f, Y = 0.5f, G = 1f},
-                new Vertex {X = 0.5f, Y = -0.5f, B = 1f},
-                new Vertex {X = -0.5f, Y = -0.5f, G = 1f, B = 1f}
+                new Vertex {X = -1f, Y = -1f, Z = -1f, R = 1f},
+                new Vertex {X = 1f, Y = -1f, Z = -1f, G = 1f},
+                new Vertex {X = -1f, Y = 1f, Z = -1f, B = 1f},
+                new Vertex {X = 1f, Y = 1f, Z = -1f, R = 1f},
+                new Vertex {X = -1f, Y = -1f, Z = 1f, G = 1f},
+                new Vertex {X = 1f, Y = -1f, Z = 1f, B = 1f},
+                new Vertex {X = -1f, Y = 1f, Z = 1f, R = 1f},
+                new Vertex {X = 1f, Y = 1f, Z = 1f, G = 1f},
             };
             D3D11SubresourceData resourceData = default;
             fixed (void* p = vertices)
@@ -97,16 +129,20 @@ namespace Titan.Graphics
             desc.Usage = D3D11Usage.Default;
             desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified;
             desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
-            desc.ByteWidth = (uint) (vertices.Length * (4 * 2 + 3*4));
-            desc.StructureByteStride = 2 * 4 + 3 * 4;
+            desc.ByteWidth = (uint) (vertices.Length * (3 * sizeof(float) + 3 * sizeof(float)));
+            desc.StructureByteStride = 3 * sizeof(float) + 3 * sizeof(float);
             using var buffer = _device.CreateBuffer(desc, resourceData);
             _device.Context.SetVertexBuffer(0, buffer, desc.StructureByteStride, 0u);
 
             // index buffer
             var indices = new short[]
             {
-                0,1,2,
-                2,3,0
+                0,2,1,  2,3,1,
+                1,3,5,  3,7,5,
+                2,6,3,  3,6,7,
+                4,5,7,  4,7,6,
+                0,4,2,  2,4,6,
+                0,1,4,  1,5,4
             };
             D3D11SubresourceData indicesResourceData = default;
             fixed (void* p = indices)
@@ -124,9 +160,9 @@ namespace Titan.Graphics
             _device.Context.SetIndexBuffer(indexBuffer, DxgiFormat.R16Uint, 0u);
 
 
-            if (_inputManager.Keyboard.IsKeyDown(KeyCode.Up))
+            //if (_inputManager.Keyboard.IsKeyDown(KeyCode.Up))
             {
-                _angle += 0.01f;
+                _angle += 0.02f;
             }
 
             if (_inputManager.Keyboard.IsKeyDown(KeyCode.Down))
@@ -150,7 +186,7 @@ namespace Titan.Graphics
                 {
                     SemanticName = "POSITION",
                     SemanticIndex = 0,
-                    Format = DxgiFormat.R32G32Float,
+                    Format = DxgiFormat.R32G32B32Float,
                     InputSlot = 0,
                     AlignedByteOffset = 0,
                     InstanceDataStepRate = 0,
@@ -162,7 +198,7 @@ namespace Titan.Graphics
                     SemanticIndex = 0,
                     Format = DxgiFormat.R32G32B32Float,
                     InputSlot = 0,
-                    AlignedByteOffset = 8u,
+                    AlignedByteOffset = 12u,
                     InstanceDataStepRate = 0,
                     InputSlotClass = D3D11InputClassification.PerVertexData
                 }
@@ -191,11 +227,13 @@ namespace Titan.Graphics
 
             var x = mousePosition.X / (_window.Width / 2f) - 1;
             var y = -mousePosition.Y / (_window.Height / 2f) + 1;
+            var perspectiveLh = CreatePerspectiveLH1(1f, 3f/4f, 0.5f, 10f);
             cb.Transformation =
                 Matrix4x4.Transpose(
                     Matrix4x4.CreateRotationZ(_angle) *
-                    Matrix4x4.CreateScale(3f / 4f, 1f, 1f) *
-                    Matrix4x4.CreateTranslation(x, y, 0f)
+                    Matrix4x4.CreateRotationX(_angle) *
+                    Matrix4x4.CreateTranslation(x, y, 4f) *
+                    perspectiveLh
                 );
 
 
