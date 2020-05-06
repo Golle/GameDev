@@ -21,14 +21,19 @@ namespace Titan.D3D11.Device
             D3D11DeviceContextBindings.DeviceContextDraw_(Handle, vertexCount, startLocation);
         }
 
-        public void SetRenderTargets(ID3D11RenderTargetView renderTarget)
+        public void OMSetRenderTargets(ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencil)
         {
-            D3D11DeviceContextBindings.DeviceContextOMSetRenderTargets_(Handle, 1, new[]{renderTarget.Handle}, IntPtr.Zero);
+            D3D11DeviceContextBindings.DeviceContextOMSetRenderTargets_(Handle, 1, new[]{ renderTarget.Handle}, depthStencil?.Handle ?? IntPtr.Zero);
         }
 
         public void ClearRenderTargetView(ID3D11RenderTargetView renderTarget, in Color color)
         {
             D3D11DeviceContextBindings.ClearRenderTargetView(Handle, renderTarget.Handle, color);
+        }
+
+        public void ClearDepthStencilView(ID3D11DepthStencilView depthStencilView, D3D11ClearFlag clearFlags, float depth, sbyte stencil)
+        {
+            D3D11DeviceContextBindings.ClearDepthStencilView_(Handle,depthStencilView.Handle, clearFlags, depth, stencil);
         }
 
         public void SetVertexShader(ID3D11VertexShader vertexShader)
@@ -66,9 +71,19 @@ namespace Titan.D3D11.Device
             D3D11DeviceContextBindings.DrawIndexed_(Handle, indexCount, startIndexLocation, baseVertexLocation);
         }
 
-        public void SetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer)
+        public void VSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer)
         {
             D3D11DeviceContextBindings.VSSetConstantBuffers_(Handle, startSlot, 1, constantBuffer.Handle);
+        }
+        
+        public void PSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer)
+        {
+            D3D11DeviceContextBindings.PSSetConstantBuffers_(Handle, startSlot, 1, constantBuffer.Handle);
+        }
+
+        public void OMSetDepthStencilState(ID3D11DepthStencilState stencilState, uint stencilRef)
+        {
+            D3D11DeviceContextBindings.OMSetDepthStencilState_(Handle, stencilState.Handle, stencilRef);
         }
     }
 }

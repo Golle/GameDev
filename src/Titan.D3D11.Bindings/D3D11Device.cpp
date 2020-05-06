@@ -87,3 +87,33 @@ EXTERN_C DLLEXPORT HRESULT D3D11CreateInputLayout_(
 {
 	return device->CreateInputLayout(pInputElementDescs, NumElements, pShaderBytecodeWithInputSignature, bytecodeLength, ppInputLayout);
 }
+
+EXTERN_C DLLEXPORT HRESULT CreateDepthStencilState_(
+	ID3D11Device* device,
+	const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc,
+	ID3D11DepthStencilState** ppDepthStencilState
+)
+{
+	return device->CreateDepthStencilState(pDepthStencilDesc, ppDepthStencilState);
+}
+
+EXTERN_C DLLEXPORT HRESULT CreateTexture2D_(
+	ID3D11Device* device,
+	const D3D11_TEXTURE2D_DESC* pDesc,
+	const D3D11_SUBRESOURCE_DATA* pInitialData,
+	ID3D11Texture2D** ppTexture2D
+) 
+{
+	return device->CreateTexture2D(pDesc, pInitialData, ppTexture2D);
+}
+
+
+EXTERN_C DLLEXPORT HRESULT CreateDepthStencilView_(
+	ID3D11Device* device,
+	ID3D11Resource* pResource,
+	const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc,
+	ID3D11DepthStencilView** ppDepthStencilView
+)
+{
+	return device->CreateDepthStencilView(pResource, pDesc, ppDepthStencilView);
+}

@@ -20,6 +20,17 @@ EXTERN_C DLLEXPORT void DeviceContextClearRenderTargetView_(
 	context->ClearRenderTargetView(pRenderTargetView, ColorRGBA);
 }
 
+EXTERN_C DLLEXPORT void ClearDepthStencilView_(
+	ID3D11DeviceContext* context,
+	ID3D11DepthStencilView* pDepthStencilView,
+	UINT ClearFlags,
+	FLOAT Depth,
+	UINT8 Stencil
+)
+{
+	context->ClearDepthStencilView(pDepthStencilView, ClearFlags, Depth, Stencil);
+}
+
 EXTERN_C DLLEXPORT void DeviceContextIASetVertexBuffers_(
 	ID3D11DeviceContext* context,
 	UINT startSlot,
@@ -105,6 +116,16 @@ EXTERN_C DLLEXPORT void VSSetConstantBuffers_(
 	context->VSSetConstantBuffers(startSlot, numBuffers, ppConstantBuffers);
 }
 
+EXTERN_C DLLEXPORT void PSSetConstantBuffers_(
+	ID3D11DeviceContext* context,
+	UINT startSlot,
+	UINT numBuffers, 
+	ID3D11Buffer * const * ppConstantBuffers
+)
+{
+	context->PSSetConstantBuffers(startSlot, numBuffers, ppConstantBuffers);
+}
+
 
 
 EXTERN_C DLLEXPORT void DrawIndexed_(
@@ -115,4 +136,13 @@ EXTERN_C DLLEXPORT void DrawIndexed_(
 ) 
 {
 	context->DrawIndexed(indexCount, startIndexLocation, baseVertexLocation);
+}
+
+EXTERN_C DLLEXPORT void OMSetDepthStencilState_(
+	ID3D11DeviceContext* context,
+	ID3D11DepthStencilState* pDepthStencilState,
+	UINT stencilRef
+) 
+{
+	context->OMSetDepthStencilState(pDepthStencilState, stencilRef);
 }

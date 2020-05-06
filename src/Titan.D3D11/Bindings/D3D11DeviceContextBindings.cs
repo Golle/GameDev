@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using Titan.D3D11.Bindings.Models;
-using Titan.D3D11.Device;
 
 namespace Titan.D3D11.Bindings
 {
@@ -20,6 +19,16 @@ namespace Titan.D3D11.Bindings
             [In] IntPtr pRenderTargetView, 
             [In] Color color
             );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern void ClearDepthStencilView_(
+            [In] IntPtr context,
+            [In] IntPtr pDepthStencilView,
+            [In] D3D11ClearFlag clearFlags,
+            [In] float depth,
+            [In] sbyte stencil
+        );
+
 
         [DllImport(Constants.D3D11Dll, SetLastError = true)]
         public static extern void DeviceContextIASetVertexBuffers_(
@@ -91,6 +100,22 @@ namespace Titan.D3D11.Bindings
             [In] uint numBuffers,
             [In] in IntPtr ppConstantBuffers // this is a list of buffers, replace with IntPtr[] when we need it
         );
+        
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern void PSSetConstantBuffers_(
+            [In] IntPtr handle,
+            [In] uint startSlot,
+            [In] uint numBuffers,
+            [In] in IntPtr ppConstantBuffers // this is a list of buffers, replace with IntPtr[] when we need it
+        );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern void OMSetDepthStencilState_(
+            [In] IntPtr handle,
+            [In] IntPtr pDepthStencilState,
+            [In] uint stencilRef
+        );
+
 
         [DllImport(Constants.D3D11Dll, SetLastError = true)]
         public static extern void DrawIndexed_(

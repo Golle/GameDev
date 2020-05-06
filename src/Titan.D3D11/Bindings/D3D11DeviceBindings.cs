@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using Titan.D3D11.Bindings.Models;
+using Titan.D3D11.Device;
 using Titan.Windows;
 
 namespace Titan.D3D11.Bindings
@@ -79,6 +80,28 @@ namespace Titan.D3D11.Bindings
             [In] IntPtr compiledShader,
             [In] UIntPtr byteCodeLength,
             [Out] out IntPtr ppInputLayout
+        );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern unsafe HRESULT CreateDepthStencilState_(
+            [In] IntPtr device,
+            [In] D3D11DepthStencilDesc* pDepthStencilDesc,
+            [Out] out IntPtr ppDepthStencilState
+        );
+
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern unsafe HRESULT CreateTexture2D_(
+            [In] IntPtr device,
+            [In] D3D11Texture2DDesc* pDesc,
+            [In] D3D11SubresourceData* pInitialData,
+            [Out] out IntPtr ppTexture2D
+        );
+        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        public static extern unsafe HRESULT CreateDepthStencilView_(
+            [In] IntPtr device,
+            [In] IntPtr pResource,
+            [In] D3D11DepthStencilViewDesc* pDesc,
+            [Out] out IntPtr ppDepthStencilView
         );
     }
 

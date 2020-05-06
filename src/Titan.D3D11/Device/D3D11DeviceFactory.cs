@@ -11,7 +11,8 @@ namespace Titan.D3D11.Device
         public ID3D11Device Create(CreateDeviceArguments arguments)
         {
             DxgiSwapChainDesc desc = default;
-            desc.BufferCount = 2;
+            //desc.BufferCount = 2;   // how do I use this with depth stencil?
+            desc.BufferCount = 1;
             desc.BufferDesc.Width = (uint) arguments.Window.Width;
             desc.BufferDesc.Height = (uint) arguments.Window.Height;
             desc.BufferDesc.Format = DxgiFormat.R8G8B8A8Unorm;
@@ -26,7 +27,8 @@ namespace Titan.D3D11.Device
             desc.BufferUsage = DxgiUsage.RenderTargetOutput;
             desc.OutputWindow = arguments.Window.Handle;
             desc.Windowed = arguments.Window.Windowed ? 1 : 0;
-            desc.SwapEffect = DxgiSwapEffect.FlipDiscard;
+            desc.SwapEffect = DxgiSwapEffect.Discard;
+            //desc.SwapEffect = DxgiSwapEffect.FlipDiscard;    // how do I use this with depth stencil?
             desc.Flags = DxgiSwapChainFlag.AllowModeSwitch;
 
             HRESULT result;

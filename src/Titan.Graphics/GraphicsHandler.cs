@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Titan.Core.EventSystem;
@@ -7,6 +8,7 @@ using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.Device;
 using Titan.Windows.Input;
 using Titan.Windows.Window;
+using Color = Titan.D3D11.Color;
 
 namespace Titan.Graphics
 {
@@ -21,6 +23,7 @@ namespace Titan.Graphics
         private IWindow _window;
         private ID3D11Device _device;
         private ID3D11RenderTargetView _renderTarget;
+        private ID3D11DepthStencilView _depthStencilView;
 
         public GraphicsHandler(IWindowCreator windowCreator, ID3D11DeviceFactory d3D11DeviceFactory, IEventManager eventManager, IInputManager inputManager, ID3DCommon d3DCommon)
         {
@@ -49,12 +52,36 @@ namespace Titan.Graphics
                     Window = _window
                 });
 
-            using (var backBuffer = _device.SwapChain.GetBuffer(0, D3D11Resources.D3D11Resource))
-            {
-                _renderTarget = _device.CreateRenderTargetView(backBuffer);
-            }
+            using var backBuffer = _device.SwapChain.GetBuffer(0, D3D11Resources.D3D11Resource);
+            _renderTarget = _device.CreateRenderTargetView(backBuffer);
 
-            _device.Context.SetRenderTargets(_renderTarget);
+            D3D11DepthStencilDesc depthDesc = default;
+            depthDesc.DepthEnable = true;
+            depthDesc.DepthWriteMask = D3D11DepthWriteMask.All;
+            depthDesc.DepthFunc = D3D11ComparisonFunc.Less;
+            using var depthStencilState = _device.CreateDepthStencilState(depthDesc);
+            _device.Context.OMSetDepthStencilState(depthStencilState, 1u);
+
+
+            D3D11Texture2DDesc texture2DDesc = default;
+            texture2DDesc.Height = (uint)_window.Height;
+            texture2DDesc.Width = (uint) _window.Width;
+            texture2DDesc.MipLevels = 1u;
+            texture2DDesc.ArraySize = 1u;
+            texture2DDesc.Format = DxgiFormat.D32Float;
+            texture2DDesc.SampleDesc.Count = 1u;
+            texture2DDesc.SampleDesc.Quality = 0;
+            texture2DDesc.Usage = D3D11Usage.Default;
+            texture2DDesc.BindFlags = D3D11BindFlag.DepthStencil;
+            using var depthStencil = _device.CreateTexture2D(texture2DDesc);
+
+            D3D11DepthStencilViewDesc viewDesc = default;
+            viewDesc.Format = DxgiFormat.D32Float;
+            viewDesc.ViewDimension = D3D11DsvDimension.Texture2D;
+            viewDesc.Texture2D.MipSlice = 0u;
+            _depthStencilView = _device.CreateDepthStencilView(depthStencil, viewDesc);
+
+            _device.Context.OMSetRenderTargets(_renderTarget, _depthStencilView);
             _window.ShowWindow();
 
             return true;
@@ -66,9 +93,6 @@ namespace Titan.Graphics
             public float X;
             public float Y;
             public float Z;
-            public float R;
-            public float G;
-            public float B;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -98,26 +122,33 @@ namespace Titan.Graphics
 
         }
 
-        public unsafe struct TestStru
+
+        uint RGBAToUint(float r, float g, float b, float a = 1f)
         {
-            public fixed float Colors[4];
+            var red = (int)(r * 255);
+            var green = (int)(g * 255);
+            var blue = (int)(b * 255);
+            var alpha = (int)(a * 255);
+
+            return (uint) (alpha | (blue << 8) | (green << 16) | (red << 24));
         }
-
-
+        
         private float _angle;
-        public unsafe void DrawTestTriangle()
-        {
 
+
+        public unsafe void DrawTestTriangle(float x, float z, float angle)
+        {
+            
             var vertices = new[]
             {
-                new Vertex {X = -1f, Y = -1f, Z = -1f, R = 1f},
-                new Vertex {X = 1f, Y = -1f, Z = -1f, G = 1f},
-                new Vertex {X = -1f, Y = 1f, Z = -1f, B = 1f},
-                new Vertex {X = 1f, Y = 1f, Z = -1f, R = 1f},
-                new Vertex {X = -1f, Y = -1f, Z = 1f, G = 1f},
-                new Vertex {X = 1f, Y = -1f, Z = 1f, B = 1f},
-                new Vertex {X = -1f, Y = 1f, Z = 1f, R = 1f},
-                new Vertex {X = 1f, Y = 1f, Z = 1f, G = 1f},
+                new Vertex {X = -1f, Y = -1f, Z = -1f},
+                new Vertex {X = 1f, Y = -1f, Z = -1f},
+                new Vertex {X = -1f, Y = 1f, Z = -1f},
+                new Vertex {X = 1f, Y = 1f, Z = -1f},
+                new Vertex {X = -1f, Y = -1f, Z = 1f},
+                new Vertex {X = 1f, Y = -1f, Z = 1f},
+                new Vertex {X = -1f, Y = 1f, Z = 1f},
+                new Vertex {X = 1f, Y = 1f, Z = 1f},
             };
             D3D11SubresourceData resourceData = default;
             fixed (void* p = vertices)
@@ -129,8 +160,8 @@ namespace Titan.Graphics
             desc.Usage = D3D11Usage.Default;
             desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified;
             desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
-            desc.ByteWidth = (uint) (vertices.Length * (3 * sizeof(float) + 3 * sizeof(float)));
-            desc.StructureByteStride = 3 * sizeof(float) + 3 * sizeof(float);
+            desc.ByteWidth = (uint) (vertices.Length * 3 * sizeof(float));
+            desc.StructureByteStride = 3 * sizeof(float);
             using var buffer = _device.CreateBuffer(desc, resourceData);
             _device.Context.SetVertexBuffer(0, buffer, desc.StructureByteStride, 0u);
 
@@ -160,17 +191,6 @@ namespace Titan.Graphics
             _device.Context.SetIndexBuffer(indexBuffer, DxgiFormat.R16Uint, 0u);
 
 
-            //if (_inputManager.Keyboard.IsKeyDown(KeyCode.Up))
-            {
-                _angle += 0.02f;
-            }
-
-            if (_inputManager.Keyboard.IsKeyDown(KeyCode.Down))
-            {
-                _angle -= 0.01f;
-            }
-
-
             using var vertexShaderBlob = _d3DCommon.ReadFileToBlob("Shaders/VertexShader.cso");
             using var vertexShader = _device.CreateVertexShader(vertexShaderBlob);
             _device.Context.SetVertexShader(vertexShader);
@@ -192,23 +212,20 @@ namespace Titan.Graphics
                     InstanceDataStepRate = 0,
                     InputSlotClass = D3D11InputClassification.PerVertexData
                 },
-                new D3D11InputElementDesc
-                {
-                    SemanticName = "COLOR",
-                    SemanticIndex = 0,
-                    Format = DxgiFormat.R32G32B32Float,
-                    InputSlot = 0,
-                    AlignedByteOffset = 12u,
-                    InstanceDataStepRate = 0,
-                    InputSlotClass = D3D11InputClassification.PerVertexData
-                }
+                //new D3D11InputElementDesc
+                //{
+                //    SemanticName = "COLOR",
+                //    SemanticIndex = 0,
+                //    Format = DxgiFormat.R32G32B32Float,
+                //    InputSlot = 0,
+                //    AlignedByteOffset = 12u,
+                //    InstanceDataStepRate = 0,
+                //    InputSlotClass = D3D11InputClassification.PerVertexData
+                //}
             };
 
             using var inputLayout = _device.CreateInputLayout(elementDesc, vertexShaderBlob);
             _device.Context.SetInputLayout(inputLayout);
-
-
-            _device.Context.SetRenderTargets(_renderTarget);
             
             _device.Context.SetPrimitiveTopology(D3D11PrimitiveTopology.D3D11PrimitiveTopologyTrianglelist);
 
@@ -225,14 +242,12 @@ namespace Titan.Graphics
             var mousePosition = _inputManager.Mouse.Position;
             ConstantBuffer cb = default;
 
-            var x = mousePosition.X / (_window.Width / 2f) - 1;
-            var y = -mousePosition.Y / (_window.Height / 2f) + 1;
             var perspectiveLh = CreatePerspectiveLH1(1f, 3f/4f, 0.5f, 10f);
             cb.Transformation =
                 Matrix4x4.Transpose(
-                    Matrix4x4.CreateRotationZ(_angle) *
-                    Matrix4x4.CreateRotationX(_angle) *
-                    Matrix4x4.CreateTranslation(x, y, 4f) *
+                    Matrix4x4.CreateRotationZ(angle) *
+                    Matrix4x4.CreateRotationX(angle) *
+                    Matrix4x4.CreateTranslation(x, 0f, z+4f) *
                     perspectiveLh
                 );
 
@@ -249,7 +264,33 @@ namespace Titan.Graphics
             constantBufferResource.pSysMem = &cb;
             using var constantBuffer = _device.CreateBuffer(constantBufferDesc, constantBufferResource);
 
-            _device.Context.SetConstantBuffer(0, constantBuffer);
+            _device.Context.VSSetConstantBuffer(0, constantBuffer);
+
+
+            var colors = new[]
+            {
+                new Color(1, 0, 1),
+                new Color(1, 0, 0),
+                new Color(0, 1, 1),
+                new Color(0, 0, 1),
+                new Color(1, 1, 0),
+                new Color(0, 1, 1),
+            };
+
+            D3D11BufferDesc constantBufferDesc2;
+            constantBufferDesc2.BindFlags = D3D11BindFlag.ConstantBuffer;
+            constantBufferDesc2.Usage = D3D11Usage.Dynamic;
+            constantBufferDesc2.CpuAccessFlags = D3D11CpuAccessFlag.Write;
+            constantBufferDesc2.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
+            constantBufferDesc2.ByteWidth = (uint)(sizeof(float)* 4 * colors.Length);
+            constantBufferDesc2.StructureByteStride = 0;
+            D3D11SubresourceData constantBufferResource2 = default;
+            fixed (void* p = colors)
+            {
+                constantBufferResource2.pSysMem = p;
+            }
+            using var constantBuffer2 = _device.CreateBuffer(constantBufferDesc2, constantBufferResource2);
+            _device.Context.PSSetConstantBuffer(0, constantBuffer2);
 
 
 
@@ -289,8 +330,14 @@ namespace Titan.Graphics
             _window.SetTitle($"x: {mousePosition.X} y: {mousePosition.Y}, left: {mouse.LeftButtonDown}, right: {mouse.RightButtonDown}");
 
             _device.Context.ClearRenderTargetView(_renderTarget, color);
-
-            DrawTestTriangle();
+            _device.Context.ClearDepthStencilView(_depthStencilView, D3D11ClearFlag.Depth, 1f, 0);
+            
+            var x = mousePosition.X / (_window.Width / 2f) - 1;
+            var y = -mousePosition.Y / (_window.Height / 2f) + 1;
+            
+            _angle += 0.02f;
+            DrawTestTriangle(x, y, _angle);
+            DrawTestTriangle(0, 0, _angle * 2f);
 
             _device.SwapChain.Present(true);
 
@@ -299,6 +346,7 @@ namespace Titan.Graphics
 
         public void Dispose()
         {
+            _depthStencilView.Dispose();
             _renderTarget.Dispose();
             _device.Dispose();
         }

@@ -12,8 +12,6 @@ EXTERN_C DLLEXPORT HRESULT D3DReadFileToBlob_(
     ID3DBlob ** ppContents
 ) 
 {
-
-    
     return D3DReadFileToBlob(pFileName, ppContents);
 }
 

@@ -14,5 +14,8 @@ namespace Titan.D3D11.Device
         ID3D11VertexShader CreateVertexShader(ID3DBlob blob);
         ID3D11PixelShader CreatePixelShader(ID3DBlob blob);
         ID3D11InputLayout CreateInputLayout(in D3D11InputElementDesc[] desc, ID3DBlob blob);
+        ID3D11DepthStencilState CreateDepthStencilState(in D3D11DepthStencilDesc depthDesc);
+        ID3D11Texture2D CreateTexture2D(in D3D11Texture2DDesc texture2DDesc, D3D11SubresourceData? initialData = null);
+        ID3D11DepthStencilView CreateDepthStencilView(ID3D11Resource resource, in D3D11DepthStencilViewDesc desc);
     }
 }

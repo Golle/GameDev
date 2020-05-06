@@ -103,6 +103,68 @@ namespace Titan.D3D11.Device
             return new D3D11InputLayout(inputLayout);
         }
 
+        public ID3D11DepthStencilState CreateDepthStencilState(in D3D11DepthStencilDesc depthDesc)
+        {
+            HRESULT result;
+            IntPtr depthStencilState;
+            unsafe
+            {
+                fixed (D3D11DepthStencilDesc* pointer = &depthDesc)
+                {
+                    result = D3D11DeviceBindings.CreateDepthStencilState_(_handle, pointer, out depthStencilState);
+                }
+            }
+            if (result.Failed)
+            {
+                throw new Win32Exception($"Device CreateDepthStencilState failed with code: 0x{result.Code.ToString("X")}");
+            }
+            return new D3D11DepthStencilState(depthStencilState);
+        }
+
+        public ID3D11Texture2D CreateTexture2D(in D3D11Texture2DDesc texture2DDesc, D3D11SubresourceData? initialData = null)
+        {
+            HRESULT result;
+            IntPtr texture2D;
+            unsafe
+            {
+                fixed (D3D11Texture2DDesc* texture2DPointer = &texture2DDesc)
+                {
+                    if (initialData.HasValue)
+                    {
+                        var subResourceData = initialData.Value; // copies the value, maybe look at other ways to do this.
+                        result = D3D11DeviceBindings.CreateTexture2D_(_handle, texture2DPointer, &subResourceData, out texture2D);
+                    }
+                    else
+                    {
+                        result = D3D11DeviceBindings.CreateTexture2D_(_handle, texture2DPointer, null, out texture2D);
+                    }
+                }
+            }
+            if (result.Failed)
+            {
+                throw new Win32Exception($"Device CreateTexture2D failed with code: 0x{result.Code.ToString("X")}");
+            }
+            return new D3D11Texture2D(texture2D);
+        }
+
+        public ID3D11DepthStencilView CreateDepthStencilView(ID3D11Resource resource, in D3D11DepthStencilViewDesc desc)
+        {
+            HRESULT result;
+            IntPtr stencilView;
+            unsafe
+            {
+                fixed (D3D11DepthStencilViewDesc* viewDescPointer = &desc)
+                {
+                    result = D3D11DeviceBindings.CreateDepthStencilView_(_handle, resource.Handle, viewDescPointer, out stencilView);
+                }
+            }
+            if (result.Failed)
+            {
+                throw new Win32Exception($"Device CreateDepthStencilView failed with code: 0x{result.Code.ToString("X")}");
+            }
+            return new D3D11DepthStencilView(stencilView);
+        }
+
         public void Dispose()
         {
             SwapChain.Dispose();
