@@ -13,7 +13,7 @@ namespace Titan.D3D11.Device
 
         public ID3D11Resource GetBuffer(uint buffer, Guid riid)
         {
-            var result = D3D11SwapChainBindings.GetBuffer(Handle, buffer, riid, out var backBuffer);
+            var result = D3D11SwapChainBindings.GetBuffer_(Handle, buffer, riid, out var backBuffer);
             if (result.Failed)
             {
                 throw new Win32Exception((int)result.Code, "SwapChain GetBuffer failed");
@@ -23,7 +23,7 @@ namespace Titan.D3D11.Device
 
         public void Present(bool vSync = true)
         {
-            D3D11SwapChainBindings.Present(Handle, vSync ? 1u : 0u, 0);
+            D3D11SwapChainBindings.Present_(Handle, vSync ? 1u : 0u, 0);
         }
     }
 }

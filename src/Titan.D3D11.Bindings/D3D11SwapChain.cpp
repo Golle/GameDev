@@ -1,6 +1,6 @@
 #include "common.h"
 
-EXTERN_C DLLEXPORT HRESULT GetBuffer_(
+EXPORT HRESULT GetBuffer_(
 	IDXGISwapChain* swapChain,
 	UINT   buffer,
 	REFIID riid,
@@ -10,7 +10,7 @@ EXTERN_C DLLEXPORT HRESULT GetBuffer_(
 	return swapChain->GetBuffer(buffer, riid, ppSurface);
 }
 
-EXTERN_C DLLEXPORT void SwapChainPresent_(
+EXPORT void Present_(
 	IDXGISwapChain* swapChain,
 	UINT syncInterval,
 	UINT flags

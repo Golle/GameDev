@@ -1,7 +1,6 @@
 #include "common.h"
 
-
-EXTERN_C DLLEXPORT void DeviceContextOMSetRenderTargets_(
+EXPORT void OMSetRenderTargets_(
 	ID3D11DeviceContext*	context,
 	UINT					numViews,
 	ID3D11RenderTargetView* const* ppRenderTargetViews,
@@ -11,7 +10,7 @@ EXTERN_C DLLEXPORT void DeviceContextOMSetRenderTargets_(
 }
 
 
-EXTERN_C DLLEXPORT void DeviceContextClearRenderTargetView_(
+EXPORT void ClearRenderTargetView_(
 	ID3D11DeviceContext* context,
 	ID3D11RenderTargetView* pRenderTargetView,
 	const FLOAT ColorRGBA[4]
@@ -20,7 +19,7 @@ EXTERN_C DLLEXPORT void DeviceContextClearRenderTargetView_(
 	context->ClearRenderTargetView(pRenderTargetView, ColorRGBA);
 }
 
-EXTERN_C DLLEXPORT void ClearDepthStencilView_(
+EXPORT void ClearDepthStencilView_(
 	ID3D11DeviceContext* context,
 	ID3D11DepthStencilView* pDepthStencilView,
 	UINT ClearFlags,
@@ -31,7 +30,7 @@ EXTERN_C DLLEXPORT void ClearDepthStencilView_(
 	context->ClearDepthStencilView(pDepthStencilView, ClearFlags, Depth, Stencil);
 }
 
-EXTERN_C DLLEXPORT void DeviceContextIASetVertexBuffers_(
+EXPORT void IASetVertexBuffers_(
 	ID3D11DeviceContext* context,
 	UINT startSlot,
 	UINT numBuffers,
@@ -43,7 +42,7 @@ EXTERN_C DLLEXPORT void DeviceContextIASetVertexBuffers_(
 	context->IASetVertexBuffers(startSlot, numBuffers, ppVertexBuffers, pStrides, pOffsets);
 }
 
-EXTERN_C DLLEXPORT void DeviceContextDraw_(
+EXPORT void Draw_(
 	ID3D11DeviceContext* context,
 	UINT vertexCount,
 	UINT startVertexLocation)
@@ -51,7 +50,7 @@ EXTERN_C DLLEXPORT void DeviceContextDraw_(
 	context->Draw(vertexCount, startVertexLocation);
 }
 
-EXTERN_C DLLEXPORT void DeviceContextVSSetShader_(
+EXPORT void VSSetShader_(
 	ID3D11DeviceContext* context,
 	ID3D11VertexShader* pVertexShader,
 	ID3D11ClassInstance* const* ppClassInstances,
@@ -61,7 +60,7 @@ EXTERN_C DLLEXPORT void DeviceContextVSSetShader_(
 	context->VSSetShader(pVertexShader, ppClassInstances, NumClassInstances);
 }
 
-EXTERN_C DLLEXPORT void DeviceContextPSSetShader_(
+EXPORT void PSSetShader_(
 	ID3D11DeviceContext* context,
 	ID3D11PixelShader* pPixelShader,
 	ID3D11ClassInstance* const* ppClassInstances,
@@ -71,7 +70,7 @@ EXTERN_C DLLEXPORT void DeviceContextPSSetShader_(
 	context->PSSetShader(pPixelShader, ppClassInstances, NumClassInstances);
 }
 
-EXTERN_C DLLEXPORT void DeviceContextRSSetViewports_(
+EXPORT void RSSetViewports_(
 	ID3D11DeviceContext* context,
 	UINT numViewports,
 	const D3D11_VIEWPORT* pViewports
@@ -80,7 +79,7 @@ EXTERN_C DLLEXPORT void DeviceContextRSSetViewports_(
 	context->RSSetViewports(numViewports, pViewports);
 }
 
-EXTERN_C DLLEXPORT void DeviceContextIASetPrimitiveTopology_(
+EXPORT void IASetPrimitiveTopology_(
 	ID3D11DeviceContext* context,
 	D3D_PRIMITIVE_TOPOLOGY topology
 )
@@ -88,7 +87,7 @@ EXTERN_C DLLEXPORT void DeviceContextIASetPrimitiveTopology_(
 	context->IASetPrimitiveTopology(topology);
 }
 
-EXTERN_C DLLEXPORT void DeviceContextIASetInputLayout_(
+EXPORT void IASetInputLayout_(
 	ID3D11DeviceContext* context,
 	ID3D11InputLayout* pInputLayout
 )
@@ -96,7 +95,7 @@ EXTERN_C DLLEXPORT void DeviceContextIASetInputLayout_(
 	context->IASetInputLayout(pInputLayout);
 }
 
-EXTERN_C DLLEXPORT void IASetIndexBuffer_(
+EXPORT void IASetIndexBuffer_(
 	ID3D11DeviceContext* context,
 	ID3D11Buffer* indexBuffer,
 	DXGI_FORMAT format,
@@ -106,7 +105,7 @@ EXTERN_C DLLEXPORT void IASetIndexBuffer_(
 	context->IASetIndexBuffer(indexBuffer, format, offset);
 }
 
-EXTERN_C DLLEXPORT void VSSetConstantBuffers_(
+EXPORT void VSSetConstantBuffers_(
 	ID3D11DeviceContext* context,
 	UINT startSlot,
 	UINT numBuffers, 
@@ -116,7 +115,7 @@ EXTERN_C DLLEXPORT void VSSetConstantBuffers_(
 	context->VSSetConstantBuffers(startSlot, numBuffers, ppConstantBuffers);
 }
 
-EXTERN_C DLLEXPORT void PSSetConstantBuffers_(
+EXPORT void PSSetConstantBuffers_(
 	ID3D11DeviceContext* context,
 	UINT startSlot,
 	UINT numBuffers, 
@@ -126,9 +125,7 @@ EXTERN_C DLLEXPORT void PSSetConstantBuffers_(
 	context->PSSetConstantBuffers(startSlot, numBuffers, ppConstantBuffers);
 }
 
-
-
-EXTERN_C DLLEXPORT void DrawIndexed_(
+EXPORT void DrawIndexed_(
 	ID3D11DeviceContext* context,
 	UINT indexCount,
 	UINT startIndexLocation,
@@ -138,7 +135,7 @@ EXTERN_C DLLEXPORT void DrawIndexed_(
 	context->DrawIndexed(indexCount, startIndexLocation, baseVertexLocation);
 }
 
-EXTERN_C DLLEXPORT void OMSetDepthStencilState_(
+EXPORT void OMSetDepthStencilState_(
 	ID3D11DeviceContext* context,
 	ID3D11DepthStencilState* pDepthStencilState,
 	UINT stencilRef

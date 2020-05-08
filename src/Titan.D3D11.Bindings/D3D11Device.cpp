@@ -1,6 +1,6 @@
 #include "common.h"
 
-EXTERN_C DLLEXPORT HRESULT D3D11CreateDevice_(
+EXPORT HRESULT D3D11CreateDevice_(
 	IDXGIAdapter*			pAdapter,
 	D3D_DRIVER_TYPE         driverType,
 	HMODULE                 software,
@@ -16,7 +16,7 @@ EXTERN_C DLLEXPORT HRESULT D3D11CreateDevice_(
 	return D3D11CreateDevice(pAdapter, driverType, software, flags, pFeatureLevels, featureLevels, SDKVersion, ppDevice, pFeatureLevel, ppImmediateContext);
 }
 
-EXTERN_C DLLEXPORT HRESULT D3D11CreateDeviceAndSwapChain_(
+EXPORT HRESULT D3D11CreateDeviceAndSwapChain_(
 	IDXGIAdapter*				pAdapter,
 	D3D_DRIVER_TYPE				driverType,
 	HMODULE						software,
@@ -35,7 +35,7 @@ EXTERN_C DLLEXPORT HRESULT D3D11CreateDeviceAndSwapChain_(
 }
 
 
-EXTERN_C DLLEXPORT HRESULT D3D11CreateRenderTargetView_(
+EXPORT HRESULT CreateRenderTargetView_(
 	ID3D11Device*				device,
 	ID3D11Resource*				pResource,
 	const D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
@@ -44,7 +44,7 @@ EXTERN_C DLLEXPORT HRESULT D3D11CreateRenderTargetView_(
 {
 	return device->CreateRenderTargetView(pResource, pDesc, ppRTView);
 }
-EXTERN_C DLLEXPORT HRESULT D3D11CreateBuffer_(
+EXPORT HRESULT CreateBuffer_(
 	ID3D11Device* device,
 	const D3D11_BUFFER_DESC* pDesc,
 	const D3D11_SUBRESOURCE_DATA* pInitialData,
@@ -53,7 +53,7 @@ EXTERN_C DLLEXPORT HRESULT D3D11CreateBuffer_(
 	return device->CreateBuffer(pDesc, pInitialData, ppBuffer);
 }
 
-EXTERN_C DLLEXPORT HRESULT D3D11CreateVertexShader_(
+EXPORT HRESULT CreateVertexShader_(
 	ID3D11Device * device,
 	const void* pShaderBytecode,
 	SIZE_T BytecodeLength,
@@ -65,7 +65,7 @@ EXTERN_C DLLEXPORT HRESULT D3D11CreateVertexShader_(
 }
 
 
-EXTERN_C DLLEXPORT HRESULT D3D11CreatePixelShader_(
+EXPORT HRESULT CreatePixelShader_(
 	ID3D11Device* device,
 	const void* pShaderBytecode,
 	SIZE_T BytecodeLength,
@@ -76,7 +76,7 @@ EXTERN_C DLLEXPORT HRESULT D3D11CreatePixelShader_(
 	return device->CreatePixelShader(pShaderBytecode, BytecodeLength, pClassLinkage, ppPixelShader);
 }
 
-EXTERN_C DLLEXPORT HRESULT D3D11CreateInputLayout_(
+EXPORT HRESULT CreateInputLayout_(
 	ID3D11Device* device,
 	const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,
 	UINT NumElements,
@@ -88,7 +88,7 @@ EXTERN_C DLLEXPORT HRESULT D3D11CreateInputLayout_(
 	return device->CreateInputLayout(pInputElementDescs, NumElements, pShaderBytecodeWithInputSignature, bytecodeLength, ppInputLayout);
 }
 
-EXTERN_C DLLEXPORT HRESULT CreateDepthStencilState_(
+EXPORT HRESULT CreateDepthStencilState_(
 	ID3D11Device* device,
 	const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc,
 	ID3D11DepthStencilState** ppDepthStencilState
@@ -97,7 +97,7 @@ EXTERN_C DLLEXPORT HRESULT CreateDepthStencilState_(
 	return device->CreateDepthStencilState(pDepthStencilDesc, ppDepthStencilState);
 }
 
-EXTERN_C DLLEXPORT HRESULT CreateTexture2D_(
+EXPORT HRESULT CreateTexture2D_(
 	ID3D11Device* device,
 	const D3D11_TEXTURE2D_DESC* pDesc,
 	const D3D11_SUBRESOURCE_DATA* pInitialData,
@@ -108,7 +108,7 @@ EXTERN_C DLLEXPORT HRESULT CreateTexture2D_(
 }
 
 
-EXTERN_C DLLEXPORT HRESULT CreateDepthStencilView_(
+EXPORT HRESULT CreateDepthStencilView_(
 	ID3D11Device* device,
 	ID3D11Resource* pResource,
 	const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc,

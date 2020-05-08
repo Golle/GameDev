@@ -28,7 +28,7 @@ namespace Titan.D3D11.Device
             IntPtr renderTargetView;
             unsafe
             {
-                result = D3D11DeviceBindings.D3D11CreateRenderTargetView_(_handle, resource.Handle, (D3D11RenderTargetViewDesc*)null, out renderTargetView);
+                result = D3D11DeviceBindings.CreateRenderTargetView_(_handle, resource.Handle, (D3D11RenderTargetViewDesc*)null, out renderTargetView);
             }
             if (result.Failed)
             {
@@ -57,11 +57,11 @@ namespace Titan.D3D11.Device
                 if (subresourceData.HasValue)
                 {
                     var subResource = subresourceData.Value;
-                    result = D3D11DeviceBindings.D3D11CreateBuffer_(_handle, &desc, &subResource, out buffer);
+                    result = D3D11DeviceBindings.CreateBuffer_(_handle, &desc, &subResource, out buffer);
                 }
                 else
                 {
-                    result = D3D11DeviceBindings.D3D11CreateBuffer_(_handle, &desc, null, out buffer);
+                    result = D3D11DeviceBindings.CreateBuffer_(_handle, &desc, null, out buffer);
                 }
             }
             if (result.Failed)
@@ -73,7 +73,7 @@ namespace Titan.D3D11.Device
 
         public ID3D11VertexShader CreateVertexShader(ID3DBlob blob)
         {
-            var result = D3D11DeviceBindings.D3D11CreateVertexShader_(_handle, blob.GetBufferPointer(), blob.GetBufferSize(), IntPtr.Zero, out var vertexShader);
+            var result = D3D11DeviceBindings.CreateVertexShader_(_handle, blob.GetBufferPointer(), blob.GetBufferSize(), IntPtr.Zero, out var vertexShader);
             if (result.Failed)
             {
                 throw new Win32Exception($"Device CreateVertexShader failed with code: 0x{result.Code.ToString("X")}");
@@ -84,7 +84,7 @@ namespace Titan.D3D11.Device
 
         public ID3D11PixelShader CreatePixelShader(ID3DBlob blob)
         {
-            var result = D3D11DeviceBindings.D3D11CreatePixelShader_(_handle, blob.GetBufferPointer(), blob.GetBufferSize(), IntPtr.Zero, out var pixelShader);
+            var result = D3D11DeviceBindings.CreatePixelShader_(_handle, blob.GetBufferPointer(), blob.GetBufferSize(), IntPtr.Zero, out var pixelShader);
             if (result.Failed)
             {
                 throw new Win32Exception($"Device CreatePixelShader failed with code: 0x{result.Code.ToString("X")}");
@@ -95,7 +95,7 @@ namespace Titan.D3D11.Device
 
         public ID3D11InputLayout CreateInputLayout(in D3D11InputElementDesc[] descs, ID3DBlob blob)
         {
-            var result = D3D11DeviceBindings.D3D11CreateInputLayout_(_handle, descs, (uint)descs.Length, blob.GetBufferPointer(), blob.GetBufferSize(), out var inputLayout);
+            var result = D3D11DeviceBindings.CreateInputLayout_(_handle, descs, (uint)descs.Length, blob.GetBufferPointer(), blob.GetBufferSize(), out var inputLayout);
             if (result.Failed)
             {
                 throw new Win32Exception($"Device CreateInputLayout failed with code: 0x{result.Code.ToString("X")}");

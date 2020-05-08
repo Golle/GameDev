@@ -6,3 +6,4 @@
 #include <d3dcompiler.h>
 
 #define DLLEXPORT __declspec(dllexport)
+#define EXPORT EXTERN_C DLLEXPORT 

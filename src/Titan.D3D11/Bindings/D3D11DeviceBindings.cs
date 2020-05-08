@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using Titan.D3D11.Bindings.Models;
-using Titan.D3D11.Device;
 using Titan.Windows;
 
 namespace Titan.D3D11.Bindings
@@ -9,7 +8,7 @@ namespace Titan.D3D11.Bindings
     internal static class D3D11DeviceBindings
     {
         [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        public static extern HRESULT D3D11CreateDeviceBinding_(
+        public static extern HRESULT D3D11CreateDevice_(
             [In] IntPtr adapter,
             [In] D3DDriverType driverType,
             [In] IntPtr hModule,
@@ -22,7 +21,7 @@ namespace Titan.D3D11.Bindings
             [Out] out IntPtr context
             );
 
-        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern unsafe HRESULT D3D11CreateDeviceAndSwapChain_(
             [In] IntPtr adapter,
             [In] D3DDriverType driverType,
@@ -38,24 +37,24 @@ namespace Titan.D3D11.Bindings
             [Out] out IntPtr context
             );
 
-        [DllImport(Constants.D3D11Dll, SetLastError = true)]
-        public static extern unsafe HRESULT D3D11CreateRenderTargetView_(
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern unsafe HRESULT CreateRenderTargetView_(
             [In] IntPtr device,
             [In] IntPtr pResource,
             [In] D3D11RenderTargetViewDesc* pDesc,
             [Out] out IntPtr renderTargetView
         );
 
-        [DllImport(Constants.D3D11Dll, SetLastError = true)]
-        public static extern unsafe HRESULT D3D11CreateBuffer_(
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern unsafe HRESULT CreateBuffer_(
             [In] IntPtr device,
             [In] D3D11BufferDesc* pDesc,
             [In] D3D11SubresourceData* pInitialData,
             [Out] out IntPtr ppBUffer
         );
 
-        [DllImport(Constants.D3D11Dll, SetLastError = true)]
-        public static extern HRESULT D3D11CreateVertexShader_(
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern HRESULT CreateVertexShader_(
             [In] IntPtr device,
             [In] IntPtr blob,
             [In] UIntPtr byteCodeLength,
@@ -63,8 +62,8 @@ namespace Titan.D3D11.Bindings
             [Out] out IntPtr ppVertexShader
         );
 
-        [DllImport(Constants.D3D11Dll, SetLastError = true)]
-        public static extern HRESULT D3D11CreatePixelShader_(
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern HRESULT CreatePixelShader_(
             [In] IntPtr device,
             [In] IntPtr blob,
             [In] UIntPtr byteCodeLength,
@@ -72,8 +71,8 @@ namespace Titan.D3D11.Bindings
             [Out] out IntPtr ppPixelShader
         );
 
-        [DllImport(Constants.D3D11Dll, SetLastError = true)]
-        public static extern HRESULT D3D11CreateInputLayout_(
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern HRESULT CreateInputLayout_(
             [In] IntPtr device,
             [In] D3D11InputElementDesc[] inputElementDescs,
             [In] uint numElements,
@@ -82,21 +81,21 @@ namespace Titan.D3D11.Bindings
             [Out] out IntPtr ppInputLayout
         );
 
-        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern unsafe HRESULT CreateDepthStencilState_(
             [In] IntPtr device,
             [In] D3D11DepthStencilDesc* pDepthStencilDesc,
             [Out] out IntPtr ppDepthStencilState
         );
 
-        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern unsafe HRESULT CreateTexture2D_(
             [In] IntPtr device,
             [In] D3D11Texture2DDesc* pDesc,
             [In] D3D11SubresourceData* pInitialData,
             [Out] out IntPtr ppTexture2D
         );
-        [DllImport(Constants.D3D11Dll, SetLastError = true)]
+        [DllImport(Constants.D3D11Dll, CallingConvention =CallingConvention.StdCall, SetLastError = true)]
         public static extern unsafe HRESULT CreateDepthStencilView_(
             [In] IntPtr device,
             [In] IntPtr pResource,
