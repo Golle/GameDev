@@ -44,6 +44,11 @@ namespace Titan.Core.Ioc
             _parentContainer = parentContainer;
         }
 
+        public IContainer Register<TConcrete>() where TConcrete : class
+        {
+            return Register<TConcrete, TConcrete>();
+        }
+
         public IContainer Register<TTypeToResolve, TConcrete>() where TConcrete : TTypeToResolve
         {
             var typeToResolve = typeof(TTypeToResolve);
@@ -86,7 +91,12 @@ namespace Titan.Core.Ioc
         private object CreateInstance(ContainerObject containerObject)
         {
             var parameters = ResolveConstructorParameters(containerObject.RegisteredObject);
-            return containerObject.CreateInstance(parameters.ToArray());
+            var instance = containerObject.CreateInstance(parameters.ToArray());
+            if (instance == null)
+            {
+                throw new InvalidOperationException($"Failed to create instance of type {containerObject.RegisteredObject.ConcreteType} with interface {containerObject.RegisteredObject.TypeToResolve}");
+            }
+            return instance;
         }
 
         private IEnumerable<object> ResolveConstructorParameters(RegisteredObject registeredObject)

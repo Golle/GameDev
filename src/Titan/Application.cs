@@ -12,18 +12,15 @@ namespace Titan
     {
         private readonly IContainer _container = Bootstrapper.CreateContainer()
                 .AddRegistry<WindowsRegistry>()
-                .AddRegistry<GraphicsRegistry>();
+                .AddRegistry<GraphicsRegistry>()
+                .Register<GameEngine>()
+            ;
 
         private readonly ILogger _logger;
-        private readonly IGameLoop _gameLoop;
-        private readonly IDisplayFactory _displayFactory;
 
         public Application()
         {
-            //_graphicsHandler = _container.CreateInstance<IGraphicsHandler>();
-            _displayFactory = _container.CreateInstance<IDisplayFactory>();
             _logger = _container.GetInstance<ILogger>();
-            _gameLoop = _container.GetInstance<IGameLoop>();
         }
 
         public static void Start()
@@ -34,21 +31,35 @@ namespace Titan
 
         private void Run()
         {
-            _logger.Debug("Initialize Window");
+            RegisterServices(_container);
+            
+            _logger.Debug("Initialize Window and D3D11Device");
 
-            using var display = _displayFactory.Create("Donkey box", 1024, 768);
+            using var display = GetInstance<IDisplayFactory>()
+                .Create("Donkey box", 1024, 768);
 
+            _logger.Debug("Register D3D11Device and Win32Window as singletons");
+            _container
+                .RegisterSingleton(display.Device)
+                .RegisterSingleton(display.Window);
+
+
+            var engine = _container.GetInstance<GameEngine>();
+            
             OnStart();
+
             _logger.Debug("Start main loop");
-            
-            _gameLoop.Run(display.Update);
-            
+            GetInstance<IGameLoop>()
+                .Run(engine.Execute);
+
             _logger.Debug("Main loop ended");
             OnQuit();
             _logger.Debug("Ending application");
         }
 
-        protected virtual void OnStart(){}
+        protected virtual void OnStart() { }
         protected virtual void OnQuit() { }
+        protected virtual void RegisterServices(IContainer container) { }
+        protected TType GetInstance<TType>() => _container.GetInstance<TType>();
     }
 }

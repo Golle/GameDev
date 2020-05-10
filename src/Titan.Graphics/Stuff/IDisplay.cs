@@ -7,7 +7,5 @@ namespace Titan.Graphics.Stuff
     {
         IDevice Device { get; }
         IWindow Window { get; }
-
-        bool Update();
     }
 }

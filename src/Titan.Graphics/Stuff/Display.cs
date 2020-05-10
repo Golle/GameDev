@@ -14,18 +14,6 @@ namespace Titan.Graphics.Stuff
             Window = window ?? throw new ArgumentNullException(nameof(window));
         }
 
-        public bool Update()
-        {
-            if (!Window.Update())
-            {
-                return false;
-            }
-            Device.BeginRender();
-
-            Device.EndRender();
-            return true;
-        }
-
         public void Dispose()
         {
             Device.Dispose();

@@ -5,6 +5,7 @@ namespace Titan.Core.Ioc
 {
     public interface IContainer
     {
+        IContainer Register<TConcrete>() where TConcrete : class;
         IContainer Register<TTypeToResolve, TConcrete>() where TConcrete : TTypeToResolve;
         TTypeToResolve CreateInstance<TTypeToResolve>();
         TTypeToResolve GetInstance<TTypeToResolve>();

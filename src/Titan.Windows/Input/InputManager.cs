@@ -12,13 +12,13 @@ namespace Titan.Windows.Input
         private readonly Mouse _mouse;
         public InputManager(IEventManager eventManager)
         {
-            eventManager.Subscribe<FixedUpdateEvent>(OnUpdate);
+            eventManager.Subscribe<UpdateEvent>(OnUpdate);
 
             _keyboard = new Keyboard(eventManager);
             _mouse = new Mouse(eventManager);
         }
 
-        private void OnUpdate(in FixedUpdateEvent @event)
+        private void OnUpdate(in UpdateEvent @event)
         {
             _keyboard.Update();
             _mouse.Update();
