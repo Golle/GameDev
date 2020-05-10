@@ -1,5 +1,6 @@
 using Titan.Core.Ioc;
 using Titan.D3D11;
+using Titan.Graphics.Stuff;
 
 namespace Titan.Graphics
 {
@@ -11,6 +12,7 @@ namespace Titan.Graphics
                 .AddRegistry<D3D11Registry>()
 
                 .Register<IGraphicsHandler, GraphicsHandler>()
+                .Register<IDisplayFactory, DisplayFactory>()
 
                 ;
         }

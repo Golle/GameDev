@@ -36,21 +36,10 @@ namespace Titan.Graphics
 
         public bool Initialize(string title, int width, int height)
         {
-            _window = _windowCreator.CreateWindow(new CreateWindowArguments
-            {
-                Height = height, 
-                Title = title, 
-                Width = width
-            });
+            _window = _windowCreator.CreateWindow(new CreateWindowArguments(title, width, height));
 
             _device = _d3D11DeviceFactory
-                .Create(new CreateDeviceArguments
-                {
-                    Adapter = IntPtr.Zero,
-                    RefreshRate = 144, 
-                    Debug = false,
-                    Window = _window
-                });
+                .Create(new CreateDeviceArguments(_window, 144, IntPtr.Zero, true));
 
             using var backBuffer = _device.SwapChain.GetBuffer(0, D3D11Resources.D3D11Resource);
             _renderTarget = _device.CreateRenderTargetView(backBuffer);
@@ -226,7 +215,7 @@ namespace Titan.Graphics
 
             using var inputLayout = _device.CreateInputLayout(elementDesc, vertexShaderBlob);
             _device.Context.SetInputLayout(inputLayout);
-            
+
             _device.Context.SetPrimitiveTopology(D3D11PrimitiveTopology.D3D11PrimitiveTopologyTrianglelist);
 
             D3D11Viewport viewport = default;

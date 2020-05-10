@@ -14,13 +14,14 @@ namespace Titan
                 .AddRegistry<WindowsRegistry>()
                 .AddRegistry<GraphicsRegistry>();
 
-        private readonly IGraphicsHandler _graphicsHandler;
         private readonly ILogger _logger;
         private readonly IGameLoop _gameLoop;
+        private readonly IDisplayFactory _displayFactory;
 
         public Application()
         {
-            _graphicsHandler = _container.CreateInstance<IGraphicsHandler>();
+            //_graphicsHandler = _container.CreateInstance<IGraphicsHandler>();
+            _displayFactory = _container.CreateInstance<IDisplayFactory>();
             _logger = _container.GetInstance<ILogger>();
             _gameLoop = _container.GetInstance<IGameLoop>();
         }
@@ -34,21 +35,16 @@ namespace Titan
         private void Run()
         {
             _logger.Debug("Initialize Window");
-            if (!_graphicsHandler.Initialize("A game title", 1024, 768))
-            {
-                throw new InvalidOperationException("Failed to create the window");
-            }
+
+            using var display = _displayFactory.Create("Donkey box", 1024, 768);
+
             OnStart();
-
-
             _logger.Debug("Start main loop");
-            _gameLoop.Run(_graphicsHandler.Update);
+            
+            _gameLoop.Run(display.Update);
             
             _logger.Debug("Main loop ended");
             OnQuit();
-
-            _logger.Debug("Dispose main loop");
-            _graphicsHandler.Dispose();
             _logger.Debug("Ending application");
         }
 

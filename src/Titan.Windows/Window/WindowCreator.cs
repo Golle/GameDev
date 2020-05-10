@@ -56,6 +56,8 @@ namespace Titan.Windows.Window
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error(), "CreateWindowExA failed");
             }
+            
+            nativeWindow.ShowWindow();
             return nativeWindow;
         }
     }
