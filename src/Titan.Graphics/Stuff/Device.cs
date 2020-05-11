@@ -23,9 +23,37 @@ namespace Titan.Graphics.Stuff
             _depthStencilView = depthStencilView ?? throw new ArgumentNullException(nameof(depthStencilView));
         }
 
-        public IIndexBuffer CreateIndexBuffer()
+        public IIndexBuffer CreateIndexBuffer(in short[] indices)
         {
-            throw new NotImplementedException();
+            D3D11BufferDesc desc = default;
+            desc.BindFlags = D3D11BindFlag.IndexBuffer;
+            desc.Usage = D3D11Usage.Default;
+            desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified;
+            desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
+            desc.ByteWidth = (uint) (indices.Length * sizeof(short));
+            desc.StructureByteStride = sizeof(short);
+            unsafe
+            {
+                fixed (void* indicesPointer = indices)
+                {
+                    D3D11SubresourceData data = default;
+                    data.pSysMem = indicesPointer;
+                    return new IndexBuffer(_device.CreateBuffer(desc, data), indices);
+                }
+            }
+        }
+
+        public IIndexBuffer CreateIndexBuffer(uint size)
+        {
+            D3D11BufferDesc desc = default;
+            desc.BindFlags = D3D11BindFlag.IndexBuffer;
+            desc.Usage = D3D11Usage.Dynamic;
+            desc.CpuAccessFlags = D3D11CpuAccessFlag.Write;
+            desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
+            desc.ByteWidth = size * sizeof(short);
+            desc.StructureByteStride = sizeof(short);
+
+            return new IndexBuffer(_device.CreateBuffer(desc), size);
         }
 
         public IVertexBuffer<T> CreateVertexBuffer<T>(uint numberOfVertices) where T : unmanaged, IVertex
