@@ -2,7 +2,7 @@ using System;
 
 namespace Titan.Graphics.Buffers
 {
-    public interface IConstantBuffer : IDisposable
+    public interface IConstantBuffer<T> : IDisposable
     {
     }
 }

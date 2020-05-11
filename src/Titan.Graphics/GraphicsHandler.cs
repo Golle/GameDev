@@ -227,8 +227,6 @@ namespace Titan.Graphics
             _device.Context.SetViewport(viewport);
 
 
-            _window.Update();
-            var mousePosition = _inputManager.Mouse.Position;
             ConstantBuffer cb = default;
 
             var perspectiveLh = CreatePerspectiveLH1(1f, 3f/4f, 0.5f, 10f);

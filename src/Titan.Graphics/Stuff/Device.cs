@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using Titan.D3D11;
 using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.Device;
@@ -100,9 +101,39 @@ namespace Titan.Graphics.Stuff
 
         }
 
-        public IConstantBuffer CreateConstantBuffer()
+        public IConstantBuffer<T> CreateConstantBuffer<T>(in T initialData) where T : unmanaged
         {
-            throw new NotImplementedException();
+            var size = (uint)Marshal.SizeOf<T>();
+            CheckAlignment(size);
+
+            D3D11BufferDesc desc = default;
+            desc.BindFlags = D3D11BindFlag.ConstantBuffer;
+            desc.Usage = D3D11Usage.Dynamic; // not sure about this one
+            desc.CpuAccessFlags = D3D11CpuAccessFlag.Write; // not sure about this one
+            desc.ByteWidth = size;
+
+            unsafe
+            {
+                fixed (void* initialDataPointer = &initialData)
+                {
+                    D3D11SubresourceData data = default;
+                    data.pSysMem = initialDataPointer;
+                    return new ConstantBuffer<T>(_device.CreateBuffer(desc, data));
+                }
+            }
+        }
+
+        public IConstantBuffer<T> CreateConstantBuffer<T>() where T : unmanaged
+        {
+            var size = (uint)Marshal.SizeOf<T>();
+            CheckAlignment(size);
+
+            D3D11BufferDesc desc = default;
+            desc.BindFlags = D3D11BindFlag.ConstantBuffer;
+            desc.Usage = D3D11Usage.Dynamic; // not sure about this one
+            desc.CpuAccessFlags = D3D11CpuAccessFlag.Write; // not sure about this one
+            desc.ByteWidth = size;
+            return new ConstantBuffer<T>(_device.CreateBuffer(desc));
         }
 
         public void BeginRender()
@@ -114,6 +145,14 @@ namespace Titan.Graphics.Stuff
         public void EndRender()
         {
             _device.SwapChain.Present(_vSync);
+        }
+
+        private static void CheckAlignment(uint bytes)
+        {
+            if (bytes % 16 != 0)
+            {
+                throw new InvalidOperationException($"The size of the type is {bytes} bytes and is not 16 bytes aligned.");
+            }
         }
 
         public void Dispose()
