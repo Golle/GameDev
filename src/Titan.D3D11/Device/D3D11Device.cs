@@ -48,20 +48,23 @@ namespace Titan.D3D11.Device
             return new D3D11InfoQueue(infoQueue);
         }
 
-        public ID3D11Buffer CreateBuffer(D3D11BufferDesc desc, D3D11SubresourceData? subresourceData = null)
+        public ID3D11Buffer CreateBuffer(in D3D11BufferDesc desc, D3D11SubresourceData? subresourceData = null)
         {
             HRESULT result;
             IntPtr buffer;
             unsafe
             {
-                if (subresourceData.HasValue)
+                fixed (D3D11BufferDesc* bufferDesc = &desc)
                 {
-                    var subResource = subresourceData.Value;
-                    result = D3D11DeviceBindings.CreateBuffer_(_handle, &desc, &subResource, out buffer);
-                }
-                else
-                {
-                    result = D3D11DeviceBindings.CreateBuffer_(_handle, &desc, null, out buffer);
+                    if (subresourceData.HasValue)
+                    {
+                        var subResource = subresourceData.Value;
+                        result = D3D11DeviceBindings.CreateBuffer_(_handle, bufferDesc, &subResource, out buffer);
+                    }
+                    else
+                    {
+                        result = D3D11DeviceBindings.CreateBuffer_(_handle, bufferDesc, null, out buffer);
+                    }
                 }
             }
             if (result.Failed)

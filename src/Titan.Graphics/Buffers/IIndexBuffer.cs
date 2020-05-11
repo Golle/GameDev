@@ -1,6 +1,6 @@
 using System;
 
-namespace Titan.Graphics.Stuff
+namespace Titan.Graphics.Buffers
 {
     public interface IIndexBuffer : IDisposable
     {
