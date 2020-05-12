@@ -1,7 +1,7 @@
 using System;
 using Titan.Windows.Window;
 
-namespace Titan.Graphics.Stuff
+namespace Titan.Graphics
 {
     public interface IDisplay : IDisposable
     {

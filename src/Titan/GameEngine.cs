@@ -1,6 +1,6 @@
 using Titan.Core.EventSystem;
 using Titan.Core.Logging;
-using Titan.Graphics.Stuff;
+using Titan.Graphics;
 using Titan.Windows.Input;
 using Titan.Windows.Window;
 

@@ -5,7 +5,7 @@ using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.Device;
 using Titan.Graphics.Buffers;
 
-namespace Titan.Graphics.Stuff
+namespace Titan.Graphics
 {
     internal class Device : IDevice
     {
@@ -57,13 +57,13 @@ namespace Titan.Graphics.Stuff
             return new IndexBuffer(_device.CreateBuffer(desc), size);
         }
 
-        public IVertexBuffer<T> CreateVertexBuffer<T>(uint numberOfVertices) where T : unmanaged, IVertex
+        public IVertexBuffer<T> CreateVertexBuffer<T>(uint numberOfVertices) where T : unmanaged
         {
             if (numberOfVertices == 0)
             {
                 throw new InvalidOperationException($"{nameof(numberOfVertices)} must be greater than 0.");
             }
-            var size = default(T).Size();
+            var size = (uint)Marshal.SizeOf<T>();
             D3D11BufferDesc desc = default;
             desc.BindFlags = D3D11BindFlag.VertexBuffer;
             desc.Usage = D3D11Usage.Dynamic;
@@ -75,13 +75,13 @@ namespace Titan.Graphics.Stuff
             return new VertexBuffer<T>(_device.CreateBuffer(desc));
         }
 
-        public IVertexBuffer<T> CreateVertexBuffer<T>(in T[] initialData) where T : unmanaged, IVertex
+        public IVertexBuffer<T> CreateVertexBuffer<T>(in T[] initialData) where T : unmanaged
         {
             if (initialData == null)
             {
                 throw new ArgumentNullException(nameof(initialData));
             }
-            var size = default(T).Size();
+            var size = (uint)Marshal.SizeOf<T>();
             D3D11BufferDesc desc = default;
             desc.BindFlags = D3D11BindFlag.VertexBuffer;
             desc.Usage = D3D11Usage.Default;
@@ -98,7 +98,6 @@ namespace Titan.Graphics.Stuff
                     return new VertexBuffer<T>(_device.CreateBuffer(desc, data));
                 }
             }
-
         }
 
         public IConstantBuffer<T> CreateConstantBuffer<T>(in T initialData) where T : unmanaged

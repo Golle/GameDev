@@ -1,6 +1,6 @@
 using System;
 
-namespace Titan.Graphics
+namespace Titan.Graphics.Stuff
 {
     public interface IGraphicsHandler : IDisposable
     {

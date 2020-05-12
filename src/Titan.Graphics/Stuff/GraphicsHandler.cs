@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Titan.Core.EventSystem;
@@ -10,13 +9,12 @@ using Titan.Windows.Input;
 using Titan.Windows.Window;
 using Color = Titan.D3D11.Color;
 
-namespace Titan.Graphics
+namespace Titan.Graphics.Stuff
 {
     public class GraphicsHandler : IGraphicsHandler
     {
         private readonly IWindowCreator _windowCreator;
         private readonly ID3D11DeviceFactory _d3D11DeviceFactory;
-        private readonly IEventManager _eventManager;
         private readonly IInputManager _inputManager;
         private readonly ID3DCommon _d3DCommon;
 
@@ -25,11 +23,10 @@ namespace Titan.Graphics
         private ID3D11RenderTargetView _renderTarget;
         private ID3D11DepthStencilView _depthStencilView;
 
-        public GraphicsHandler(IWindowCreator windowCreator, ID3D11DeviceFactory d3D11DeviceFactory, IEventManager eventManager, IInputManager inputManager, ID3DCommon d3DCommon)
+        public GraphicsHandler(IWindowCreator windowCreator, ID3D11DeviceFactory d3D11DeviceFactory, IInputManager inputManager, ID3DCommon d3DCommon)
         {
             _windowCreator = windowCreator;
             _d3D11DeviceFactory = d3D11DeviceFactory;
-            _eventManager = eventManager;
             _inputManager = inputManager;
             _d3DCommon = d3DCommon;
         }

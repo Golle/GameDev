@@ -4,7 +4,7 @@ using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.Device;
 using Titan.Windows.Window;
 
-namespace Titan.Graphics.Stuff
+namespace Titan.Graphics
 {
     internal class DisplayFactory : IDisplayFactory
     {
