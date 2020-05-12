@@ -2,7 +2,8 @@ using System;
 
 namespace Titan.Graphics.Buffers
 {
-    public interface IVertexBuffer<T> : IDisposable
+    public interface IVertexBuffer : IDisposable {}
+    public interface IVertexBuffer<T> : IVertexBuffer
     {
 
     }
