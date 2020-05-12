@@ -95,5 +95,13 @@ namespace Titan.Windows.Win32
             [In] IntPtr hWnd,
             ref POINT lpPoint
         );
+
+        [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool AdjustWindowRect(
+            [In] ref RECT lpRect,
+            [In] WindowStyles dwStyle,
+            [In, MarshalAs(UnmanagedType.Bool)] bool bMenu
+        );
     }
 }

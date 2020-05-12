@@ -36,16 +36,25 @@ namespace Titan.Windows.Window
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error(), "RegisterClassExA failed");
             }
+
+            const WindowStyles wsStyle = WindowStyles.WS_OVERLAPPEDWINDOW | WindowStyles.WS_VISIBLE;
+
+            RECT windowRect = default;
+            windowRect.Left = 100;
+            windowRect.Right = arguments.Width + windowRect.Left;
+            windowRect.Top = 100;
+            windowRect.Bottom = arguments.Height + windowRect.Top;
+            User32.AdjustWindowRect(ref windowRect, wsStyle, false);
             
             nativeWindow.Handle = User32.CreateWindowExA(
                 0, 
                 wndClassExA.LpszClassName, 
                 arguments.Title, 
-                WindowStyles.WS_OVERLAPPEDWINDOW | WindowStyles.WS_VISIBLE, 
+                wsStyle, 
                 arguments.X, 
                 arguments.Y, 
-                arguments.Width, 
-                arguments.Height, 
+                windowRect.Right - windowRect.Left, 
+                windowRect.Bottom - windowRect.Top, 
                 IntPtr.Zero, 
                 IntPtr.Zero, 
                 wndClassExA.HInstance, 

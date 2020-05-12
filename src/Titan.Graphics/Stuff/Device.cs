@@ -157,6 +157,8 @@ namespace Titan.Graphics.Stuff
 
         public void Dispose()
         {
+            _depthStencilView.Dispose();
+            _renderTarget.Dispose();
             _device.Dispose();
         }
     }

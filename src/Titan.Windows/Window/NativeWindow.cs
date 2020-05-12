@@ -50,7 +50,6 @@ namespace Titan.Windows.Window
 
         public bool Update()
         {
-            GC.Collect();
             while (User32.PeekMessageA(out var msg, IntPtr.Zero, 0, 0, 1))
             {
                 if (msg.Message == WindowsMessage.WM_QUIT)
