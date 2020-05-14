@@ -4,7 +4,9 @@ using System.Runtime.InteropServices;
 using Titan.D3D11;
 using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.Device;
+using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
+using Titan.Graphics.Layout;
 using Titan.Graphics.Shaders;
 
 namespace Titan.Graphics
@@ -43,7 +45,7 @@ namespace Titan.Graphics
                 {
                     D3D11SubresourceData data = default;
                     data.pSysMem = indicesPointer;
-                    return new IndexBuffer(_device.CreateBuffer(desc, data), indices);
+                    return new IndexBuffer(_device.Context, _device.CreateBuffer(desc, data), indices);
                 }
             }
         }
@@ -58,7 +60,7 @@ namespace Titan.Graphics
             desc.ByteWidth = size * sizeof(short);
             desc.StructureByteStride = sizeof(short);
 
-            return new IndexBuffer(_device.CreateBuffer(desc), size);
+            return new IndexBuffer(_device.Context, _device.CreateBuffer(desc), size); 
         }
 
         public IVertexBuffer<T> CreateVertexBuffer<T>(uint numberOfVertices) where T : unmanaged
@@ -76,7 +78,7 @@ namespace Titan.Graphics
             desc.ByteWidth = (numberOfVertices * size);
             desc.StructureByteStride = size;
 
-            return new VertexBuffer<T>(_device.CreateBuffer(desc));
+            return new VertexBuffer<T>(_device.Context, _device.CreateBuffer(desc), size);
         }
 
         public IVertexBuffer<T> CreateVertexBuffer<T>(in T[] initialData) where T : unmanaged
@@ -99,7 +101,7 @@ namespace Titan.Graphics
                 {
                     D3D11SubresourceData data = default;
                     data.pSysMem = initialDataPointer;
-                    return new VertexBuffer<T>(_device.CreateBuffer(desc, data));
+                    return new VertexBuffer<T>(_device.Context, _device.CreateBuffer(desc, data), size);
                 }
             }
         }
@@ -126,20 +128,24 @@ namespace Titan.Graphics
             }
         }
 
-        public IVertexShader CreateVertexShader(string filename)
+        public IVertexShader CreateVertexShader(IBlob vertexShaderBlob)
         {
-            // not sure if we should read the file here, maybe look at other ways to do it
-            // maybe we should load the blob in some other place and pass the blob here (buffer pointer + size)
-            using var blob = _common.ReadFileToBlob(filename);
-            return new VertexShader(_device.Context, _device.CreateVertexShader(blob));
+            var shader = _device.CreateVertexShader(vertexShaderBlob.Buffer, vertexShaderBlob.Size);
+
+            return new VertexShader(_device.Context, shader);
         }
 
-        public IPixelShader CreatePixelShader(string filename)
+        public IPixelShader CreatePixelShader(IBlob pixelShaderBlob)
         {
-            // not sure if we should read the file here, maybe look at other ways to do it
-            // maybe we should load the blob in some other place and pass the blob here (buffer pointer + size)
-            using var blob = _common.ReadFileToBlob(filename);
-            return new PixelShader(_device.Context, _device.CreatePixelShader(blob));
+            var shader = _device.CreatePixelShader(pixelShaderBlob.Buffer, pixelShaderBlob.Size);
+
+            return new PixelShader(_device.Context, shader);
+        }
+
+        public IInputLayout CreateInputLayout(VertexLayout vertexLayout, IBlob vertexShaderBlob)
+        {
+            var layout = _device.CreateInputLayout(vertexLayout.Descriptors, vertexShaderBlob.Buffer, vertexShaderBlob.Size);
+            return new InputLayout(_device.Context, layout);
         }
 
         public IConstantBuffer<T> CreateConstantBuffer<T>() where T : unmanaged
@@ -159,11 +165,20 @@ namespace Titan.Graphics
         {
             _device.Context.ClearRenderTargetView(_renderTarget, _clearColor);
             _device.Context.ClearDepthStencilView(_depthStencilView, D3D11ClearFlag.Depth, 1f, 0);
+
+            
+            // TODO: this is tempory
+            _device.Context.SetPrimitiveTopology(D3D11PrimitiveTopology.D3D11PrimitiveTopologyTrianglelist);
         }
 
         public void EndRender()
         {
             _device.SwapChain.Present(_vSync);
+        }
+
+        public void DrawIndexed(uint numberOfIndices, uint startIndexLocation, int baseVertexLocation)
+        {
+            _device.Context.DrawIndexed(numberOfIndices, startIndexLocation, baseVertexLocation);
         }
 
         private static void CheckAlignment(uint bytes)

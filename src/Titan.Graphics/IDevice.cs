@@ -1,5 +1,8 @@
 using System;
+using Titan.D3D11.Bindings.Models;
+using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
+using Titan.Graphics.Layout;
 using Titan.Graphics.Shaders;
 
 namespace Titan.Graphics
@@ -13,10 +16,14 @@ namespace Titan.Graphics
         IConstantBuffer<T> CreateConstantBuffer<T>() where T : unmanaged;
         IConstantBuffer<T> CreateConstantBuffer<T>(in T initialData) where T : unmanaged;
 
-        IVertexShader CreateVertexShader(string filename);
-        IPixelShader CreatePixelShader(string filename);
+        IVertexShader CreateVertexShader(IBlob vertexShaderBlob);
+        IPixelShader CreatePixelShader(IBlob pixelShaderBlob);
+
+
+        IInputLayout CreateInputLayout(VertexLayout vertexLayout, IBlob vertexShaderBlob);
 
         void BeginRender();
         void EndRender();
+        void DrawIndexed(uint numberOfIndices, uint startIndexLocation, int baseVertexLocation);
     }
 }

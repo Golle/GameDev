@@ -1,5 +1,7 @@
 using System;
 using Titan.Core.Ioc;
+using Titan.Graphics;
+using Titan.Graphics.Blobs;
 
 namespace Titan.Game
 {
@@ -32,6 +34,7 @@ namespace Titan.Game
 
     internal class MyTestClass
     {
+
         public void Print()
         {
             Console.WriteLine("Apa");

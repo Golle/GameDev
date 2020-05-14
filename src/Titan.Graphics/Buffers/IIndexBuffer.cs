@@ -6,5 +6,7 @@ namespace Titan.Graphics.Buffers
     {
         public uint NumberOfIndices { get; }
         public ref readonly short[] Indicies { get; }
+
+        public void Bind();
     }
 }

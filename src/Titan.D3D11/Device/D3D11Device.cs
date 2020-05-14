@@ -76,7 +76,12 @@ namespace Titan.D3D11.Device
 
         public ID3D11VertexShader CreateVertexShader(ID3DBlob blob)
         {
-            var result = D3D11DeviceBindings.CreateVertexShader_(_handle, blob.GetBufferPointer(), blob.GetBufferSize(), IntPtr.Zero, out var vertexShader);
+            return CreateVertexShader(blob.GetBufferPointer(), blob.GetBufferSize());
+        }
+
+        public ID3D11VertexShader CreateVertexShader(IntPtr buffer, UIntPtr size)
+        {
+            var result = D3D11DeviceBindings.CreateVertexShader_(_handle, buffer, size , IntPtr.Zero, out var vertexShader);
             if (result.Failed)
             {
                 throw new Win32Exception($"Device CreateVertexShader failed with code: 0x{result.Code.ToString("X")}");
@@ -87,7 +92,12 @@ namespace Titan.D3D11.Device
 
         public ID3D11PixelShader CreatePixelShader(ID3DBlob blob)
         {
-            var result = D3D11DeviceBindings.CreatePixelShader_(_handle, blob.GetBufferPointer(), blob.GetBufferSize(), IntPtr.Zero, out var pixelShader);
+            return CreatePixelShader(blob.GetBufferPointer(), blob.GetBufferSize());
+        }
+
+        public ID3D11PixelShader CreatePixelShader(IntPtr buffer, UIntPtr size)
+        {
+            var result = D3D11DeviceBindings.CreatePixelShader_(_handle, buffer, size, IntPtr.Zero, out var pixelShader);
             if (result.Failed)
             {
                 throw new Win32Exception($"Device CreatePixelShader failed with code: 0x{result.Code.ToString("X")}");
@@ -98,14 +108,18 @@ namespace Titan.D3D11.Device
 
         public ID3D11InputLayout CreateInputLayout(in D3D11InputElementDesc[] descs, ID3DBlob blob)
         {
-            var result = D3D11DeviceBindings.CreateInputLayout_(_handle, descs, (uint)descs.Length, blob.GetBufferPointer(), blob.GetBufferSize(), out var inputLayout);
+            return CreateInputLayout(descs, blob.GetBufferPointer(), blob.GetBufferSize());
+        }
+
+        public ID3D11InputLayout CreateInputLayout(in D3D11InputElementDesc[] descs, IntPtr buffer, UIntPtr size)
+        {
+            var result = D3D11DeviceBindings.CreateInputLayout_(_handle, descs, (uint)descs.Length, buffer, size, out var inputLayout);
             if (result.Failed)
             {
                 throw new Win32Exception($"Device CreateInputLayout failed with code: 0x{result.Code.ToString("X")}");
             }
             return new D3D11InputLayout(inputLayout);
         }
-
         public ID3D11DepthStencilState CreateDepthStencilState(in D3D11DepthStencilDesc depthDesc)
         {
             HRESULT result;
