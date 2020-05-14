@@ -1,9 +1,11 @@
 using System;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using Titan.D3D11;
 using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.Device;
 using Titan.Graphics.Buffers;
+using Titan.Graphics.Shaders;
 
 namespace Titan.Graphics
 {
@@ -12,16 +14,18 @@ namespace Titan.Graphics
         private readonly ID3D11Device _device;
         private readonly ID3D11RenderTargetView _renderTarget;
         private readonly ID3D11DepthStencilView _depthStencilView;
+        private readonly ID3DCommon _common;
 
         private readonly Color _clearColor = new Color{Blue = 0.1f, Alpha = 1f};
 
         private readonly bool _vSync = true;
 
-        public Device(ID3D11Device device, ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencilView)
+        public Device(ID3D11Device device, ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencilView, ID3DCommon common)
         {
             _device = device ?? throw new ArgumentNullException(nameof(device));
             _renderTarget = renderTarget ?? throw new ArgumentNullException(nameof(renderTarget));
             _depthStencilView = depthStencilView ?? throw new ArgumentNullException(nameof(depthStencilView));
+            _common = common ?? throw new ArgumentNullException(nameof(common));
         }
 
         public IIndexBuffer CreateIndexBuffer(in short[] indices)
@@ -120,6 +124,22 @@ namespace Titan.Graphics
                     return new ConstantBuffer<T>(_device.CreateBuffer(desc, data));
                 }
             }
+        }
+
+        public IVertexShader CreateVertexShader(string filename)
+        {
+            // not sure if we should read the file here, maybe look at other ways to do it
+            // maybe we should load the blob in some other place and pass the blob here (buffer pointer + size)
+            using var blob = _common.ReadFileToBlob(filename);
+            return new VertexShader(_device.Context, _device.CreateVertexShader(blob));
+        }
+
+        public IPixelShader CreatePixelShader(string filename)
+        {
+            // not sure if we should read the file here, maybe look at other ways to do it
+            // maybe we should load the blob in some other place and pass the blob here (buffer pointer + size)
+            using var blob = _common.ReadFileToBlob(filename);
+            return new PixelShader(_device.Context, _device.CreatePixelShader(blob));
         }
 
         public IConstantBuffer<T> CreateConstantBuffer<T>() where T : unmanaged

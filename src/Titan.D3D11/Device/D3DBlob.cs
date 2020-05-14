@@ -5,7 +5,8 @@ namespace Titan.D3D11.Device
 {
     internal class D3DBlob : ComPointer, ID3DBlob
     {
-        public D3DBlob(IntPtr handle) : base(handle)
+        public D3DBlob(IntPtr handle) 
+            : base(handle)
         {
         }
         public UIntPtr GetBufferSize()

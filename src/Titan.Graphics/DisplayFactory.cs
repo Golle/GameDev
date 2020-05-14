@@ -10,11 +10,13 @@ namespace Titan.Graphics
     {
         private readonly IWindowCreator _windowCreator;
         private readonly ID3D11DeviceFactory _d3D11DeviceFactory;
+        private readonly ID3DCommon _common;
 
-        public DisplayFactory(IWindowCreator windowCreator, ID3D11DeviceFactory d3D11DeviceFactory)
+        public DisplayFactory(IWindowCreator windowCreator, ID3D11DeviceFactory d3D11DeviceFactory, ID3DCommon common)
         {
             _windowCreator = windowCreator;
             _d3D11DeviceFactory = d3D11DeviceFactory;
+            _common = common;
         }
         public IDisplay Create(string title, int width, int height)
         {
@@ -78,7 +80,7 @@ namespace Titan.Graphics
 
 
             // Create the device abstraction
-            var device = new Device(d3D11Device, renderTarget, depthStencilView);
+            var device = new Device(d3D11Device, renderTarget, depthStencilView, _common);
 
             return new Display(device, window);
         }
