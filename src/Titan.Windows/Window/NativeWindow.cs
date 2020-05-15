@@ -19,6 +19,7 @@ namespace Titan.Windows.Window
         private readonly IEventManager _eventManager;
 
         private POINT _mousePosition = default;
+        private UIntPtr _windowSize;
 
         // Create a delegate that have the same lifetime as the native window to prevent the GC to move it
         private User32.WndProcDelegate _windowProcedureDelegate;
@@ -82,6 +83,7 @@ namespace Titan.Windows.Window
             }
         }
 
+        
         internal IntPtr WindowProcedure(IntPtr hWnd, WindowsMessage message, UIntPtr wParam, UIntPtr lParam)
         {
             switch (message)
@@ -103,11 +105,18 @@ namespace Titan.Windows.Window
                 case WindowsMessage.WM_CHAR:
                     _eventManager.Publish(new CharacterTypedEvent((char)wParam));
                     break;
-
+                case WindowsMessage.WM_SIZE:
+                    _windowSize = lParam;
+                    break;
+                case WindowsMessage.WM_EXITSIZEMOVE:
+                    if (_windowSize != UIntPtr.Zero)
+                    {
+                        var (low, high) = Split((int)_windowSize);
+                        _eventManager.Publish(new WindowResizeEvent(low, high));
+                    }
+                    break;
 
                 // Mouse events, we can use wParam to read the state for mouse buttons. Might be better?
-
-
                 // VM_MOSEMOVE is slow, look at GetCursorPos and ScreenToClient
                 //case WindowsMessage.WM_MOUSEMOVE:
                 //    _eventManager.Publish(new MouseMovedEvent(GetMouseCoordinates((int)lParam)));
@@ -151,6 +160,11 @@ namespace Titan.Windows.Window
         }
 
         private static (int x, int y) GetMouseCoordinates(int lParam)
+        {
+            return (lParam & 0xffff, (lParam >> 16) & 0xffff);
+        }
+
+        public static (int low, int high) Split(int lParam)
         {
             return (lParam & 0xffff, (lParam >> 16) & 0xffff);
         }

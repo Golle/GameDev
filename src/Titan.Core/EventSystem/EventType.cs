@@ -6,8 +6,10 @@ namespace Titan.Core.EventSystem
         KeyDown,
         KeyReleased,
         KeyAutoRepeat,
-        LostFocus,
         CharacterTyped,
+
+        LostFocus,
+        WindowResize,
 
         Update,
         FixedUpdate,
@@ -17,7 +19,7 @@ namespace Titan.Core.EventSystem
         MouseLeftButtonReleased,
         MouseRightButtonReleased,
         MouseRightButtonPressed,
-        
-        NumberOfEvents,
+
+        NumberOfEvents // must be the last one
     }
 }
