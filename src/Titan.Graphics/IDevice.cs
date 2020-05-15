@@ -19,7 +19,6 @@ namespace Titan.Graphics
         IVertexShader CreateVertexShader(IBlob vertexShaderBlob);
         IPixelShader CreatePixelShader(IBlob pixelShaderBlob);
 
-
         IInputLayout CreateInputLayout(VertexLayout vertexLayout, IBlob vertexShaderBlob);
 
         void BeginRender();

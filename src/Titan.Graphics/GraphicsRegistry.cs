@@ -1,6 +1,7 @@
 using Titan.Core.Ioc;
 using Titan.D3D11;
 using Titan.Graphics.Blobs;
+using Titan.Graphics.Camera;
 using Titan.Graphics.Stuff;
 
 namespace Titan.Graphics
@@ -15,6 +16,7 @@ namespace Titan.Graphics
                 .Register<IGraphicsHandler, GraphicsHandler>()
                 .Register<IDisplayFactory, DisplayFactory>()
                 .Register<IBlobReader, BlobReader>()
+                .Register<ICameraFactory, CameraFactory>()
 
                 ;
         }

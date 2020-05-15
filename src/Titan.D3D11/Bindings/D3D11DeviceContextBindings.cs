@@ -121,5 +121,23 @@ namespace Titan.D3D11.Bindings
             [In] uint startIndexLocation,
             [In] int baseVertexLocation
         );
+
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern unsafe void UpdateSubresource_(
+            [In] IntPtr context,
+            [In] IntPtr pDstResource, // ID3D11Resource
+            [In] uint dstSubresource,
+            [In] D3D11Box* pDstBox,
+            [In] void* pSrcData,
+            [In] uint srcRowPitch,
+            [In] uint srcDepthPitch
+        );
+    }
+
+    [StructLayout(LayoutKind.Sequential, Size = 24)]
+    internal struct D3D11Box
+    {
+        // wont be using this one now
+        // https://docs.microsoft.com/sv-se/windows/win32/api/d3d11/ns-d3d11-d3d11_box
     }
 }

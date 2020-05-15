@@ -85,5 +85,13 @@ namespace Titan.D3D11.Device
         {
             D3D11DeviceContextBindings.OMSetDepthStencilState_(Handle, stencilState.Handle, stencilRef);
         }
+
+        public void UpdateSubresourceData(ID3D11Resource resource, in D3D11SubresourceData data)
+        {
+            unsafe
+            {
+                D3D11DeviceContextBindings.UpdateSubresource_(Handle, resource.Handle, 0, (D3D11Box*)null, data.pSysMem, 0,0);
+            }
+        }
     }
 }

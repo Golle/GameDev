@@ -106,6 +106,19 @@ namespace Titan.Graphics
             }
         }
 
+        public IConstantBuffer<T> CreateConstantBuffer<T>() where T : unmanaged
+        {
+            var size = (uint)Marshal.SizeOf<T>();
+            CheckAlignment(size);
+
+            D3D11BufferDesc desc = default;
+            desc.BindFlags = D3D11BindFlag.ConstantBuffer;
+            desc.Usage = D3D11Usage.Default; // not sure about this one
+            desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified; // not sure about this one
+            desc.ByteWidth = size;
+            return new ConstantBuffer<T>(_device.Context, _device.CreateBuffer(desc));
+        }
+
         public IConstantBuffer<T> CreateConstantBuffer<T>(in T initialData) where T : unmanaged
         {
             var size = (uint)Marshal.SizeOf<T>();
@@ -113,8 +126,8 @@ namespace Titan.Graphics
 
             D3D11BufferDesc desc = default;
             desc.BindFlags = D3D11BindFlag.ConstantBuffer;
-            desc.Usage = D3D11Usage.Dynamic; // not sure about this one
-            desc.CpuAccessFlags = D3D11CpuAccessFlag.Write; // not sure about this one
+            desc.Usage = D3D11Usage.Default; // not sure about this one
+            desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified; // not sure about this one
             desc.ByteWidth = size;
 
             unsafe
@@ -123,7 +136,7 @@ namespace Titan.Graphics
                 {
                     D3D11SubresourceData data = default;
                     data.pSysMem = initialDataPointer;
-                    return new ConstantBuffer<T>(_device.CreateBuffer(desc, data));
+                    return new ConstantBuffer<T>(_device.Context, _device.CreateBuffer(desc, data));
                 }
             }
         }
@@ -146,19 +159,6 @@ namespace Titan.Graphics
         {
             var layout = _device.CreateInputLayout(vertexLayout.Descriptors, vertexShaderBlob.Buffer, vertexShaderBlob.Size);
             return new InputLayout(_device.Context, layout);
-        }
-
-        public IConstantBuffer<T> CreateConstantBuffer<T>() where T : unmanaged
-        {
-            var size = (uint)Marshal.SizeOf<T>();
-            CheckAlignment(size);
-
-            D3D11BufferDesc desc = default;
-            desc.BindFlags = D3D11BindFlag.ConstantBuffer;
-            desc.Usage = D3D11Usage.Dynamic; // not sure about this one
-            desc.CpuAccessFlags = D3D11CpuAccessFlag.Write; // not sure about this one
-            desc.ByteWidth = size;
-            return new ConstantBuffer<T>(_device.CreateBuffer(desc));
         }
 
         public void BeginRender()

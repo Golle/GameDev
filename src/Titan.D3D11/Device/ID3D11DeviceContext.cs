@@ -20,5 +20,7 @@ namespace Titan.D3D11.Device
         void VSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer);
         void PSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer);
         void OMSetDepthStencilState(ID3D11DepthStencilState stencilState, uint stencilRef);
+
+        void UpdateSubresourceData(ID3D11Resource resource, in D3D11SubresourceData data);
     }
 }

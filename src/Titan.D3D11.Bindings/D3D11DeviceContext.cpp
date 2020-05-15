@@ -143,3 +143,16 @@ EXPORT void OMSetDepthStencilState_(
 {
 	context->OMSetDepthStencilState(pDepthStencilState, stencilRef);
 }
+
+EXPORT void UpdateSubresource_(
+	ID3D11DeviceContext* context,
+	ID3D11Resource* pDstResource,
+	UINT DstSubresource,
+	const D3D11_BOX* pDstBox,
+	const void* pSrcData,
+	UINT SrcRowPitch,
+	UINT SrcDepthPitch
+)
+{
+	context->UpdateSubresource(pDstResource, DstSubresource, pDstBox, pSrcData, SrcRowPitch, SrcDepthPitch);
+}

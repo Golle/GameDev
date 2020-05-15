@@ -2,6 +2,7 @@ using System;
 using Titan.Core.Ioc;
 using Titan.Graphics;
 using Titan.Graphics.Blobs;
+using Titan.Graphics.Camera;
 
 namespace Titan.Game
 {
@@ -34,6 +35,12 @@ namespace Titan.Game
 
     internal class MyTestClass
     {
+        private ICamera _camera;
+
+        public MyTestClass(ICameraFactory factory)
+        {
+            _camera = factory.CreateOrhographicCamera();
+        }
 
         public void Print()
         {

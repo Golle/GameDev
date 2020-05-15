@@ -1,9 +1,10 @@
+using System;
+using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Titan.Core.EventSystem;
 using Titan.Core.Logging;
 using Titan.D3D11;
-using Titan.D3D11.Bindings.Models;
 using Titan.Graphics;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
@@ -28,6 +29,9 @@ namespace Titan
         private IVertexShader _vertexShader;
         private IPixelShader _pixelShader;
         private IInputLayout _inputLayout;
+        private IConstantBuffer<MyConstantBuffer> _contantBuffer;
+
+        private MyConstantBuffer _cbValue = default;
 
         public GameEngine(IWindow window, IDevice device, IEventManager eventManager, ILogger logger, IInputManager inputManager, IBlobReader blobReader)
         {
@@ -49,6 +53,23 @@ namespace Titan
             public float Y;
             public float Z;
             public Color Color;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        struct MyConstantBuffer
+        {
+            public Matrix4x4 Transform;
+        }
+        public static Matrix4x4 CreatePerspectiveLH1(float width, float height, float nearPlaneDistance, float farPlaneDistance)
+        {
+            Matrix4x4 matrix = default;
+            matrix.M11 = 2 * nearPlaneDistance / width;
+            matrix.M22 = 2 * nearPlaneDistance / height;
+            matrix.M33 = farPlaneDistance / (farPlaneDistance - nearPlaneDistance);
+            matrix.M34 = 1f;
+            matrix.M43 = nearPlaneDistance * farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
+            return matrix;
+
         }
         private void Setup()
         {
@@ -90,8 +111,20 @@ namespace Titan
                 .Append("COLOR", VertexLayoutTypes.Float4Color);
 
             _inputLayout = _device.CreateInputLayout(layout, vertexBlob);
+
+            
+            _cbValue.Transform =
+                Matrix4x4.Transpose(
+                    //Matrix4x4.CreateRotationZ(angle) *
+                    //Matrix4x4.CreateRotationX(angle) *
+                    Matrix4x4.CreateTranslation(0, 0f, 0) *
+                    CreatePerspectiveLH1(1f, 3f / 4f, 0.5f, 10f)
+                );
+
+            _contantBuffer = _device.CreateConstantBuffer(_cbValue);
         }
 
+        private float a = 0f;
         public bool Execute()
         {
             // temporary for testing
@@ -113,7 +146,14 @@ namespace Titan
             
             _device.BeginRender();
 
-
+            a += 0.01f;
+            _cbValue.Transform =
+                Matrix4x4.Transpose(
+                    Matrix4x4.CreateRotationZ(a) *
+                    Matrix4x4.CreateTranslation(0, 0f, 0.5f + a/10f) *
+                    CreatePerspectiveLH1(1f, _window.Height/(float)_window.Width, 0.5f, 10f)
+                );
+            _contantBuffer.Update(_cbValue);
 
 
             // Draw 3D World
@@ -125,6 +165,7 @@ namespace Titan
             _vertexShader.Bind();
             _pixelShader.Bind();
             _inputLayout.Bind();
+            _contantBuffer.BindToVertexShader();
 
             _device.DrawIndexed(_indexBuffer.NumberOfIndices, 0, 0);
 

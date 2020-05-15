@@ -1,8 +1,8 @@
 //
-//cbuffer CBuf 
-//{
-//	matrix transform;
-//};
+cbuffer CBuf 
+{
+	matrix transform;
+};
 //
 //float4 main(float3 pos : POSITION) : SV_Position
 //{
@@ -19,7 +19,7 @@ struct VS_OUTPUT {
 VS_OUTPUT main(float3 pos : POSITION, float4 color : COLOR)
 {
 	VS_OUTPUT output;
-	output.Pos = float4(pos, 4.0f);
+	output.Pos = mul(float4(pos, 4.0f), transform);
 	output.Color = color;
 	return output;
 	/*return mul(float4(pos.x, pos.y, pos.z, 1.0f), transform);*/
