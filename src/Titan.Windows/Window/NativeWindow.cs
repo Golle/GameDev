@@ -10,19 +10,19 @@ namespace Titan.Windows.Window
     internal class NativeWindow : IWindow
     {
         public IntPtr Handle { get; internal set; }
-        public int Width { get; }
-        public int Height { get; }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
         public bool Windowed => true; // This will change later
         
         public IntPtr WindowProcedureFunctionPointer { get; }
 
         private readonly IEventManager _eventManager;
 
-        private POINT _mousePosition = default;
-        private UIntPtr _windowSize;
+        private POINT _mousePosition;
 
         // Create a delegate that have the same lifetime as the native window to prevent the GC to move it
-        private User32.WndProcDelegate _windowProcedureDelegate;
+        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
+        private readonly User32.WndProcDelegate _windowProcedureDelegate;
         private GCHandle _windowsProcedureHandle;
         public NativeWindow(int width, int height, IEventManager eventManager)
         {
@@ -106,14 +106,12 @@ namespace Titan.Windows.Window
                     _eventManager.Publish(new CharacterTypedEvent((char)wParam));
                     break;
                 case WindowsMessage.WM_SIZE:
-                    _windowSize = lParam;
+                    var (low, high) = Split((int)lParam);
+                    Height = high;
+                    Width = low;
                     break;
                 case WindowsMessage.WM_EXITSIZEMOVE:
-                    if (_windowSize != UIntPtr.Zero)
-                    {
-                        var (low, high) = Split((int)_windowSize);
-                        _eventManager.Publish(new WindowResizeEvent(low, high));
-                    }
+                    _eventManager.Publish(new WindowResizeEvent(Width, Height));
                     break;
 
                 // Mouse events, we can use wParam to read the state for mouse buttons. Might be better?
