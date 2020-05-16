@@ -1,4 +1,5 @@
 using System;
+using Titan.Graphics.Renderer;
 
 namespace Titan.Graphics.Buffers
 {
@@ -8,6 +9,6 @@ namespace Titan.Graphics.Buffers
     }
     public interface IVertexBuffer<T> : IVertexBuffer
     {
-
+        void SetData(in T[] vertices, int numberOfVertices);
     }
 }

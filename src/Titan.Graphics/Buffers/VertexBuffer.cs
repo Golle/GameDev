@@ -19,7 +19,18 @@ namespace Titan.Graphics.Buffers
         public void Bind()
         {
             // TODO: offset needs to be configurable at some point
-            _context.SetVertexBuffer(0, _buffer,_strides, 0); 
+            _context.SetVertexBuffer(0, _buffer, _strides, 0); 
+        }
+
+        public void SetData(in T[] vertices, int numberOfVertices)
+        {
+            unsafe
+            {
+                fixed (void* pointer = vertices)
+                {
+                    _context.UpdateSubresourceData(_buffer, pointer);
+                }
+            }
         }
 
         public void Dispose()

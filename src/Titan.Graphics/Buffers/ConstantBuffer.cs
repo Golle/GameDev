@@ -1,4 +1,3 @@
-using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.Device;
 
 namespace Titan.Graphics.Buffers
@@ -29,9 +28,7 @@ namespace Titan.Graphics.Buffers
             {
                 fixed (void* dataPointer = &data)
                 {
-                    D3D11SubresourceData subresourceData = default;
-                    subresourceData.pSysMem = dataPointer;
-                    _context.UpdateSubresourceData(_buffer, subresourceData);
+                    _context.UpdateSubresourceData(_buffer, dataPointer);
                 }
             }
         }

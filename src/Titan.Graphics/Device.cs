@@ -54,8 +54,8 @@ namespace Titan.Graphics
         {
             D3D11BufferDesc desc = default;
             desc.BindFlags = D3D11BindFlag.IndexBuffer;
-            desc.Usage = D3D11Usage.Dynamic;
-            desc.CpuAccessFlags = D3D11CpuAccessFlag.Write;
+            desc.Usage = D3D11Usage.Default;
+            desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified;
             desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
             desc.ByteWidth = size * sizeof(short);
             desc.StructureByteStride = sizeof(short);
@@ -72,8 +72,8 @@ namespace Titan.Graphics
             var size = (uint)Marshal.SizeOf<T>();
             D3D11BufferDesc desc = default;
             desc.BindFlags = D3D11BindFlag.VertexBuffer;
-            desc.Usage = D3D11Usage.Dynamic;
-            desc.CpuAccessFlags = D3D11CpuAccessFlag.Write;
+            desc.Usage = D3D11Usage.Default;
+            desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified;
             desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
             desc.ByteWidth = (numberOfVertices * size);
             desc.StructureByteStride = size;

@@ -11,6 +11,7 @@ namespace Titan.Graphics.Camera
     public interface ICameraFactory
     {
         ICamera CreateOrhographicCamera();
+        ICamera CreatePerspectiveCamera();
     }
 
     class CameraFactory : ICameraFactory
@@ -25,8 +26,16 @@ namespace Titan.Graphics.Camera
         }
         public ICamera CreateOrhographicCamera()
         {
-            return new OrthographicCamera(_eventManager, _window.Width, _window.Height);
 
+            var aspectRatio = _window.Width / (float)_window.Height;
+
+            return new OrthographicCamera(_eventManager, -aspectRatio * 0.25f, aspectRatio*0.25f, -0.25f, 0.25f);
+
+        }
+
+        public ICamera CreatePerspectiveCamera()
+        {
+            return new PerspectiveCamera(1f, _window.Height / (float)_window.Width, 0.5f, 10f);
         }
     }
 }
