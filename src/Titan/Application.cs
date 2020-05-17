@@ -4,6 +4,7 @@ using Titan.Core.GameLoop;
 using Titan.Core.Ioc;
 using Titan.Core.Logging;
 using Titan.Graphics;
+using Titan.Systems;
 using Titan.Windows;
 
 namespace Titan
@@ -13,6 +14,7 @@ namespace Titan
         private readonly IContainer _container = Bootstrapper.CreateContainer()
                 .AddRegistry<WindowsRegistry>()
                 .AddRegistry<GraphicsRegistry>()
+                .AddRegistry<SystemsRegistry>()
                 .Register<GameEngine>()
             ;
 

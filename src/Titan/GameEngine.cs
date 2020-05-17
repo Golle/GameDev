@@ -1,9 +1,17 @@
+using System;
+using System.Diagnostics;
 using System.Numerics;
+using System.Reflection;
+using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
 using Titan.Core.EventSystem;
 using Titan.Core.Logging;
 using Titan.D3D11;
 using Titan.Graphics.Camera;
 using Titan.Graphics.Renderer;
+using Titan.Systems.Components;
+using Titan.Systems.EntitySystem;
+using Titan.Systems.TransformSystem;
 using Titan.Windows.Input;
 using Titan.Windows.Window;
 
@@ -17,10 +25,11 @@ namespace Titan
         private readonly IInputManager _inputManager;
         private readonly ICameraFactory _cameraFactory;
         private readonly IRenderer _renderer;
+        private readonly IEntityManager _entityManager;
 
         private ICamera _camera;
         private RendereableModel _model;
-        public GameEngine(IWindow window, IEventManager eventManager, ILogger logger, IInputManager inputManager, ICameraFactory cameraFactory, IRenderer renderer)
+        public GameEngine(IWindow window, IEventManager eventManager, ILogger logger, IInputManager inputManager, ICameraFactory cameraFactory, IRenderer renderer, IEntityManager entityManager, ITransform3DSystem transform3DSystem)
         {
             _window = window;
             _eventManager = eventManager;
@@ -28,7 +37,20 @@ namespace Titan
             _inputManager = inputManager;
             _cameraFactory = cameraFactory;
             _renderer = renderer;
+            _entityManager = entityManager;
             Setup();
+
+
+
+            var entity = _entityManager.Create();
+
+
+            for (var i = 0; i < 10; ++i)
+            {
+                var transform = entity.AddComponent<Transform3D>(ComponentId.Transform3D);
+            }
+            
+            entity.Destroy();
         }
    
         private void Setup()
@@ -58,13 +80,20 @@ namespace Titan
             
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = sizeof(int))]
+        struct TestStr
+        {
+            public int A;
+            public long B;
+            public float C;
+        }
         
 
         public bool Execute()
         {
             var mousePosition = _inputManager.Mouse.Position;
             _window.SetTitle($"x: {mousePosition.X} y: {mousePosition.Y}");
-
+            
 
             if (!_window.Update())
             {

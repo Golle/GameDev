@@ -20,6 +20,12 @@ namespace Titan.Core.EventSystem
         MouseRightButtonReleased,
         MouseRightButtonPressed,
 
+
+        ComponentAdded,
+        ComponentRemoved,
+        ComponentEnabled,
+        ComponentDisabled,
+
         NumberOfEvents // must be the last one
     }
 }

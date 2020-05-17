@@ -1,5 +1,4 @@
 using System;
-using Titan.D3D11.Bindings.Models;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
