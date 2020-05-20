@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Titan.Core.EventSystem;
 using Titan.Systems.Components;
 using Titan.Systems.Components.Events;
+using Titan.Systems.EntitySystem.Events;
 
 namespace Titan.Systems.EntitySystem
 {
@@ -57,12 +57,43 @@ namespace Titan.Systems.EntitySystem
             return default;
         }
 
-        public void SetActive(bool active)
+        public void Enable()
         {
-            Enabled = active;
-            // disable/enable components
+            if (Enabled)
+            {
+                return;
+            }
+
+            Enabled = true;
+            for (var i = 0; i < _children.Count; ++i)
+            {
+                _children[i].Enable();
+            }
+            for (var i = 0; i < _components.Count; ++i)
+            {
+                _eventManager.Publish(new ComponentEnabledEvent(_components[i]));
+            }
+            _eventManager.Publish(new EntityEnabledEvent(this));
         }
 
+        public void Disable()
+        {
+            if (!Enabled)
+            {
+                return;
+            }
+            Enabled = false;
+            for (var i = 0; i < _children.Count; ++i)
+            {
+                _children[i].Disable();
+            }
+            for (var i = 0; i < _components.Count; ++i)
+            {
+                _eventManager.Publish(new ComponentDisabledEvent(_components[i]));
+            }
+            _eventManager.Publish(new EntityDisabledEvent(this));
+        }
+        
         public void Destroy()
         {
             for (var i = 0; i < _children.Count; ++i)
@@ -76,6 +107,11 @@ namespace Titan.Systems.EntitySystem
             }
             _children.Clear();
             _components.Clear();
+
+            _eventManager.Publish(new EntityDestroyedEvent(this));
         }
+
+
+
     }
 }

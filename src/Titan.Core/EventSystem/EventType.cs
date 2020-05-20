@@ -26,6 +26,12 @@ namespace Titan.Core.EventSystem
         ComponentEnabled,
         ComponentDisabled,
 
+        EntityDestroyed,
+        EntityDisabled,
+        EntityEnabled,
+
         NumberOfEvents // must be the last one
+        
+        
     }
 }

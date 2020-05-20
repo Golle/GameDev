@@ -6,7 +6,8 @@ namespace Titan.Systems.EntitySystem
     {
         T AddComponent<T>(ComponentId id) where T : IComponent;
         T GetComponent<T>(ComponentId id) where T : IComponent;
-        void SetActive(bool active);
+        void Enable();
+        void Disable();
         void Destroy();
 
     }
