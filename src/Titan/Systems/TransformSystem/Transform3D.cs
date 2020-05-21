@@ -14,6 +14,8 @@ namespace Titan.Systems.TransformSystem
         public ref readonly Quaternion Rotation => ref _transform.Rotation;
         public ref readonly Vector3 Scale => ref _transform.Scale;
         public Transform3D Parent { get; private set; }
+        public Matrix4x4 Transform => _transform.LocalTransform;
+
         public Transform3D()
         {
             Init();

@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Titan.Core.EventSystem;
@@ -5,6 +7,7 @@ using Titan.Core.Logging;
 using Titan.D3D11;
 using Titan.EntityComponentSystem;
 using Titan.EntityComponentSystem.Entities;
+using Titan.EntityComponentSystem.Systems;
 using Titan.Graphics.Camera;
 using Titan.Graphics.Renderer;
 using Titan.Systems.Components;
@@ -39,14 +42,33 @@ namespace Titan
             Setup();
 
 
-            
 
-            var entity = _entityManager.Create();
-            entity.AddComponent<TestComponent1>();
-            entity.AddComponent<TestComponent2>();
-            entity.AddComponent<Transform3D>();
+            var s = Stopwatch.StartNew();
+            var system = new TestSystem();
 
+            for (int i = 0; i < 10000; i++)
+            {
+                var entity = _entityManager.Create();
+                entity.AddComponent<TestComponent1>();
+                entity.AddComponent<TestComponent2>();
+                entity.AddComponent<Transform3D>();
+                
+                system.OnEntityCreated(entity);
+            }
+
+            system.Update(0.1f);
+            s.Stop();
+            Console.WriteLine($"Time elapsed: {s.Elapsed.TotalMilliseconds} ms");
+            s.Restart();
+            for (var i = 0; i < 1; ++i)
+            {
+                system.Update(0.1f);
+            }
             
+            s.Stop();
+            Console.WriteLine($"Time elapsed: {s.Elapsed.TotalMilliseconds} ms");
+
+
 
             //entity.Destroy();
         }

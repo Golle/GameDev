@@ -25,15 +25,15 @@ namespace Titan.EntityComponentSystem.Components
 
         public T Get()
         {
-            if (_components.TryDequeue(out var component))
+            if (!_components.TryDequeue(out var component))
             {
-                if (_resetOnGet)
-                {
-                    component.Reset();
-                }
-                return component;
+                return new T();
             }
-            return new T();
+            if (_resetOnGet)
+            {
+                component.Reset();
+            }
+            return component;
         }
 
         public void Put(T component)

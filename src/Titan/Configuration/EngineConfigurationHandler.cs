@@ -1,21 +1,21 @@
 using Titan.EntityComponentSystem;
 using Titan.EntityComponentSystem.Components;
+using Titan.EntityComponentSystem.Configuration;
 using Titan.Systems.TransformSystem;
 
 namespace Titan.Configuration
 {
     internal class EngineConfigurationHandler : IEngineConfigurationHandler
     {
-        private readonly IComponentManager _componentManager;
+        private readonly IEntityComponentSystemConfiguration _entityComponentSystemConfiguration;
 
-        public EngineConfigurationHandler(IComponentManager componentManager)
+        public EngineConfigurationHandler(IEntityComponentSystemConfiguration entityComponentSystemConfiguration)
         {
-            _componentManager = componentManager;
+            _entityComponentSystemConfiguration = entityComponentSystemConfiguration;
         }
         public void Initialize()
         {
-            _componentManager.Register(new ComponentPool<Transform3D>(100, 5000));
-
+            _entityComponentSystemConfiguration.Initialize();
         }
     }
 }

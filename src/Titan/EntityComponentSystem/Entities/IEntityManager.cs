@@ -1,7 +1,8 @@
 namespace Titan.EntityComponentSystem.Entities
 {
-    internal interface IEntityManager
+    public interface IEntityManager
     {
         Entity Create();
+        void Destroy(Entity entity);
     }
 }

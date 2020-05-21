@@ -21,17 +21,21 @@ namespace Titan.Core.EventSystem
         MouseRightButtonPressed,
 
 
+        ComponentCreated,
+        ComponentDestroyed,
         ComponentAdded,
         ComponentRemoved,
         ComponentEnabled,
         ComponentDisabled,
 
+        EntityCreated,
         EntityDestroyed,
         EntityDisabled,
         EntityEnabled,
 
         NumberOfEvents // must be the last one
-        
-        
+
+
+        ,
     }
 }

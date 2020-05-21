@@ -6,5 +6,6 @@ namespace Titan.EntityComponentSystem.Components
     {
         void Register<T>(IComponentPool<T> componentPool) where T : IComponent;
         T Create<T>() where T : IComponent;
+        void Destroy<T>(T component) where T : IComponent;
     }
 }

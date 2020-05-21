@@ -14,7 +14,9 @@ namespace Titan.EntityComponentSystem.Configuration
 
         public void Initialize()
         {
-            _componentManager.Register(new ComponentPool<Transform3D>(100, 5000));
+            _componentManager.Register(new ComponentPool<Transform3D>(1000, 5000));
+            _componentManager.Register(new ComponentPool<TestComponent1>(1000, 5000));
+            _componentManager.Register(new ComponentPool<TestComponent2>(1000, 5000));
         }
     }
 }
