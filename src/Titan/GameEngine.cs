@@ -1,12 +1,10 @@
-using System;
-using System.Diagnostics;
 using System.Numerics;
-using System.Reflection;
-using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using Titan.Core.EventSystem;
 using Titan.Core.Logging;
 using Titan.D3D11;
+using Titan.EntityComponentSystem;
+using Titan.EntityComponentSystem.Entities;
 using Titan.Graphics.Camera;
 using Titan.Graphics.Renderer;
 using Titan.Systems.Components;
@@ -29,7 +27,7 @@ namespace Titan
 
         private ICamera _camera;
         private RendereableModel _model;
-        public GameEngine(IWindow window, IEventManager eventManager, ILogger logger, IInputManager inputManager, ICameraFactory cameraFactory, IRenderer renderer, IEntityManager entityManager, ITransform3DSystem transform3DSystem)
+        public GameEngine(IWindow window, IEventManager eventManager, ILogger logger, IInputManager inputManager, ICameraFactory cameraFactory, IRenderer renderer, IEntityManager entityManager)
         {
             _window = window;
             _eventManager = eventManager;
@@ -41,16 +39,16 @@ namespace Titan
             Setup();
 
 
+            
 
             var entity = _entityManager.Create();
+            entity.AddComponent<TestComponent1>();
+            entity.AddComponent<TestComponent2>();
+            entity.AddComponent<Transform3D>();
 
-
-            for (var i = 0; i < 10; ++i)
-            {
-                var transform = entity.AddComponent<Transform3D>(ComponentId.Transform3D);
-            }
             
-            entity.Destroy();
+
+            //entity.Destroy();
         }
    
         private void Setup()
@@ -79,15 +77,6 @@ namespace Titan
             _model = new RendereableModel(vertices, indices, Vector3.Zero);
             
         }
-
-        [StructLayout(LayoutKind.Sequential, Pack = sizeof(int))]
-        struct TestStr
-        {
-            public int A;
-            public long B;
-            public float C;
-        }
-        
 
         public bool Execute()
         {

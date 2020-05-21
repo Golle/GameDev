@@ -1,12 +1,12 @@
+using System;
 using System.Numerics;
+using System.Threading;
 using Titan.Systems.Components;
 
 namespace Titan.Systems.TransformSystem
 {
     public class Transform3D : IComponent
     {
-        public ComponentId Id => ComponentId.Transform3D;
-
         private bool _isDirty;
         private TransformData _transform;
         private int _numberOfParents;
@@ -66,6 +66,11 @@ namespace Titan.Systems.TransformSystem
                 return;
             }
             _transform.Update(Parent?._transform.WorldTransform);
+        }
+
+        public void Reset()
+        {
+            //TODO: implement
         }
     }
 }

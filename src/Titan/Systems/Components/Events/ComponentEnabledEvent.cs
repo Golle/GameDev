@@ -6,7 +6,6 @@ namespace Titan.Systems.Components.Events
     {
         public EventType Type => EventType.ComponentEnabled;
         public IComponent Component { get; }
-        public ComponentId Id => Component.Id;
         public ComponentEnabledEvent(IComponent component)
         {
             Component = component;

@@ -1,4 +1,6 @@
 using Titan.Core.EventSystem;
+using Titan.EntityComponentSystem;
+using Titan.EntityComponentSystem.Entities;
 
 namespace Titan.Systems.EntitySystem.Events
 {

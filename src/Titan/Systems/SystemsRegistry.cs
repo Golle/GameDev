@@ -15,13 +15,7 @@ namespace Titan.Systems
         public void Register(IContainer container)
         {
 
-            container
-                .Register<IEntityManager, EntityManager>()
-                .Register<ITransform3DSystem, Transform3DSystem>()
-                .Register<ITransform3DPool, Transform3DPool>()
-                .Register<IComponentSystem, ComponentSystem>()
-
-                ;
+       
 
         }
     }

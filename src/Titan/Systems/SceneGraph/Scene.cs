@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Titan.EntityComponentSystem;
+using Titan.EntityComponentSystem.Entities;
 using Titan.Systems.EntitySystem;
 
 namespace Titan.Systems.SceneGraph
