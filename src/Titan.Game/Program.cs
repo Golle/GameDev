@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Titan.Core.Ioc;
 using Titan.Graphics;
 using Titan.Graphics.Blobs;
@@ -44,6 +45,13 @@ namespace Titan.Game
 
         public void Print()
         {
+
+            var a = new BitArray(new bool[] {true, false, false});
+
+            var b = new BitArray(new bool[] {true, false, true});
+
+            var c = a.And(b);
+
             Console.WriteLine("Apa");
         }
     }

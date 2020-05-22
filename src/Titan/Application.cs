@@ -1,8 +1,10 @@
 using System;
+using Titan.Configuration;
 using Titan.Core;
 using Titan.Core.GameLoop;
 using Titan.Core.Ioc;
 using Titan.Core.Logging;
+using Titan.EntityComponentSystem;
 using Titan.Graphics;
 using Titan.Systems;
 using Titan.Windows;
@@ -15,7 +17,9 @@ namespace Titan
                 .AddRegistry<WindowsRegistry>()
                 .AddRegistry<GraphicsRegistry>()
                 .AddRegistry<SystemsRegistry>()
+                .AddRegistry<EntityComponenSystemRegistry>()
                 .Register<GameEngine>()
+                .Register<IEngineConfigurationHandler, EngineConfigurationHandler>()
             ;
 
         private readonly ILogger _logger;
@@ -33,7 +37,14 @@ namespace Titan
 
         private void Run()
         {
+
+            _logger.Debug("Initialize EngineConfiguration");
+            _container
+                .GetInstance<IEngineConfigurationHandler>()
+                .Initialize();
+
             RegisterServices(_container);
+            //RegisterComponentPools(_container.GetInstance<IComponentManager>());
             
             _logger.Debug("Initialize Window and D3D11Device");
 
@@ -62,6 +73,7 @@ namespace Titan
         protected virtual void OnStart() { }
         protected virtual void OnQuit() { }
         protected virtual void RegisterServices(IContainer container) { }
+        //protected virtual void RegisterComponentPools(IComponentManager componentManager){}
         protected TType GetInstance<TType>() => _container.GetInstance<TType>();
     }
 }
