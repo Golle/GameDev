@@ -1,17 +1,15 @@
 using System;
 using System.Diagnostics;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using Titan.Core.EventSystem;
 using Titan.Core.Logging;
 using Titan.D3D11;
 using Titan.EntityComponentSystem;
+using Titan.EntityComponentSystem.Configuration;
 using Titan.EntityComponentSystem.Entities;
 using Titan.EntityComponentSystem.Systems;
 using Titan.Graphics.Camera;
 using Titan.Graphics.Renderer;
-using Titan.Systems.Components;
-using Titan.Systems.EntitySystem;
 using Titan.Systems.TransformSystem;
 using Titan.Windows.Input;
 using Titan.Windows.Window;
@@ -39,24 +37,27 @@ namespace Titan
             _cameraFactory = cameraFactory;
             _renderer = renderer;
             _entityManager = entityManager;
-            Setup();
-
+            
 
 
             var s = Stopwatch.StartNew();
             var system = new TestSystem();
 
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 2; i++)
             {
                 var entity = _entityManager.Create();
-                entity.AddComponent<TestComponent1>();
-                entity.AddComponent<TestComponent2>();
-                entity.AddComponent<Transform3D>();
+                Console.WriteLine($"Mask: {entity.AddComponent<TestComponent1>().Id}");
+                Console.WriteLine($"Mask: {entity.AddComponent<TestComponent2>().Id}");
+                Console.WriteLine($"Mask: {entity.AddComponent<Transform3D>().Id}");
                 
-                system.OnEntityCreated(entity);
+
+                Console.WriteLine(entity.ComponentSignature);
+                entity.RemoveComponent<Transform3D>();
+                Console.WriteLine(entity.ComponentSignature);
+                //system.OnEntityCreated(entity);
             }
 
-            system.Update(0.1f);
+            //system.Update(0.1f);
             s.Stop();
             Console.WriteLine($"Time elapsed: {s.Elapsed.TotalMilliseconds} ms");
             s.Restart();
@@ -69,7 +70,7 @@ namespace Titan
             Console.WriteLine($"Time elapsed: {s.Elapsed.TotalMilliseconds} ms");
 
 
-
+            Setup();
             //entity.Destroy();
         }
    

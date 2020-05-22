@@ -1,11 +1,9 @@
-using System;
 using System.Numerics;
-using System.Threading;
-using Titan.Systems.Components;
+using Titan.EntityComponentSystem.Components;
 
 namespace Titan.Systems.TransformSystem
 {
-    public class Transform3D : IComponent
+    public class Transform3D : BaseComponent
     {
         private bool _isDirty;
         private TransformData _transform;
@@ -70,7 +68,7 @@ namespace Titan.Systems.TransformSystem
             _transform.Update(Parent?._transform.WorldTransform);
         }
 
-        public void Reset()
+        public override void Reset()
         {
             //TODO: implement
         }

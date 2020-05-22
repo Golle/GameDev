@@ -1,21 +1,22 @@
 using System.Numerics;
-using Titan.Systems.Components;
+using Titan.EntityComponentSystem.Components;
 
 namespace Titan.EntityComponentSystem
 {
-    internal class TestComponent1 : IComponent
+    internal struct TestComponent1
     {
-        public Matrix4x4 Transform = Matrix4x4.CreateTranslation(1,2,3);
-        public void Reset()
-        {
-            // noop
-        }
+        public Matrix4x4 Transform;
+    
     }
 
-    internal class TestComponent2 : IComponent
+    internal interface IComponent1
+    {
+    }
+
+    internal class TestComponent2 : BaseComponent
     {
         public Matrix4x4 Transform = Matrix4x4.CreateTranslation(3,4, 23);
-        public void Reset()
+        public override void Reset()
         {
             // noop
         }

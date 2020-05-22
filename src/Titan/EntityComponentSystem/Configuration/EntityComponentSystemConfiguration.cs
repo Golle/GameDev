@@ -14,6 +14,8 @@ namespace Titan.EntityComponentSystem.Configuration
 
         public void Initialize()
         {
+
+            // This must be called before any system is initialized
             _componentManager.Register(new ComponentPool<Transform3D>(1000, 5000));
             _componentManager.Register(new ComponentPool<TestComponent1>(1000, 5000));
             _componentManager.Register(new ComponentPool<TestComponent2>(1000, 5000));

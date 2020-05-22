@@ -13,6 +13,7 @@ namespace Titan.EntityComponentSystem
                 .Register<IEntityComponentSystemConfiguration, EntityComponentSystemConfiguration>()
                 .Register<IEntityManager, EntityManager>()
                 .Register<IComponentManager, ComponentManager>()
+                .Register<IComponentRegister, ComponentRegister>()
                 ;
         }
     }

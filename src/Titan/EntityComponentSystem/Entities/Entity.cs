@@ -17,6 +17,7 @@ namespace Titan.EntityComponentSystem.Entities
 
         private readonly IDictionary<Type, IComponent> _components = new Dictionary<Type, IComponent>();
         public IEnumerable<IComponent> Components => _components.Values;
+        public ulong ComponentSignature { get; private set; }
         public Entity(IEntityManager entityManager, IComponentManager componentManager)
         {
             _entityManager = entityManager;
@@ -27,7 +28,20 @@ namespace Titan.EntityComponentSystem.Entities
         {
             Debug.Assert(!_components.ContainsKey(typeof(T)), $"The entity already contains the {typeof(T)} component.");
 
-            return (T)(_components[typeof(T)] = _componentManager.Create<T>());
+            var component = (T)(_components[typeof(T)] = _componentManager.Create<T>());
+            ComponentSignature |= component.Id; // add component to signature list
+            return component;
+        }
+
+        public void RemoveComponent<T>() where T : IComponent
+        {
+            var type = typeof(T);
+            Debug.Assert(_components.ContainsKey(type));
+
+            var component = _components[type];
+            _components.Remove(type);
+            ComponentSignature ^= component.Id; // remove component from signature list
+            _componentManager.Destroy(component);
         }
 
         public T GetComponent<T>()
@@ -44,6 +58,7 @@ namespace Titan.EntityComponentSystem.Entities
             {
                 _componentManager.Destroy(component);
             }
+            ComponentSignature = 0;
         }
     }
 }

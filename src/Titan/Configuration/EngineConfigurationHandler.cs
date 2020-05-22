@@ -1,7 +1,4 @@
-using Titan.EntityComponentSystem;
-using Titan.EntityComponentSystem.Components;
 using Titan.EntityComponentSystem.Configuration;
-using Titan.Systems.TransformSystem;
 
 namespace Titan.Configuration
 {
