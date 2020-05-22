@@ -1,5 +1,4 @@
 using System.Numerics;
-using Titan.EntityComponentSystem.Components;
 
 namespace Titan.Systems.TransformSystem
 {

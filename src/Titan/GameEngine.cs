@@ -10,7 +10,6 @@ using Titan.EntityComponentSystem.Entities;
 using Titan.EntityComponentSystem.Systems;
 using Titan.Graphics.Camera;
 using Titan.Graphics.Renderer;
-using Titan.Systems.TransformSystem;
 using Titan.Windows.Input;
 using Titan.Windows.Window;
 
@@ -29,7 +28,7 @@ namespace Titan
 
         private ICamera _camera;
         private RendereableModel _model;
-        public GameEngine(IWindow window, IEventManager eventManager, ILogger logger, IInputManager inputManager, ICameraFactory cameraFactory, IRenderer renderer, IEntityManager entityManager, IComponentManager componentManager)
+        public GameEngine(IWindow window, IEventManager eventManager, ILogger logger, IInputManager inputManager, ICameraFactory cameraFactory, IRenderer renderer, IEntityManager entityManager, IComponentManager componentManager, IContext context)
         {
             _window = window;
             _eventManager = eventManager;
@@ -41,44 +40,130 @@ namespace Titan
             _componentManager = componentManager;
 
 
-            _componentManager.RegisterPool(new ComponentPool<TestComponent1>(1000));
-            _componentManager.RegisterPool(new ComponentPool<TestComponent2>(1000));
+            _componentManager.RegisterComponent<TestComponent1>(10000);
+            _componentManager.RegisterComponent<TestComponent2>(10000);
 
-            var s = Stopwatch.StartNew();
-            var system = new TestSystem();
 
-            for (int i = 0; i < 2; i++)
+            var testSystem1 = new TestSystem(_componentManager);
+            var testSystem2 = new TestSystem(_componentManager);
+
+            context.RegisterSystem(testSystem1);
+            context.RegisterSystem(testSystem2);
+
+            
+            
+            
+
+            //for (int i = 0; i < 2; i++)
             {
-                var entity = _entityManager.Create();
+                var s = Stopwatch.StartNew();
+                var count = 100_00;
+                _logger.Debug("Adding 2 systems subscribing to 2 components");
+                _logger.Debug("Creating 1000 Entities");
+                _logger.Debug("Creating 2000 Components");
+                _logger.Debug("Updating systems (Doing 2x Matrix4x4 multiplications");
+                _logger.Debug("Destroying 2000 Components");
+                _logger.Debug("Destroying 1000 Entities");
+                for (var i = 0; i < count; ++i)
+                {
+                    var entities = CreateEntities();
+                    var components = CreateComponents(entities);
+
+                    for (var x = 0; x < 100; ++x)
+                    {
+                        testSystem1.Update(1.1f);
+                        testSystem2.Update(1.1f);
+                    }
+
+                    foreach (var component in components)
+                    {
+                        _componentManager.Free(component);
+                    }
+                    foreach (var entity in entities)
+                    {
+                        _entityManager.Free(entity);
+                    }
+                    //var entity = _entityManager.Create(); 
+                    //var testComp1 = _componentManager.Create<TestComponent1>(entity);
+                    //var testComp2 = _componentManager.Create<TestComponent2>(entity);
+                    //testSystem1.Update(0.1f);
+                    //testSystem2.Update(0.1f);
+                    //_componentManager.Free(testComp1);
+                    //testSystem1.Update(0.1f);
+                    //testSystem2.Update(0.1f);
+                    //var testComp3 = _componentManager.Create<TestComponent1>(entity);
+                    //testSystem1.Update(0.1f);
+                    //testSystem2.Update(0.1f);
+
+                    //_componentManager.Free(testComp2);
+                    //_componentManager.Free(testComp3);
+                    //_entityManager.Free(entity);
+                    //testSystem1.Update(0.1f);
+                    //testSystem2.Update(0.1f);
+                }
+                s.Stop();
+                Console.WriteLine($"{count} iterations, time elapsed: {s.Elapsed.TotalMilliseconds} ms. {s.Elapsed.TotalMilliseconds/ count} ms/iteration");
+
+                //var entity = _entityManager.Create();
+
                 
-                var testComp1 = _componentManager.Create<TestComponent1>(entity);
-                var testComp2 = _componentManager.Create<TestComponent2>(entity);
-
-                _componentManager.Free(testComp2);
-
-                var testComp3 = _componentManager.Create<TestComponent1>(entity);
-                var testComp4 = _componentManager.Create<TestComponent2>(entity);
-
                 
+                //var testComp1 = _componentManager.Create<TestComponent1>(entity);
+                //var testComp2 = _componentManager.Create<TestComponent2>(entity);
+
+                //testSystem1.Update(0.1f);
+                //testSystem2.Update(0.1f);
+                //_componentManager.Free(testComp1);
+
+                //testSystem1.Update(0.1f);
+                //testSystem2.Update(0.1f);
+                //var testComp3 = _componentManager.Create<TestComponent1>(entity);
+                //testSystem1.Update(0.1f);
+                //testSystem2.Update(0.1f);
+                ////var testComp4 = _componentManager.Create<TestComponent2>(entity);
+
+                //_entityManager.Free(entity);
+                //testSystem1.Update(0.1f);
+                //testSystem2.Update(0.1f);
             }
 
             //system.Update(0.1f);
-            s.Stop();
-            Console.WriteLine($"Time elapsed: {s.Elapsed.TotalMilliseconds} ms");
-            s.Restart();
+            
+            //s.Restart();
             for (var i = 0; i < 1; ++i)
             {
                 //system.Update(0.1f);
             }
             
-            s.Stop();
-            Console.WriteLine($"Time elapsed: {s.Elapsed.TotalMilliseconds} ms");
+            //s.Stop();
+            //Console.WriteLine($"Time elapsed: {s.Elapsed.TotalMilliseconds} ms");
 
 
             Setup();
             //entity.Destroy();
         }
-   
+
+        private Component[] CreateComponents(in uint[] entities)
+        {
+            var components = new Component[entities.Length*2];
+            for (var i = 0; i < entities.Length; ++i)
+            {
+                components[i] = _componentManager.Create<TestComponent1>(entities[i]);
+                components[i+entities.Length] = _componentManager.Create<TestComponent2>(entities[i]);
+            }
+            return components;
+        }
+
+        private uint[] CreateEntities()
+        {
+            var a = new uint[1000];
+            for (var i = 0; i < a.Length; ++i)
+            {
+                a[i] = _entityManager.Create();
+            }
+            return a;
+        }
+
         private void Setup()
         {
             _camera = _cameraFactory.CreatePerspectiveCamera();

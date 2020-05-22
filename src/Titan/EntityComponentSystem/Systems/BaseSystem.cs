@@ -1,53 +1,58 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Titan.EntityComponentSystem.Components;
 
 namespace Titan.EntityComponentSystem.Systems
 {
-
-    
-    internal class TestSystem : ISystem
+    internal abstract class BaseSystem : ISystem
     {
-        public TestSystem()
+        private readonly ISet<uint> _addedEntities = new HashSet<uint>(10_000);
+        private readonly ISet<uint> _removedEntities = new HashSet<uint>(10_000);
+        private readonly ISet<uint> _entites = new HashSet<uint>(10_000);
+
+        private bool _isDirty;
+        public ulong Signature { get; }
+        protected BaseSystem(params Type[] types)
         {
-            
+            Signature = new ComponentSignature(types).Value;
         }
 
-        
-
-
-    }
-
-    internal interface ISystem
-    {
-
-    }
-
-
-    public readonly struct ComponentSignature
-    {
-        public ulong Value { get; }
-        public ComponentSignature(params Type[] types)
+        public void Remove(uint entity)
         {
-            Value = 0;
-            foreach (var type in types)
+            _removedEntities.Add(entity);
+            _isDirty = true;
+        }
+
+        public void Add(uint entity)
+        {
+            _addedEntities.Add(entity);
+            _isDirty = true;
+        }
+
+        public bool IsMatch(ulong signature) => (signature & Signature) == Signature;
+
+        public void Update(float deltaTime)
+        {
+            if (_isDirty)
             {
-                Value |= type.ComponentMask();
+                foreach (var entity in _addedEntities)
+                {
+                    _entites.Add(entity);
+                }
+                foreach (var entity in _removedEntities)
+                {
+                    _entites.Remove(entity);
+                }
+                _addedEntities.Clear();
+                _removedEntities.Clear();
+            }
+
+            foreach (var entity in _entites)
+            {
+                Update(deltaTime, entity);
             }
         }
-    }
 
+        protected abstract void Update(float deltaTime, uint entity);
 
-    internal interface IComponentMapperProvider
-    {
-    }
-
-    internal abstract class BaseSystem
-    {
-
-        
     }
 }

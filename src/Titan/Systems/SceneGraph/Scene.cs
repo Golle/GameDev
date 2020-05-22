@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Titan.EntityComponentSystem;
-using Titan.EntityComponentSystem.Entities;
-using Titan.Systems.EntitySystem;
 
 namespace Titan.Systems.SceneGraph
 {
@@ -25,7 +22,7 @@ namespace Titan.Systems.SceneGraph
 
     internal class Scene : IScene
     {
-        private IList<Entity> _entities = new List<Entity>(100);
+        private IList<uint> _entities = new List<uint>(100);
 
         public Scene(string name)
         {

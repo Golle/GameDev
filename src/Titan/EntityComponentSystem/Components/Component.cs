@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Titan.EntityComponentSystem.Entities;
+using System.Runtime.InteropServices;
 
 namespace Titan.EntityComponentSystem.Components
 {
@@ -8,8 +7,8 @@ namespace Titan.EntityComponentSystem.Components
     {
         public readonly ulong Id;
         public readonly uint Index;
-        public readonly Entity Entity;
-        public Component(ulong id, uint index, Entity entity)
+        public readonly uint Entity;
+        public Component(ulong id, uint index, uint entity)
         {
             Id = id;
             Index = index;

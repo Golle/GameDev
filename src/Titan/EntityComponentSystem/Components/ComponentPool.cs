@@ -3,8 +3,6 @@ using System.Diagnostics;
 
 namespace Titan.EntityComponentSystem.Components
 {
-    
-
     internal class ComponentPool<T> : IComponentPool<T> where T : unmanaged
     {
         private readonly T[] _componentPool;

@@ -5,7 +5,6 @@ using Titan.Core.GameLoop;
 using Titan.Core.Ioc;
 using Titan.Core.Logging;
 using Titan.EntityComponentSystem;
-using Titan.EntityComponentSystem.Components;
 using Titan.Graphics;
 using Titan.Systems;
 using Titan.Windows;

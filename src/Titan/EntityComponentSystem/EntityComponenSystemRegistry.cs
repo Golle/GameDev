@@ -1,6 +1,7 @@
 using Titan.Core.Ioc;
 using Titan.EntityComponentSystem.Components;
 using Titan.EntityComponentSystem.Entities;
+using Titan.EntityComponentSystem.Systems;
 
 //using Titan.EntityComponentSystem.Components;
 //using Titan.EntityComponentSystem.Configuration;
@@ -16,6 +17,7 @@ namespace Titan.EntityComponentSystem
                 //.Register<IEntityComponentSystemConfiguration, EntityComponentSystemConfiguration>()
                 .Register<IEntityManager, EntityManager>()
                 .Register<IComponentManager, ComponentManager>()
+                .Register<IContext, Context>()
                 //.Register<IComponentRegister, ComponentRegister>()
                 ;
         }
