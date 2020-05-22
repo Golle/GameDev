@@ -1,7 +1,10 @@
 using Titan.Core.Ioc;
 using Titan.EntityComponentSystem.Components;
-using Titan.EntityComponentSystem.Configuration;
 using Titan.EntityComponentSystem.Entities;
+
+//using Titan.EntityComponentSystem.Components;
+//using Titan.EntityComponentSystem.Configuration;
+//using Titan.EntityComponentSystem.Entities;
 
 namespace Titan.EntityComponentSystem
 {
@@ -10,10 +13,10 @@ namespace Titan.EntityComponentSystem
         public void Register(IContainer container)
         {
             container
-                .Register<IEntityComponentSystemConfiguration, EntityComponentSystemConfiguration>()
+                //.Register<IEntityComponentSystemConfiguration, EntityComponentSystemConfiguration>()
                 .Register<IEntityManager, EntityManager>()
                 .Register<IComponentManager, ComponentManager>()
-                .Register<IComponentRegister, ComponentRegister>()
+                //.Register<IComponentRegister, ComponentRegister>()
                 ;
         }
     }

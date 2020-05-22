@@ -1,11 +1,11 @@
-using Titan.Systems.Components;
+using Titan.EntityComponentSystem.Entities;
 
 namespace Titan.EntityComponentSystem.Components
 {
-    public interface IComponentManager
+    internal interface IComponentManager
     {
-        void Register<T>(IComponentPool<T> componentPool) where T : IComponent;
-        T Create<T>() where T : IComponent;
-        void Destroy<T>(T component) where T : IComponent;
+        void RegisterPool<T>(IComponentPool<T> pool) where T : unmanaged; 
+        Component Create<T>(Entity entity) where T : unmanaged;
+        void Free(in Component component);
     }
 }

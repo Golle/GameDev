@@ -15,6 +15,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="EntityComponentSystem\Old\**" />
+    <EmbeddedResource Remove="EntityComponentSystem\Old\**" />
+    <None Remove="EntityComponentSystem\Old\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Titan.Core\Titan.Core.csproj" />
     <ProjectReference Include="..\Titan.Graphics\Titan.Graphics.csproj" />
   </ItemGroup>

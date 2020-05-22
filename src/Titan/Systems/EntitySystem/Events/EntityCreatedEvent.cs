@@ -7,7 +7,7 @@ namespace Titan.Systems.EntitySystem.Events
     {
         public Entity Entity { get; }
         public EventType Type => EventType.EntityCreated;
-        public EntityCreatedEvent(Entity entity)
+        public EntityCreatedEvent(in Entity entity)
         {
             Entity = entity;
         }

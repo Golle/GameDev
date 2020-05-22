@@ -1,48 +1,31 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Titan.Core.EventSystem;
-using Titan.Systems.Components;
-using Titan.Systems.Components.Events;
+using Titan.EntityComponentSystem.Entities;
 
 namespace Titan.EntityComponentSystem.Components
 {
     internal class ComponentManager : IComponentManager
     {
-        private readonly IEventManager _eventManager;
-        private readonly IComponentRegister _componentRegister;
-        private readonly IDictionary<Type, object> _pools = new Dictionary<Type, object>();
-
-        public ComponentManager(IEventManager eventManager, IComponentRegister componentRegister)
+        private readonly IDictionary<ulong, object> _pools = new Dictionary<ulong, object>();
+        public void RegisterPool<T>(IComponentPool<T> pool) where T : unmanaged
         {
-            _eventManager = eventManager;
-            _componentRegister = componentRegister;
+            var id = typeof(T).ComponentMask();
+            Debug.Assert(!_pools.ContainsKey(id), $"A component pool for type {typeof(T)} has already been regitered.");
+            _pools[id] = pool;
         }
 
-        public void Register<T>(IComponentPool<T> componentPool) where T : IComponent
+        public Component Create<T>(Entity entity) where T : unmanaged
         {
-            var type = typeof(T);
-            Debug.Assert(!_pools.ContainsKey(type));
-            _componentRegister.Register<T>();
-            _pools[type] = componentPool;
+            var id = typeof(T).ComponentMask();
+            Debug.Assert(_pools.ContainsKey(id), $"No component pool has been registed for type {typeof(T)}.");
+
+            var index = ((IComponentPool<T>) _pools[id]).Create();
+            return new Component(id, index, entity);
         }
 
-        public T Create<T>() where T : IComponent
+        public void Free(in Component component)
         {
-            Debug.Assert(_pools.ContainsKey(typeof(T)));
-            var component = ((IComponentPool<T>) _pools[typeof(T)]).Get();
-            
-            _eventManager.Publish(new ComponentCreatedEvent(component));
-
-            //TODO: Set unique id per instance?
-            return component;
-        }
-
-        public void Destroy<T>(T component) where T : IComponent
-        {
-            Debug.Assert(_pools.ContainsKey(typeof(T)));
-            ((IComponentPool<T>)_pools[typeof(T)]).Put(component);
-            _eventManager.Publish(new ComponentDestroyedEvent(component));
+            ((IComponentPool)_pools[component.Id]).Free(component.Index);
         }
     }
 }

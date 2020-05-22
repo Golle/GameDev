@@ -1,47 +1,38 @@
 using System.Collections.Generic;
 using System.Diagnostics;
-using Titan.Systems.Components;
 
 namespace Titan.EntityComponentSystem.Components
 {
-    public class ComponentPool<T> : IComponentPool<T> where T : class, IComponent, new()
+    
+
+    internal class ComponentPool<T> : IComponentPool<T> where T : unmanaged
     {
-        private readonly int _maxSize;
-        private readonly bool _resetOnGet;
-
-        private readonly Queue<T> _components;
-        public ComponentPool(int initialSize, int maxSize, bool resetOnGet = true)
+        private readonly T[] _componentPool;
+        private readonly Queue<uint> _free = new Queue<uint>(100);
+        private uint _count;
+        public ComponentPool(uint size)
         {
-            Debug.Assert(maxSize >= initialSize, $"{nameof(maxSize)} must be greater or equal to {nameof(initialSize)}");
-
-            _maxSize = maxSize;
-            _resetOnGet = resetOnGet;
-            _components = new Queue<T>(initialSize);
-            for (var i = 0; i < initialSize; ++i)
-            {
-                _components.Enqueue(new T());
-            }
+            _componentPool = new T[size];
         }
 
-        public T Get()
+        public uint Create()
         {
-            if (!_components.TryDequeue(out var component))
-            {
-                return new T();
-            }
-            if (_resetOnGet)
-            {
-                component.Reset();
-            }
-            return component;
+            Debug.Assert(_count < _componentPool.Length, "No more components available");
+            return _free.TryDequeue(out var index) ? index : _count++;
         }
 
-        public void Put(T component)
+        public ref T Create(out uint index)
         {
-            if (_components.Count <= _maxSize)
+            Debug.Assert(_count < _componentPool.Length || _free.Count > 0, "No more components available");
+            if (!_free.TryDequeue(out index))
             {
-                _components.Enqueue(component);
+                index = _count++;
             }
+            return ref _componentPool[index];
         }
+
+        public ref T Get(uint index) => ref _componentPool[index];
+        public ref T this[uint index] => ref _componentPool[index];
+        public void Free(uint index) => _free.Enqueue(index);
     }
 }

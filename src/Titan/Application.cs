@@ -45,7 +45,7 @@ namespace Titan
                 .Initialize();
 
             RegisterServices(_container);
-            RegisterComponentPools(_container.GetInstance<IComponentManager>());
+            //RegisterComponentPools(_container.GetInstance<IComponentManager>());
             
             _logger.Debug("Initialize Window and D3D11Device");
 
@@ -74,7 +74,7 @@ namespace Titan
         protected virtual void OnStart() { }
         protected virtual void OnQuit() { }
         protected virtual void RegisterServices(IContainer container) { }
-        protected virtual void RegisterComponentPools(IComponentManager componentManager){}
+        //protected virtual void RegisterComponentPools(IComponentManager componentManager){}
         protected TType GetInstance<TType>() => _container.GetInstance<TType>();
     }
 }

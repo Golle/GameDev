@@ -5,7 +5,7 @@ using Titan.Core.EventSystem;
 using Titan.Core.Logging;
 using Titan.D3D11;
 using Titan.EntityComponentSystem;
-using Titan.EntityComponentSystem.Configuration;
+using Titan.EntityComponentSystem.Components;
 using Titan.EntityComponentSystem.Entities;
 using Titan.EntityComponentSystem.Systems;
 using Titan.Graphics.Camera;
@@ -25,10 +25,11 @@ namespace Titan
         private readonly ICameraFactory _cameraFactory;
         private readonly IRenderer _renderer;
         private readonly IEntityManager _entityManager;
+        private readonly IComponentManager _componentManager;
 
         private ICamera _camera;
         private RendereableModel _model;
-        public GameEngine(IWindow window, IEventManager eventManager, ILogger logger, IInputManager inputManager, ICameraFactory cameraFactory, IRenderer renderer, IEntityManager entityManager)
+        public GameEngine(IWindow window, IEventManager eventManager, ILogger logger, IInputManager inputManager, ICameraFactory cameraFactory, IRenderer renderer, IEntityManager entityManager, IComponentManager componentManager)
         {
             _window = window;
             _eventManager = eventManager;
@@ -37,8 +38,11 @@ namespace Titan
             _cameraFactory = cameraFactory;
             _renderer = renderer;
             _entityManager = entityManager;
-            
+            _componentManager = componentManager;
 
+
+            _componentManager.RegisterPool(new ComponentPool<TestComponent1>(1000));
+            _componentManager.RegisterPool(new ComponentPool<TestComponent2>(1000));
 
             var s = Stopwatch.StartNew();
             var system = new TestSystem();
@@ -46,15 +50,16 @@ namespace Titan
             for (int i = 0; i < 2; i++)
             {
                 var entity = _entityManager.Create();
-                Console.WriteLine($"Mask: {entity.AddComponent<TestComponent1>().Id}");
-                Console.WriteLine($"Mask: {entity.AddComponent<TestComponent2>().Id}");
-                Console.WriteLine($"Mask: {entity.AddComponent<Transform3D>().Id}");
                 
+                var testComp1 = _componentManager.Create<TestComponent1>(entity);
+                var testComp2 = _componentManager.Create<TestComponent2>(entity);
 
-                Console.WriteLine(entity.ComponentSignature);
-                entity.RemoveComponent<Transform3D>();
-                Console.WriteLine(entity.ComponentSignature);
-                //system.OnEntityCreated(entity);
+                _componentManager.Free(testComp2);
+
+                var testComp3 = _componentManager.Create<TestComponent1>(entity);
+                var testComp4 = _componentManager.Create<TestComponent2>(entity);
+
+                
             }
 
             //system.Update(0.1f);
@@ -63,7 +68,7 @@ namespace Titan
             s.Restart();
             for (var i = 0; i < 1; ++i)
             {
-                system.Update(0.1f);
+                //system.Update(0.1f);
             }
             
             s.Stop();

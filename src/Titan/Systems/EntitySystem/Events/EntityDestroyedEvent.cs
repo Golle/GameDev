@@ -8,7 +8,7 @@ namespace Titan.Systems.EntitySystem.Events
     {
         public Entity Entity { get; }
         public EventType Type => EventType.EntityDestroyed;
-        public EntityDestroyedEvent(Entity entity)
+        public EntityDestroyedEvent(in Entity entity)
         {
             Entity = entity;
         }

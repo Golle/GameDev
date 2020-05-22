@@ -3,7 +3,7 @@ using Titan.EntityComponentSystem.Components;
 
 namespace Titan.Systems.TransformSystem
 {
-    public class Transform3D : BaseComponent
+    public class Transform3D
     {
         private bool _isDirty;
         private TransformData _transform;
@@ -68,7 +68,7 @@ namespace Titan.Systems.TransformSystem
             _transform.Update(Parent?._transform.WorldTransform);
         }
 
-        public override void Reset()
+        public void Reset()
         {
             //TODO: implement
         }
