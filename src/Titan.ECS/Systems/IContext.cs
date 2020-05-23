@@ -1,6 +1,6 @@
-using Titan.EntityComponentSystem.Components;
+using Titan.ECS.Components;
 
-namespace Titan.EntityComponentSystem.Systems
+namespace Titan.ECS.Systems
 {
     public interface IContext
     {

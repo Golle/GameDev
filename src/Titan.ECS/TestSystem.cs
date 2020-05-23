@@ -1,9 +1,10 @@
 using System.Numerics;
-using Titan.EntityComponentSystem.Components;
+using Titan.ECS.Components;
+using Titan.ECS.Systems;
 
-namespace Titan.EntityComponentSystem.Systems
+namespace Titan.ECS
 {
-    internal class TestSystem : BaseSystem
+    public class TestSystem : BaseSystem
     {
         private readonly IComponentMapper<TestComponent1> _testComponent1;
         private readonly IComponentMapper<TestComponent2> _testComponent2;

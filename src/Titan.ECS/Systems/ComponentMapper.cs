@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Titan.EntityComponentSystem.Components;
+using Titan.ECS.Components;
 
-namespace Titan.EntityComponentSystem.Systems
+namespace Titan.ECS.Systems
 {
     internal class ComponentMapper<T> : IComponentMapper<T> where T : unmanaged
     {

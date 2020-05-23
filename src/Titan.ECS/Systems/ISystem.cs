@@ -1,4 +1,4 @@
-namespace Titan.EntityComponentSystem.Systems
+namespace Titan.ECS.Systems
 {
     public interface ISystem
     {

@@ -1,7 +1,7 @@
 using System.Threading;
-using Titan.EntityComponentSystem.Systems;
+using Titan.ECS.Systems;
 
-namespace Titan.EntityComponentSystem.Entities
+namespace Titan.ECS.Entities
 {
     internal class EntityManager : IEntityManager
     {

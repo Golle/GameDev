@@ -1,4 +1,4 @@
-namespace Titan.EntityComponentSystem.Entities
+namespace Titan.ECS.Entities
 {
     public interface IEntityManager
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Titan.EntityComponentSystem.Components
+namespace Titan.ECS.Components
 {
     internal class ComponentPool<T> : IComponentPool<T> where T : unmanaged
     {

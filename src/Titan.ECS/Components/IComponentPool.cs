@@ -1,4 +1,4 @@
-namespace Titan.EntityComponentSystem.Components
+namespace Titan.ECS.Components
 {
     internal interface IComponentPool
     {

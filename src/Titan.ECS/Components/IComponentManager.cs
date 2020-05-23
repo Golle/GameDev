@@ -1,6 +1,6 @@
-namespace Titan.EntityComponentSystem.Components
+namespace Titan.ECS.Components
 {
-    internal interface IComponentManager
+    public interface IComponentManager
     {
         void RegisterComponent<T>(uint capacity) where T : unmanaged;
         IComponentMapper<T> GetComponentMapper<T>() where T : unmanaged;

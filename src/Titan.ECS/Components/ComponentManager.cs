@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
-using Titan.EntityComponentSystem.Systems;
+using Titan.ECS.Systems;
 
-namespace Titan.EntityComponentSystem.Components
+namespace Titan.ECS.Components
 {
     internal class ComponentManager : IComponentManager
     {

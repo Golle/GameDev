@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Titan.Core.Logging;
-using Titan.EntityComponentSystem.Components;
+using Titan.ECS.Components;
 
-namespace Titan.EntityComponentSystem.Systems
+namespace Titan.ECS.Systems
 {
     internal class Context : IContext
     {

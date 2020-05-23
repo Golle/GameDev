@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Titan.EntityComponentSystem.Components
+namespace Titan.ECS.Components
 {
     public static class ComponentIdHelper
     {

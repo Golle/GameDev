@@ -1,15 +1,15 @@
 using System.Numerics;
 
-namespace Titan.EntityComponentSystem
+namespace Titan.ECS
 {
-    internal struct TestComponent1
+    public struct TestComponent1
     {
         public Matrix4x4 Transform;
     
     }
 
 
-    internal struct TestComponent2
+    public struct TestComponent2
     {
         public Matrix4x4 Transform;
     }

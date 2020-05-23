@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace Titan.EntityComponentSystem.Systems
+namespace Titan.ECS.Systems
 {
-    internal abstract class BaseSystem : ISystem
+    public abstract class BaseSystem : ISystem
     {
         private readonly ISet<uint> _addedEntities = new HashSet<uint>(10_000);
         private readonly ISet<uint> _removedEntities = new HashSet<uint>(10_000);

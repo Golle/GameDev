@@ -1,11 +1,11 @@
 using Titan.Core.Ioc;
-using Titan.EntityComponentSystem.Components;
-using Titan.EntityComponentSystem.Entities;
-using Titan.EntityComponentSystem.Systems;
+using Titan.ECS.Components;
+using Titan.ECS.Entities;
+using Titan.ECS.Systems;
 
-namespace Titan.EntityComponentSystem
+namespace Titan.ECS
 {
-    internal class EntityComponenSystemRegistry : IRegistry
+    public class EntityComponenSystemRegistry : IRegistry
     {
         public void Register(IContainer container)
         {

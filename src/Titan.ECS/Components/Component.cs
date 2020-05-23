@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Titan.EntityComponentSystem.Components
+namespace Titan.ECS.Components
 {
     [StructLayout(LayoutKind.Sequential, Size = sizeof(ulong) + sizeof(uint) + sizeof(uint), Pack = 4)]
     public readonly struct Component
