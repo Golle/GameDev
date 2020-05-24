@@ -5,8 +5,8 @@ namespace Titan.ECS.Systems
 {
     public abstract class BaseSystem : ISystem
     {
-        private readonly ISet<uint> _addedEntities = new HashSet<uint>(10_000);
-        private readonly ISet<uint> _removedEntities = new HashSet<uint>(10_000);
+        private readonly ISet<uint> _addedEntities = new HashSet<uint>(100);
+        private readonly ISet<uint> _removedEntities = new HashSet<uint>(100);
         private readonly ISet<uint> _entites = new HashSet<uint>(10_000);
 
         private bool _isDirty;
@@ -44,6 +44,7 @@ namespace Titan.ECS.Systems
                 }
                 _addedEntities.Clear();
                 _removedEntities.Clear();
+                _isDirty = false;
             }
 
             foreach (var entity in _entites)

@@ -6,5 +6,8 @@ namespace Titan.ECS.Systems
         void Remove(uint entity);
         void Add(uint entity);
         bool IsMatch(ulong signature);
+
+
+        void Update(float deltaTime);
     }
 }

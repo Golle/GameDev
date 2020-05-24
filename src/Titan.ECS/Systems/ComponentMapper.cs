@@ -29,6 +29,13 @@ namespace Titan.ECS.Systems
             return _componentIndexMap[entity] = index;
         }
 
+        public ref T CreateComponent(uint entity, out uint index)
+        {
+            ref var a = ref _pool.Create(out index);
+            _componentIndexMap[entity] = index;
+            return ref a;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ref T Get(uint entity) => ref _pool[_componentIndexMap[entity]];
 

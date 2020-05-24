@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using Titan.Core.Ioc;
-using Titan.Graphics;
-using Titan.Graphics.Blobs;
 using Titan.Graphics.Camera;
 
 namespace Titan.Game
@@ -32,6 +30,7 @@ namespace Titan.Game
             container.Register<MyTestClass>();
 
         }
+
     }
 
     internal class MyTestClass

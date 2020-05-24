@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using Titan.ECS.Components;
 using Titan.ECS.Systems;
@@ -23,7 +24,7 @@ namespace Titan.ECS
 
             comp1.Transform = comp2.Transform * Matrix4x4.Identity;
 
-            //Console.WriteLine("Woop!");
+            Console.WriteLine("Woop!");
             //Console.WriteLine("Woop!");
         }
 

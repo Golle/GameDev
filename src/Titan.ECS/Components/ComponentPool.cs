@@ -3,6 +3,9 @@ using System.Diagnostics;
 
 namespace Titan.ECS.Components
 {
+
+    // TODO: Look into options to use a big memory block instead of arrays per type
+    // TODO: Maybe allocate new byte[1GB] or something similar and have this class get pointers to that memory blob (IMemory/ISpan) or raw byte* 
     internal class ComponentPool<T> : IComponentPool<T> where T : unmanaged
     {
         private readonly T[] _componentPool;

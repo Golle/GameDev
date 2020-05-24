@@ -13,5 +13,6 @@ namespace Titan.Core.Ioc
         object GetInstance(Type type);
         IContainer AddRegistry<T>() where T : IRegistry;
         IEnumerable<T> GetAll<T>();
+        IContainer CreateChildContainer();
     }
 }

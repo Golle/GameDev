@@ -129,10 +129,17 @@ namespace Titan.Core.Ioc
         public IEnumerable<T> GetAll<T>()
         {
             var type = typeof(T);
+            var parentObjects = _parentContainer?.GetAll<T>() ?? Enumerable.Empty<T>();
             return _containerObjects
                 .Where(r => type.IsAssignableFrom(r.Key) || type.IsAssignableFrom(r.Value.RegisteredObject.ConcreteType))
                 .Select(r => GetOrCreateInstance(r.Value))
-                .Cast<T>();
+                .Cast<T>()
+                .Concat(parentObjects);
+        }
+
+        public IContainer CreateChildContainer()
+        {
+            return new Container(this);
         }
     }
 }
