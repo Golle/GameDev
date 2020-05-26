@@ -36,11 +36,11 @@ namespace Titan.ECS.World
 
         public void Destroy()
         {
-            _entityManager.Free(_entityId);
             foreach (var component in _components)
             {
                 _componentManager.Free(component);
             }
+            _entityManager.Free(_entityId);
         }
     }
 }

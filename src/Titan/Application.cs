@@ -1,7 +1,11 @@
 using System;
+using System.Numerics;
+using Titan.Components;
 using Titan.Configuration;
 using Titan.Core;
+using Titan.Core.EventSystem;
 using Titan.Core.GameLoop;
+using Titan.Core.GameLoop.Events;
 using Titan.Core.Ioc;
 using Titan.Core.Logging;
 using Titan.ECS;
@@ -9,6 +13,7 @@ using Titan.ECS.World;
 using Titan.Graphics;
 using Titan.Systems;
 using Titan.Windows;
+using Titan.Windows.Window;
 
 namespace Titan
 {
@@ -26,6 +31,7 @@ namespace Titan
         private readonly ILogger _logger;
         
         private IWorld _world;
+        
 
         public Application()
         {
@@ -38,8 +44,20 @@ namespace Titan
             application.Run();
         }
 
+        private float _fps;
         private void Run()
         {
+            _container.GetInstance<IEventManager>()
+                .Subscribe<UpdateEvent>((in UpdateEvent @event) =>
+                {
+                    _fps = 1f / @event.ElapsedTime;
+                });
+            _container.GetInstance<IEventManager>()
+                .Subscribe<FixedUpdateEvent>((in FixedUpdateEvent @event) =>
+                {
+                    _container.GetInstance<IWindow>().SetTitle($"FPS: {_fps}");
+                });
+
 
             _logger.Debug("Initialize EngineConfiguration");
             _container
@@ -51,7 +69,7 @@ namespace Titan
             _logger.Debug("Initialize Window and D3D11Device");
 
             using var display = GetInstance<IDisplayFactory>()
-                .Create("Donkey box", 1024, 768);
+                .Create("Donkey box", 1920, 1080);
 
             _logger.Debug("Register D3D11Device and Win32Window as singletons");
             _container
@@ -60,10 +78,17 @@ namespace Titan
 
 
             _world = CreateWorld();
-            var entity = _world.CreateEntity();
-            entity.AddComponent<TestComponent2>();
-            entity.AddComponent<TestComponent1>();
 
+
+            var random = new Random();
+            for (var i = 0; i < 1000; ++i)
+            {
+                var entity1 = _world.CreateEntity();
+                entity1.AddComponent(new Velocity { Value = new Vector3(random.Next(-3000, 3000) / 1000f, random.Next(-3000, 3000) / 1000f, random.Next(-3000, 3000) / 1000f) });
+                entity1.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0f) });
+                entity1.AddComponent<Mesh>();
+                entity1.AddComponent<Material>();
+            }
 
             var engine = _container.GetInstance<GameEngine>();
             
@@ -73,7 +98,6 @@ namespace Titan
             GetInstance<IGameLoop>()
                 .Run(engine.Execute);
 
-            entity.Destroy();
 
             _world.Destroy();
             _logger.Debug("Main loop ended");
@@ -85,9 +109,14 @@ namespace Titan
         {
             var configuration = new WorldConfigurationBuilder("Donkey")
                 .WithContainer(_container.CreateChildContainer()) // Add a child container for this world (might be a better way to do this)
-                .WithSystem<TestSystem>()
-                .WithComponent<TestComponent1>(1000)
-                .WithComponent<TestComponent2>(2000)
+                .WithSystem<MovementSystem>()
+                .WithSystem<Render3DSystem>()
+                .WithComponent<Transform2D>(1000)
+                .WithComponent<Transform3D>(1000)
+                .WithComponent<Velocity>(1000)
+                .WithComponent<Mesh>(1000)
+                .WithComponent<Material>(1000)
+
                 .Build()
                 ;
 

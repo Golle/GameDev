@@ -19,7 +19,7 @@ struct VS_OUTPUT {
 VS_OUTPUT main(float3 pos : POSITION, float4 color : COLOR)
 {
 	VS_OUTPUT output;
-	output.Pos = mul(float4(pos, 4.0f), transform);
+	output.Pos = mul(float4(pos, 8.0f), transform);
 	output.Color = color;
 	return output;
 	/*return mul(float4(pos.x, pos.y, pos.z, 1.0f), transform);*/

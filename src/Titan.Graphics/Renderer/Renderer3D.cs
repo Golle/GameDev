@@ -25,15 +25,15 @@ namespace Titan.Graphics.Renderer
         private readonly IPixelShader _pixelShader;
         private readonly IInputLayout _inputLayout;
 
-        private readonly Vertex[] _vertices = new Vertex[1000];
-        private readonly short[] _indices = new short[1000];
+        private readonly Vertex[] _vertices = new Vertex[100000];
+        private readonly short[] _indices = new short[100000];
         private int _numberOfVertices = 0;
         private int _numberOfIndices = 0;
         public Renderer3D(IDevice device, IBlobReader blobReader)
         {
             _device = device;
-            _vertexBuffer = device.CreateVertexBuffer<Vertex>(1000);
-            _indexBuffer = device.CreateIndexBuffer(1000);
+            _vertexBuffer = device.CreateVertexBuffer<Vertex>(100000);
+            _indexBuffer = device.CreateIndexBuffer(100000);
             using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/VertexShader.cso");
             _vertexShader = _device.CreateVertexShader(vertexShaderBlob);
             using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/PixelShader.cso");
@@ -46,11 +46,16 @@ namespace Titan.Graphics.Renderer
         
         public void Push(RendereableModel model)
         {
+
+            var indexOffset = _numberOfVertices;
+            
+            foreach (var index in model.Indices)
+            {
+                _indices[_numberOfIndices++] = (short)(index + indexOffset);
+            }
+
             Array.Copy(model.Vertices,0, _vertices, _numberOfVertices, model.Vertices.Length);
             _numberOfVertices += model.Vertices.Length;
-
-            Array.Copy(model.Indices, 0, _indices, _numberOfIndices, model.Indices.Length);
-            _numberOfIndices += model.Indices.Length;
         }
 
         public void Flush()

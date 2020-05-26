@@ -7,9 +7,7 @@ namespace Titan.Graphics.Renderer
     [StructLayout(LayoutKind.Sequential)]
     public struct Vertex
     {
-        public float X;
-        public float Y;
-        public float Z;
+        public Vector3 Position;
         public Color Color;
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Titan.ECS.Systems
 {
@@ -13,6 +14,7 @@ namespace Titan.ECS.Systems
         public ulong Signature { get; }
         protected BaseSystem(params Type[] types)
         {
+            Debug.Assert(types.Length > 0, $"No component types have been registered for system {GetType().Name}");
             Signature = new ComponentSignature(types).Value;
         }
 

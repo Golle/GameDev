@@ -23,7 +23,7 @@ namespace Titan.Systems
             if (velocity.Value != Vector3.Zero)
             {
                 ref var transform3D = ref _tranform3D[entity];
-                transform3D.Position *= velocity.Value * deltaTime;
+                transform3D.Position += (velocity.Value * deltaTime);
             }
         }
     }
