@@ -156,3 +156,22 @@ EXPORT void UpdateSubresource_(
 {
 	context->UpdateSubresource(pDstResource, DstSubresource, pDstBox, pSrcData, SrcRowPitch, SrcDepthPitch);
 }
+
+EXPORT HRESULT Map_(
+	ID3D11DeviceContext*	context,
+	ID3D11Resource*			pResource,
+	UINT                    subresource,
+	D3D11_MAP               mapType,
+	UINT                    mapFlags,
+	D3D11_MAPPED_SUBRESOURCE* pMappedResource
+)
+{
+	return context->Map(pResource, subresource, mapType, mapFlags, pMappedResource);
+}
+EXPORT void Unmap_(
+	ID3D11DeviceContext* context,
+	ID3D11Resource* pResource,
+	UINT           subresource
+) {
+	context->Unmap(pResource, subresource);
+}

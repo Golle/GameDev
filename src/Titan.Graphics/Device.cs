@@ -16,18 +16,16 @@ namespace Titan.Graphics
         private readonly ID3D11Device _device;
         private readonly ID3D11RenderTargetView _renderTarget;
         private readonly ID3D11DepthStencilView _depthStencilView;
-        private readonly ID3DCommon _common;
 
         private readonly Color _clearColor = new Color{Blue = 0.1f, Alpha = 1f};
 
         private readonly bool _vSync = true;
 
-        public Device(ID3D11Device device, ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencilView, ID3DCommon common)
+        public Device(ID3D11Device device, ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencilView)
         {
             _device = device ?? throw new ArgumentNullException(nameof(device));
             _renderTarget = renderTarget ?? throw new ArgumentNullException(nameof(renderTarget));
             _depthStencilView = depthStencilView ?? throw new ArgumentNullException(nameof(depthStencilView));
-            _common = common ?? throw new ArgumentNullException(nameof(common));
         }
 
         public IIndexBuffer CreateIndexBuffer(in short[] indices)

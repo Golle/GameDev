@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using Titan.D3D11.Bindings.Models;
+using Titan.Windows;
 
 namespace Titan.D3D11.Bindings
 {
@@ -131,6 +132,23 @@ namespace Titan.D3D11.Bindings
             [In] void* pSrcData,
             [In] uint srcRowPitch,
             [In] uint srcDepthPitch
+        );
+
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern HRESULT Map_(
+            [In] IntPtr context,
+            [In] IntPtr pResource,  // ID3D11Resource
+            [In] uint subresource,
+            [In] D3D11Map mapType,
+            [In] uint mapFlags,
+            [Out] out D3D11MappedSubresource pMappedResource
+        );
+        
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern void Unmap_(
+            [In] IntPtr context,
+            [In] IntPtr pResource,  // ID3D11Resource
+            [In] uint subresource
         );
     }
 
