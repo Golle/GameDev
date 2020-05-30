@@ -3,8 +3,8 @@ using System.Runtime.InteropServices;
 namespace Titan.Components
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct Material
+    internal struct Mesh
     {
-        public uint TextureId;
+        public string Filename;
     }
 }

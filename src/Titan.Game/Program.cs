@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Diagnostics;
 using Titan.Core.Ioc;
 using Titan.Graphics.Camera;
 
@@ -9,6 +10,7 @@ namespace Titan.Game
     {
         static void Main(string[] args)
         {
+
             Start();
         }
 

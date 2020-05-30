@@ -34,6 +34,7 @@ namespace Titan.Graphics.Renderer
             _device = device;
             _vertexBuffer = device.CreateVertexBuffer<Vertex>(100000);
             _indexBuffer = device.CreateIndexBuffer(100000);
+            
             using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/VertexShader.cso");
             _vertexShader = _device.CreateVertexShader(vertexShaderBlob);
             using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/PixelShader.cso");
@@ -46,9 +47,7 @@ namespace Titan.Graphics.Renderer
         
         public void Push(RendereableModel model)
         {
-
             var indexOffset = _numberOfVertices;
-            
             foreach (var index in model.Indices)
             {
                 _indices[_numberOfIndices++] = (short)(index + indexOffset);
