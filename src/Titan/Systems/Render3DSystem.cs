@@ -11,61 +11,45 @@ namespace Titan.Systems
     {
         private readonly IRenderer _renderer;
         private readonly IComponentMapper<Transform3D> _transform;
-        private IComponentMapper<Mesh> _model;
+        private IComponentMapper<Mesh_Unnused> _model;
         private IComponentMapper<Material> _material;
         
         public Render3DSystem(IComponentManager componentManager, IRenderer renderer)
-        : base(typeof(Transform3D), typeof(Mesh), typeof(Material))
+        : base(typeof(Transform3D), typeof(Mesh_Unnused), typeof(Material))
         {
             _renderer = renderer;
             _transform = componentManager.GetComponentMapper<Transform3D>();
-            _model = componentManager.GetComponentMapper<Mesh>();
+            _model = componentManager.GetComponentMapper<Mesh_Unnused>();
             _material = componentManager.GetComponentMapper<Material>();
         }
-        protected override void Update(float deltaTime, uint entity)
-        {
 
-            var model = GetModel(entity);
-            for (var i = 0; i < model.Vertices.Length; ++i)
+        protected override void OnUpdate(float deltaTime)
+        {
+            
+            foreach (var entity in Entities)
             {
-                
-                model.Vertices[i].Position += _transform[entity].Position;
+                var model = GetModel();
+                for (var i = 0; i < model.Vertices.Length; ++i)
+                {
+                    model.Vertices[i].Position += _transform[entity].Position;
+                }
+                _renderer.Push(model);
             }
-            _renderer.Push(model);
         }
 
-
-        private RendereableModel GetModel(uint entity)
+        private RendereableModel GetModel()
         {
-            Vertex[] vertices;
-            if (entity % 2== 0)
+            var vertices = new[]
             {
-                vertices = new[]
-                {
-                    new Vertex {Color = new Color(1f, 0, 0), Position = new Vector3(-2f, -2f, -2f)},
-                    new Vertex {Color = new Color(1f, 1f, 0), Position = new Vector3(2f, -2f, -2f)},
-                    new Vertex {Color = new Color(1f, 0, 1f), Position = new Vector3(-2f, 2f, -2f)},
-                    new Vertex {Color = new Color(0f, 1f, 0), Position = new Vector3(2f, 2f, -2f)},
-                    new Vertex {Color = new Color(0f, 1f, 1f), Position = new Vector3(-2f, -2f, 2f)},
-                    new Vertex {Color = new Color(1f, 1f, 0), Position = new Vector3(2f, -2f, 2f)},
-                    new Vertex {Color = new Color(1f, 1f, 1f), Position = new Vector3(-2f, 2f, 2f)},
-                    new Vertex {Color = new Color(1f, 0, 0), Position = new Vector3(2f, 2f, 2f)},
-                };
-            }
-            else
-            {
-                vertices = new[]
-                {
-                    new Vertex {Color = new Color(1f, 0, 0), Position = new Vector3(-1f, -1f, -1f)},
-                    new Vertex {Color = new Color(1f, 1f, 0), Position = new Vector3(1f, -1f, -1f)},
-                    new Vertex {Color = new Color(1f, 0, 1f), Position = new Vector3(-1f, 1f, -1f)},
-                    new Vertex {Color = new Color(0f, 1f, 0), Position = new Vector3(1f, 1f, -1f)},
-                    new Vertex {Color = new Color(0f, 1f, 1f), Position = new Vector3(-1f, -1f, 1f)},
-                    new Vertex {Color = new Color(1f, 1f, 0), Position = new Vector3(1f, -1f, 1f)},
-                    new Vertex {Color = new Color(1f, 1f, 1f), Position = new Vector3(-1f, 1f, 1f)},
-                    new Vertex {Color = new Color(1f, 0, 0), Position = new Vector3(1f, 1f, 1f)},
-                };
-            }
+                new Vertex {Color = new Color(1f, 0, 0), Position = new Vector3(-1f, -1f, -1f)},
+                new Vertex {Color = new Color(1f, 1f, 0), Position = new Vector3(1f, -1f, -1f)},
+                new Vertex {Color = new Color(1f, 0, 1f), Position = new Vector3(-1f, 1f, -1f)},
+                new Vertex {Color = new Color(0f, 1f, 0), Position = new Vector3(1f, 1f, -1f)},
+                new Vertex {Color = new Color(0f, 1f, 1f), Position = new Vector3(-1f, -1f, 1f)},
+                new Vertex {Color = new Color(1f, 1f, 0), Position = new Vector3(1f, -1f, 1f)},
+                new Vertex {Color = new Color(1f, 1f, 1f), Position = new Vector3(-1f, 1f, 1f)},
+                new Vertex {Color = new Color(1f, 0, 0), Position = new Vector3(1f, 1f, 1f)},
+            };
 
             var indices = new short[]
             {

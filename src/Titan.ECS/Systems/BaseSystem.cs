@@ -10,6 +10,8 @@ namespace Titan.ECS.Systems
         private readonly ISet<uint> _removedEntities = new HashSet<uint>(100);
         private readonly ISet<uint> _entites = new HashSet<uint>(10_000);
 
+        protected IEnumerable<uint> Entities => _entites;
+
         private bool _isDirty;
         public ulong Signature { get; }
         protected BaseSystem(params Type[] types)
@@ -48,14 +50,10 @@ namespace Titan.ECS.Systems
                 _removedEntities.Clear();
                 _isDirty = false;
             }
-
-            foreach (var entity in _entites)
-            {
-                Update(deltaTime, entity);
-            }
+            OnUpdate(deltaTime);
         }
 
-        protected abstract void Update(float deltaTime, uint entity);
+        protected abstract void OnUpdate(float deltaTime);
 
     }
 }

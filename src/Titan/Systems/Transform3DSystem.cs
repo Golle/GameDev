@@ -15,18 +15,21 @@ namespace Titan.Systems
             _transform = componentManager.GetComponentMapper<Transform3D>();
         }
 
-        protected override void Update(float deltaTime, uint entity)
+        protected override void OnUpdate(float deltaTime)
         {
 
             // TODO: add relationship handling, query and order parents to calculate the world position
+            foreach (var entity in Entities)
+            {
+                ref var transform = ref _transform[entity];
+                transform.ModelTransform =
+                    Matrix4x4.CreateTranslation(transform.Position) *
+                    Matrix4x4.CreateScale(transform.Scale) *
+                    Matrix4x4.CreateFromQuaternion(transform.Rotation);
 
-            ref var transform = ref _transform[entity];
-            transform.ModelTransform =
-                Matrix4x4.CreateTranslation(transform.Position) *
-                Matrix4x4.CreateScale(transform.Scale) *
-                Matrix4x4.CreateFromQuaternion(transform.Rotation);
-
-            transform.WorldTransform = Matrix4x4.Transpose(transform.ModelTransform);
+                transform.WorldTransform = Matrix4x4.Transpose(transform.ModelTransform);
+            }
+            
         }
         
     }

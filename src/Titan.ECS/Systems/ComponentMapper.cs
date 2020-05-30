@@ -5,7 +5,7 @@ using Titan.ECS.Components;
 
 namespace Titan.ECS.Systems
 {
-    internal class ComponentMapper<T> : IComponentMapper<T> where T : unmanaged
+    internal class ComponentMapper<T> : IComponentMapper<T> where T : struct
     {
         private readonly IEventManager _eventManager;
 

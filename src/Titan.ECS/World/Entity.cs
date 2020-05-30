@@ -24,12 +24,12 @@ namespace Titan.ECS.World
             _entityId = _entityManager.Create();
         }
 
-        public void AddComponent<T>() where T : unmanaged
+        public void AddComponent<T>() where T : struct
         {
             _components.Add(_componentManager.Create<T>(_entityId));
         }
 
-        public void AddComponent<T>(in T initialData) where T : unmanaged
+        public void AddComponent<T>(in T initialData) where T : struct
         {
             _components.Add(_componentManager.Create(_entityId, initialData));
         }

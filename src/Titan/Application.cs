@@ -86,7 +86,7 @@ namespace Titan
                 var entity1 = _world.CreateEntity();
                 entity1.AddComponent(new Velocity { Value = new Vector3(random.Next(-3000, 3000) / 1000f, random.Next(-3000, 3000) / 1000f, random.Next(-3000, 3000) / 1000f) });
                 entity1.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0f) });
-                entity1.AddComponent<Mesh>();
+                entity1.AddComponent<Mesh_Unnused>();
                 entity1.AddComponent<Material>();
             }
 
@@ -114,7 +114,7 @@ namespace Titan
                 .WithComponent<Transform2D>(1000)
                 .WithComponent<Transform3D>(1000)
                 .WithComponent<Velocity>(1000)
-                .WithComponent<Mesh>(1000)
+                .WithComponent<Mesh_Unnused>(1000)
                 .WithComponent<Material>(1000)
 
                 .Build()
