@@ -22,14 +22,15 @@ namespace Titan.ECS.Components
             return _free.TryDequeue(out var index) ? index : _count++;
         }
 
-        public ref T Create(out uint index)
+        public uint Create(out T value)
         {
             Debug.Assert(_count < _componentPool.Length || _free.Count > 0, "No more components available");
-            if (!_free.TryDequeue(out index))
+            if (!_free.TryDequeue(out var index))
             {
                 index = _count++;
             }
-            return ref _componentPool[index];
+            value = _componentPool[index];
+            return index;
         }
 
         public ref T Get(uint index) => ref _componentPool[index];

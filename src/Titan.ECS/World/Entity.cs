@@ -11,7 +11,7 @@ namespace Titan.ECS.World
     {
         private readonly IEntityManager _entityManager;
         private readonly IComponentManager _componentManager;
-        private readonly IList<Component> _components = new List<Component>();
+        private readonly IList<ulong> _components = new List<ulong>();
 
         private uint _entityId;
         public Entity(IEntityManager entityManager, IComponentManager componentManager)
@@ -38,7 +38,7 @@ namespace Titan.ECS.World
         {
             foreach (var component in _components)
             {
-                _componentManager.Free(component);
+                _componentManager.Free(_entityId, component);
             }
             _entityManager.Free(_entityId);
         }

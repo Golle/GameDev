@@ -1,44 +1,69 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Titan.Core.EventSystem;
 using Titan.ECS.Components;
 
 namespace Titan.ECS.Systems
 {
     internal class ComponentMapper<T> : IComponentMapper<T> where T : unmanaged
     {
+        private readonly IEventManager _eventManager;
+
         private readonly IComponentPool<T> _pool;
         private readonly IDictionary<uint, uint> _componentIndexMap;
+        private ulong _id;
 
-        public ComponentMapper(uint poolSize)
+        public ComponentMapper(uint poolSize, IEventManager eventManager)
         {
+            _eventManager = eventManager;
             _pool = new ComponentPool<T>(poolSize);
             _componentIndexMap = new Dictionary<uint, uint>();
+            _id = typeof(T).ComponentMask();
         }
 
-        public void DestroyComponent(uint entity, uint index)
+        public void DestroyComponent(uint entity)
         {
-            _componentIndexMap.Remove(entity);
+            _componentIndexMap.Remove(entity, out var index);
             _pool.Free(index);
+
+            _eventManager.Publish(new ComponentDestroyedEvent(entity, _id));
         }
 
-        public uint CreateComponent(uint entity)
+        public ref T CreateComponent(uint entity)
         {
-            Debug.Assert(!_componentIndexMap.ContainsKey(entity), $"Only one component of type {typeof(T).Name} is allowed on entity {entity}" );
             var index = _pool.Create();
-            return _componentIndexMap[entity] = index;
-        }
-
-        public ref T CreateComponent(uint entity, out uint index)
-        {
-            ref var a = ref _pool.Create(out index);
             _componentIndexMap[entity] = index;
-            return ref a;
+
+            _eventManager.Publish(new ComponentCreatedEvent(entity, _id));
+            return ref _pool[index];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ref T Get(uint entity) => ref _pool[_componentIndexMap[entity]];
 
         public ref T this[uint entity] => ref _pool[_componentIndexMap[entity]];
+    }
+
+    internal readonly struct ComponentDestroyedEvent : IEvent
+    {
+        public ulong Id { get; }
+        public uint EntityId { get; }
+        public EventType Type => EventType.ComponentDestroyed;
+        public ComponentDestroyedEvent(uint entityId, ulong id)
+        {
+            EntityId = entityId;
+            Id = id;
+        }
+    }
+    internal readonly struct ComponentCreatedEvent : IEvent
+    {
+        public uint EntityId { get; }
+        public ulong Id { get; }
+        public EventType Type => EventType.ComponentCreated;
+        public ComponentCreatedEvent(uint entityId, ulong id)
+        {
+            EntityId = entityId;
+            Id = id;
+        }
     }
 }
