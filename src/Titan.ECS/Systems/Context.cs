@@ -23,7 +23,7 @@ namespace Titan.ECS.Systems
             var oldSignature = _entityComponentSignature[@event.EntityId];
             foreach (var system in _systems)
             {
-                if ((system.Signature & @event.Id) != 0 && (system.Signature & oldSignature) == system.Signature)
+                if (system.Contains(@event.Id) && system.IsMatch(oldSignature))
                 {
                     system.Remove(@event.EntityId);
                 }

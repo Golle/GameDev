@@ -33,6 +33,7 @@ namespace Titan.ECS.Systems
         }
 
         public bool IsMatch(ulong signature) => (signature & Signature) == Signature;
+        public bool Contains(ulong componentId) => (componentId & Signature) != 0;
 
         public void Update(float deltaTime)
         {

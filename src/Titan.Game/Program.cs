@@ -2,58 +2,60 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using Titan.Core.Ioc;
+using Titan.ECS.World;
 using Titan.Graphics.Camera;
 
 namespace Titan.Game
 {
     internal class Program : Application<Program>
     {
+        private MyTestClass _test;
+
         static void Main(string[] args)
         {
-
             Start();
+        }
+
+        protected override void OnInitialize(IContainer container)
+        {
+            _test = container.GetInstance<MyTestClass>();
         }
 
         protected override void OnStart()
         {
-            GetInstance<MyTestClass>()
-                .Print();
-
+            _test.OnStart();
         }
 
         protected override void OnQuit()
         {
-            GetInstance<MyTestClass>()
-                .Print();
+            _test.OnQuit();
         }
 
         protected override void RegisterServices(IContainer container)
         {
             container.Register<MyTestClass>();
-
         }
-
     }
 
     internal class MyTestClass
     {
-        private ICamera _camera;
-
-        public MyTestClass(ICameraFactory factory)
+        
+        public MyTestClass(IWorldCreator worldCreator)
         {
-            _camera = factory.CreateOrhographicCamera();
+            
         }
 
-        public void Print()
+        public void OnStart()
         {
+            
+            
 
-            var a = new BitArray(new bool[] {true, false, false});
+            Console.WriteLine("OnStart");
+        }
 
-            var b = new BitArray(new bool[] {true, false, true});
-
-            var c = a.And(b);
-
-            Console.WriteLine("Apa");
+        public void OnQuit()
+        {
+            Console.WriteLine("OnQuit");
         }
     }
 }

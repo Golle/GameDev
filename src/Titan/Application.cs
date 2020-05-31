@@ -66,6 +66,9 @@ namespace Titan
                 .Initialize();
 
             RegisterServices(_container);
+
+            _logger.Debug("Initialize Sandbox");
+            OnInitialize(_container);
             
             _logger.Debug("Initialize Window and D3D11Device");
 
@@ -139,11 +142,13 @@ namespace Titan
                 .CreateWorld(configuration);
         }
 
+        protected virtual void OnInitialize(IContainer container) { }
         protected virtual void OnStart() { }
+        
         protected virtual void OnQuit() { }
         protected virtual void RegisterServices(IContainer container) { }
 
         //protected virtual void RegisterComponents(Something something) { } TODO: add implementation for this
-        protected TType GetInstance<TType>() => _container.GetInstance<TType>();
+        private TType GetInstance<TType>() => _container.GetInstance<TType>();
     }
 }
