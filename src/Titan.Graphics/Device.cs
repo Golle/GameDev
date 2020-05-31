@@ -1,5 +1,4 @@
 using System;
-using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using Titan.D3D11;
 using Titan.D3D11.Bindings.Models;
@@ -8,6 +7,7 @@ using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
 using Titan.Graphics.Shaders;
+using Titan.Graphics.Textures;
 
 namespace Titan.Graphics
 {
@@ -159,11 +159,36 @@ namespace Titan.Graphics
             return new InputLayout(_device.Context, layout);
         }
 
+        public ITexture2D CreateTexture2D(uint width, uint height, in byte[] pixels)
+        {
+            D3D11Texture2DDesc desc = default;
+            desc.Height = height;
+            desc.Width = width;
+            desc.BindFlags = D3D11BindFlag.ShaderResource;
+            desc.MipLevels = 1; // TODO: add support for this
+            desc.ArraySize = 1; // TODO: add support for this
+            desc.Format = DxgiFormat.R8G8B8A8Uint;
+            desc.SampleDesc.Count = 1;
+            desc.SampleDesc.Quality = 0;
+            desc.CPUAccessFlags = D3D11CpuAccessFlag.Unspecified;
+            desc.MiscFlags = 0;
+
+            D3D11SubresourceData data = default;
+            data.SysMemPitch = width * 4; // Width * size of R8G8B8A8Uint
+            unsafe
+            {
+                fixed (byte* b = pixels)
+                {
+                    data.pSysMem = b;
+                    return new Texture2D(_device.CreateTexture2D(desc, data));
+                }
+            }
+        }
+
         public void BeginRender()
         {
             _device.Context.ClearRenderTargetView(_renderTarget, _clearColor);
             _device.Context.ClearDepthStencilView(_depthStencilView, D3D11ClearFlag.Depth, 1f, 0);
-
             
             // TODO: this is tempory
             _device.Context.SetPrimitiveTopology(D3D11PrimitiveTopology.D3D11PrimitiveTopologyTrianglelist);

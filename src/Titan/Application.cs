@@ -25,8 +25,11 @@ namespace Titan
                 .AddRegistry<GraphicsRegistry>()
                 .AddRegistry<SystemsRegistry>()
                 .AddRegistry<ECSGlobalRegistry>()
+                .AddRegistry<EngineRegistry>()
+                
                 .Register<GameEngine>()
-                .Register<IEngineConfigurationHandler, EngineConfigurationHandler>()
+
+
             ;
 
         private readonly ILogger _logger;
@@ -82,7 +85,6 @@ namespace Titan
 
 
             _world = CreateWorld();
-
 
             var random = new Random();
             for (var i = 0; i < 2; ++i)

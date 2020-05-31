@@ -1,11 +1,9 @@
-using System;
-using System.Diagnostics;
-using System.Numerics;
 using Titan.Core.EventSystem;
 using Titan.Core.Logging;
-using Titan.D3D11;
+using Titan.D3D11.Device;
 using Titan.Graphics.Camera;
 using Titan.Graphics.Renderer;
+using Titan.Resources;
 using Titan.Windows.Input;
 using Titan.Windows.Window;
 
@@ -18,26 +16,19 @@ namespace Titan
         private readonly ILogger _logger;
         private readonly IInputManager _inputManager;
         private readonly ICameraFactory _cameraFactory;
-        private readonly IRenderer _renderer;
 
-        private ICamera _camera;
-        private RendereableModel _model;
-        public GameEngine(IWindow window, IEventManager eventManager, ILogger logger, IInputManager inputManager, ICameraFactory cameraFactory, IRenderer renderer)
+        public GameEngine(IWindow window, IEventManager eventManager, ILogger logger, IInputManager inputManager, ICameraFactory cameraFactory)
         {
             _window = window;
             _eventManager = eventManager;
             _logger = logger;
             _inputManager = inputManager;
             _cameraFactory = cameraFactory;
-            _renderer = renderer;
-
-            _camera = _cameraFactory.CreatePerspectiveCamera();
         }
 
         public bool Execute()
         {
             var mousePosition = _inputManager.Mouse.Position;
-
 
             //_window.SetTitle($"x: {mousePosition.X} y: {mousePosition.Y}");
             

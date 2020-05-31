@@ -3,6 +3,7 @@ using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
 using Titan.Graphics.Shaders;
+using Titan.Graphics.Textures;
 
 namespace Titan.Graphics
 {
@@ -17,8 +18,9 @@ namespace Titan.Graphics
 
         IVertexShader CreateVertexShader(IBlob vertexShaderBlob);
         IPixelShader CreatePixelShader(IBlob pixelShaderBlob);
-
         IInputLayout CreateInputLayout(VertexLayout vertexLayout, IBlob vertexShaderBlob);
+
+        ITexture2D CreateTexture2D(uint width, uint height, in byte[] pixels);
 
         void BeginRender();
         void EndRender();

@@ -26,5 +26,10 @@ namespace Titan.Core.Logging
         {
             Console.WriteLine(_logFormatter.Format("INFO", message, arguments));
         }
+
+        public void Error(string message, params object?[] arguments)
+        {
+            Console.WriteLine(_logFormatter.Format("ERROR", message, arguments));
+        }
     }
 }

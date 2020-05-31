@@ -4,5 +4,6 @@ namespace Titan.Core.Logging
     {
         void Debug(string message, params object?[] arguments);
         void Info(string message, params object?[] arguments);
+        void Error(string message, params object?[] arguments);
     }
 }
