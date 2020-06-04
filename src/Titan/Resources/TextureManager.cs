@@ -1,31 +1,25 @@
-using System;
 using System.Collections.Generic;
-using Titan.Graphics;
 using Titan.Graphics.Textures;
 
 namespace Titan.Resources
 {
     internal class TextureManager : ITextureManager
     {
-        private readonly IDevice _device;
-        private readonly IImageLoader _imageLoader;
+        private readonly ITextureLoader _textureLoader;
 
         private readonly IDictionary<string, ITexture2D> _loadedTextures = new Dictionary<string, ITexture2D>();
-        public TextureManager(IDevice device, IImageLoader imageLoader)
+        public TextureManager(ITextureLoader textureLoader)
         {
-            _device = device;
-            _imageLoader = imageLoader;
+            _textureLoader = textureLoader;
         }
 
-        public ITexture2D LoadTexture(string filename)
+        public ITexture2D GetTexture(string filename)
         {
             if (_loadedTextures.TryGetValue(filename, out var texture))
             {
                 return texture;
             }
-            
-            var image = _imageLoader.LoadFromFile(filename);
-            return _loadedTextures[filename] = _device.CreateTexture2D(image.Width, image.Height, image.Pixels);
+            return _loadedTextures[filename] = _textureLoader.LoadTexture(filename);
         }
 
         public void ReleaseTexture(string filename)

@@ -1,3 +1,4 @@
+using Titan.Core.Assets.Images;
 using Titan.Core.Common;
 using Titan.Core.Configuration;
 using Titan.Core.EventSystem;
@@ -31,6 +32,9 @@ namespace Titan.Core
 
                     // GameLoop
                     .Register<IGameLoop, BasicGameLoop>()
+
+
+                    .Register<IImageLoader, ImageLoader>()
                 ;
 
         }

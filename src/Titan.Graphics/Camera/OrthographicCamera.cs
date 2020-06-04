@@ -24,9 +24,9 @@ namespace Titan.Graphics.Camera
         {
         }
 
-        public OrthographicCamera(IEventManager eventManager, float width, float height, float bottom, float top)
+        public OrthographicCamera(IEventManager eventManager, float left, float right, float bottom, float top)
         {
-            _projection = Matrix4x4.CreateOrthographicOffCenter(width, height, bottom, top, -1f, 1f);
+            _projection = Matrix4x4.CreateOrthographicOffCenter(left, right, bottom, top, -1f, 1f);
             _view = Matrix4x4.Identity;
 
             _viewProjection =

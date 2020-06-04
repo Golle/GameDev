@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -27,6 +27,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Titan.D3D11.Bindings\bin\x64\$(Configuration)\PixelShader.cso" Link="Shaders\PixelShader.cso">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Titan.D3D11.Bindings\bin\x64\$(Configuration)\VertexShader2D.cso" Link="Shaders\VertexShader2D.cso">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Titan.D3D11.Bindings\bin\x64\$(Configuration)\PixelShader2D.cso" Link="Shaders\PixelShader2D.cso">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

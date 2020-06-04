@@ -1,6 +1,6 @@
-namespace Titan.Resources
+namespace Titan.Core.Assets.Images
 {
-    internal class ImageAsset
+    public class ImageAsset
     {
         public uint Height { get; }
         public uint Width { get; }

@@ -16,14 +16,16 @@ namespace Titan
         private readonly ILogger _logger;
         private readonly IInputManager _inputManager;
         private readonly ICameraFactory _cameraFactory;
+        private readonly ISpriteBatchRenderer _spriteBatchRenderer;
 
-        public GameEngine(IWindow window, IEventManager eventManager, ILogger logger, IInputManager inputManager, ICameraFactory cameraFactory)
+        public GameEngine(IWindow window, IEventManager eventManager, ILogger logger, IInputManager inputManager, ICameraFactory cameraFactory, ISpriteBatchRenderer spriteBatchRenderer)
         {
             _window = window;
             _eventManager = eventManager;
             _logger = logger;
             _inputManager = inputManager;
             _cameraFactory = cameraFactory;
+            _spriteBatchRenderer = spriteBatchRenderer;
         }
 
         public bool Execute()
@@ -60,6 +62,8 @@ namespace Titan
 
             //_renderer.EndScene();
 
+            _spriteBatchRenderer.Flush();
+            _spriteBatchRenderer.Render();
             
             return true;
         }

@@ -4,6 +4,7 @@ using Titan.Graphics.Blobs;
 using Titan.Graphics.Camera;
 using Titan.Graphics.Renderer;
 using Titan.Graphics.Stuff;
+using Titan.Graphics.Textures;
 
 namespace Titan.Graphics
 {
@@ -19,6 +20,10 @@ namespace Titan.Graphics
                 .Register<IBlobReader, BlobReader>()
                 .Register<ICameraFactory, CameraFactory>()
                 .Register<IRenderer, Renderer3D>()
+                .Register<ISpriteBatchRenderer, SpriteBatchRenderer>()
+
+
+                .Register<ITextureLoader, TextureLoader>()
 
                 ;
         }

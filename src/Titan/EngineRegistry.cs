@@ -1,4 +1,5 @@
 using Titan.Configuration;
+using Titan.Core.Assets.Images;
 using Titan.Core.Ioc;
 using Titan.Resources;
 
@@ -11,7 +12,6 @@ namespace Titan
             container
                 .Register<IEngineConfigurationHandler, EngineConfigurationHandler>()
 
-                .Register<IImageLoader, ImageLoader>()
                 .Register<ITextureManager, TextureManager>()
                 ;
         }

@@ -8,6 +8,7 @@ using Titan.Core.GameLoop;
 using Titan.Core.GameLoop.Events;
 using Titan.Core.Ioc;
 using Titan.Core.Logging;
+using Titan.Core.Math;
 using Titan.ECS;
 using Titan.ECS.World;
 using Titan.Graphics;
@@ -23,7 +24,6 @@ namespace Titan
         private readonly IContainer _container = Bootstrapper.CreateContainer()
                 .AddRegistry<WindowsRegistry>()
                 .AddRegistry<GraphicsRegistry>()
-                .AddRegistry<SystemsRegistry>()
                 .AddRegistry<ECSGlobalRegistry>()
                 .AddRegistry<EngineRegistry>()
                 
@@ -49,6 +49,7 @@ namespace Titan
         }
 
         private float _fps;
+
         private void Run()
         {
             _container.GetInstance<IEventManager>()
@@ -86,19 +87,22 @@ namespace Titan
 
             _world = CreateWorld();
 
-            var random = new Random();
-            for (var i = 0; i < 2; ++i)
-            {
-                var entity1 = _world.CreateEntity();
-                entity1.AddComponent(new Velocity { Value = new Vector3(random.Next(-3000, 3000) / 1000f, random.Next(-3000, 3000) / 1000f, random.Next(-3000, 3000) / 1000f) });
-                entity1.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0f) });
-                entity1.AddComponent(new Shader{VertexShader = "Shaders/VertexShader.cso", PixelShader = "Shaders/PixelShader.cso" });
-                entity1.AddComponent(new Mesh{Filename = "this_is_file.mesh" });
-            }
+            //var random = new Random();
+            //for (var i = 0; i < 2; ++i)
+            //{
+            //    var entity1 = _world.CreateEntity();
+            //    entity1.AddComponent(new Velocity { Value = new Vector3(random.Next(-3000, 3000) / 1000f, random.Next(-3000, 3000) / 1000f, random.Next(-3000, 3000) / 1000f) });
+            //    entity1.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0f) });
+            //    entity1.AddComponent(new Shader{VertexShader = "Shaders/VertexShader.cso", PixelShader = "Shaders/PixelShader.cso" });
+            //    entity1.AddComponent(new Mesh{Filename = "this_is_file.mesh" });
+            //}
 
-            var cameraEntity = _world.CreateEntity();
-            cameraEntity.AddComponent<Transform3D>();
-            cameraEntity.AddComponent<Camera>();
+            //var cameraEntity = _world.CreateEntity();
+            //cameraEntity.AddComponent<Transform3D>();
+            //cameraEntity.AddComponent<Camera>();
+
+            var entity1 = _world.CreateEntity();
+            entity1.AddComponent<TransformRect>(new TransformRect{Position = new Vector3(600, 200, 0), Size = new Size(100)});
 
             var engine = _container.GetInstance<GameEngine>();
             
@@ -122,15 +126,19 @@ namespace Titan
             var configuration = new WorldConfigurationBuilder("Donkey")
                 .WithContainer(_container.CreateChildContainer()) // Add a child container for this world (might be a better way to do this)
                 .WithSystem<MovementSystem>()
-                
+
+
                 .WithSystem<D3D11ModelLoaderSystem>()
                 .WithSystem<D3D11ShaderLoaderSystem>()
                 .WithSystem<D3D11Camera3DSystem>()
-                .WithSystem<D3D11Render3DSystem>()
+                //.WithSystem<D3D11Render3DSystem>()
+                .WithSystem<SpriteRenderSystem>()
+                .WithSystem<UIRenderSystem>()
                 .WithComponent<Transform3D>(componentSize)
                 .WithComponent<Velocity>(componentSize)
                 .WithComponent<Mesh>(componentSize)
                 .WithComponent<Shader>(componentSize)
+                .WithComponent<TransformRect>(componentSize)
 
                 .WithComponent<D3D11Model>(componentSize)
                 .WithComponent<D3D11Shader>(componentSize)

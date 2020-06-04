@@ -2,10 +2,12 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using Titan.Components;
 using Titan.Core.Math;
+using Titan.D3D11;
 using Titan.ECS.Components;
 using Titan.ECS.Systems;
 using Titan.Graphics;
 using Titan.Graphics.Buffers;
+using Titan.Graphics.Renderer;
 using Titan.Windows.Window;
 
 namespace Titan.Systems.Rendering
@@ -102,6 +104,56 @@ namespace Titan.Systems.Rendering
                 _device.DrawIndexed(model.IndexBuffer.NumberOfIndices, 0, 0);
             }
             _device.EndRender();
+        }
+    }
+
+    internal class UIRenderSystem : BaseSystem
+    {
+        private readonly ISpriteBatchRenderer _spriteBatchRenderer;
+        private readonly IComponentMapper<TransformRect> _transform;
+
+        public UIRenderSystem(IComponentManager componentManager, ISpriteBatchRenderer spriteBatchRenderer) 
+            : base(typeof(TransformRect))
+        {
+            _spriteBatchRenderer = spriteBatchRenderer;
+            _transform = componentManager.GetComponentMapper<TransformRect>();
+        }
+
+        protected override void OnUpdate(float deltaTime)
+        {
+            foreach (var entity in Entities)
+            {
+                ref var rect = ref _transform[entity];
+                _spriteBatchRenderer.Push(null, new Vector2(rect.Position.X, rect.Position.Y), new Vector2(rect.Size.Width, rect.Size.Height), new Color(1,0,0));
+            }
+        }
+    }
+
+
+    internal class SpriteRenderSystem : BaseSystem
+    {
+        private readonly ISpriteBatchRenderer _spriteBatchRenderer;
+
+        public SpriteRenderSystem(ISpriteBatchRenderer spriteBatchRenderer) :
+            base(typeof(Transform3D))
+        {
+            _spriteBatchRenderer = spriteBatchRenderer;
+
+        }
+
+        protected override void OnUpdate(float deltaTime)
+        {
+            _spriteBatchRenderer.Push(null, new Vector2(100.0f, 100.0f), new Vector2(200, 200), new Color(0, 1, 0));
+            _spriteBatchRenderer.Push(null, new Vector2(-200.0f, -200.0f), new Vector2(100, 200), new Color(0, 1, 0));
+            _spriteBatchRenderer.Push(null, new Vector2(200.0f, -300.0f), new Vector2(100, 200), new Color(0, 1, 0));
+            _spriteBatchRenderer.Push(null, new Vector2(-200.0f, 200.0f), new Vector2(100, 200), new Color(0, 1, 0));
+            _spriteBatchRenderer.Push(null, new Vector2(200.0f, 200.0f), new Vector2(100, 200), new Color(0, 1, 0));
+            _spriteBatchRenderer.Push(null, new Vector2(1000.0f, 0.0f), new Vector2(200, 200), new Color(0, 1, 0));
+            _spriteBatchRenderer.Push(null, new Vector2(0.0f, -700.0f), new Vector2(200, 200), new Color(0, 1, 0));
+            _spriteBatchRenderer.Push(null, new Vector2(200, 100), new Vector2(200, 300), new Color(0, 1, 0));
+            _spriteBatchRenderer.Push(null, new Vector2(200, 200), new Vector2(200, 300), new Color(0, 1, 0));
+            _spriteBatchRenderer.Push(null, new Vector2(200, 300), new Vector2(200, 300), new Color(0, 1, 0));
+            _spriteBatchRenderer.Push(null, new Vector2(200, 400), new Vector2(200, 300), new Color(0, 1, 0));
         }
     }
 }

@@ -29,7 +29,11 @@ namespace Titan.Graphics.Camera
 
             var aspectRatio = _window.Width / (float)_window.Height;
 
-            return new OrthographicCamera(_eventManager, -aspectRatio * 0.25f, aspectRatio*0.25f, -0.25f, 0.25f);
+            var windowWidth = _window.Width/2f;
+            var windowHeight = _window.Height/2f;
+
+            //return new OrthographicCamera(_eventManager, -windowWidth, windowWidth, -windowHeight, windowHeight);
+            return new OrthographicCamera(_eventManager, 0, _window.Width, 0, _window.Height);
 
         }
 

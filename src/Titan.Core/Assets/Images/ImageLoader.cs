@@ -3,7 +3,7 @@ using System.Drawing;
 using System.IO;
 using Titan.Core.Logging;
 
-namespace Titan.Resources
+namespace Titan.Core.Assets.Images
 {
     internal class ImageLoader : IImageLoader
     {
