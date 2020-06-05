@@ -50,25 +50,10 @@ EXPORT void Draw_(
 	context->Draw(vertexCount, startVertexLocation);
 }
 
-EXPORT void VSSetShader_(
-	ID3D11DeviceContext* context,
-	ID3D11VertexShader* pVertexShader,
-	ID3D11ClassInstance* const* ppClassInstances,
-	UINT                NumClassInstances
-) 
-{
-	context->VSSetShader(pVertexShader, ppClassInstances, NumClassInstances);
-}
 
-EXPORT void PSSetShader_(
-	ID3D11DeviceContext* context,
-	ID3D11PixelShader* pPixelShader,
-	ID3D11ClassInstance* const* ppClassInstances,
-	UINT                NumClassInstances
-)
-{
-	context->PSSetShader(pPixelShader, ppClassInstances, NumClassInstances);
-}
+/////////////////////////////////////////////
+///// Rasterizer
+/////////////////////////////////////////////
 
 EXPORT void RSSetViewports_(
 	ID3D11DeviceContext* context,
@@ -78,6 +63,10 @@ EXPORT void RSSetViewports_(
 {
 	context->RSSetViewports(numViewports, pViewports);
 }
+
+/////////////////////////////////////////////
+///// InputAssembler
+/////////////////////////////////////////////
 
 EXPORT void IASetPrimitiveTopology_(
 	ID3D11DeviceContext* context,
@@ -105,6 +94,10 @@ EXPORT void IASetIndexBuffer_(
 	context->IASetIndexBuffer(indexBuffer, format, offset);
 }
 
+/////////////////////////////////////////////
+///// VertexShaders
+/////////////////////////////////////////////
+
 EXPORT void VSSetConstantBuffers_(
 	ID3D11DeviceContext* context,
 	UINT startSlot,
@@ -115,6 +108,31 @@ EXPORT void VSSetConstantBuffers_(
 	context->VSSetConstantBuffers(startSlot, numBuffers, ppConstantBuffers);
 }
 
+
+EXPORT void VSSetShader_(
+	ID3D11DeviceContext* context,
+	ID3D11VertexShader* pVertexShader,
+	ID3D11ClassInstance* const* ppClassInstances,
+	UINT                NumClassInstances
+)
+{
+	context->VSSetShader(pVertexShader, ppClassInstances, NumClassInstances);
+}
+
+/////////////////////////////////////////////
+///// PixelShaders
+/////////////////////////////////////////////
+EXPORT void PSSetShader_(
+	ID3D11DeviceContext* context,
+	ID3D11PixelShader* pPixelShader,
+	ID3D11ClassInstance* const* ppClassInstances,
+	UINT                NumClassInstances
+)
+{
+	context->PSSetShader(pPixelShader, ppClassInstances, NumClassInstances);
+}
+
+
 EXPORT void PSSetConstantBuffers_(
 	ID3D11DeviceContext* context,
 	UINT startSlot,
@@ -124,6 +142,28 @@ EXPORT void PSSetConstantBuffers_(
 {
 	context->PSSetConstantBuffers(startSlot, numBuffers, ppConstantBuffers);
 }
+
+EXPORT void PSSetShaderResources_(
+	ID3D11DeviceContext* context,
+	UINT StartSlot,
+	UINT NumViews,
+	ID3D11ShaderResourceView* const* ppShaderResourceViews
+)
+{
+	context->PSSetShaderResources(StartSlot, NumViews, ppShaderResourceViews);
+}
+
+EXPORT void PSSetSamplers_(
+	ID3D11DeviceContext* context,
+	UINT StartSlot,
+	UINT NumSamplers,
+	ID3D11SamplerState* const* ppSamplers
+)
+{
+	context->PSSetSamplers(StartSlot, NumSamplers, ppSamplers);
+}
+
+
 
 EXPORT void DrawIndexed_(
 	ID3D11DeviceContext* context,

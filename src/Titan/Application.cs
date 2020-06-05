@@ -9,9 +9,11 @@ using Titan.Core.GameLoop.Events;
 using Titan.Core.Ioc;
 using Titan.Core.Logging;
 using Titan.Core.Math;
+using Titan.D3D11;
 using Titan.ECS;
 using Titan.ECS.World;
 using Titan.Graphics;
+using Titan.Resources;
 using Titan.Systems;
 using Titan.Systems.Rendering;
 using Titan.Windows;
@@ -83,27 +85,33 @@ namespace Titan
             _container
                 .RegisterSingleton(display.Device)
                 .RegisterSingleton(display.Window);
-
-
+            
+            using var textureManager = GetInstance<ITextureManager>();
             _world = CreateWorld();
 
-            //var random = new Random();
-            //for (var i = 0; i < 2; ++i)
-            //{
-            //    var entity1 = _world.CreateEntity();
-            //    entity1.AddComponent(new Velocity { Value = new Vector3(random.Next(-3000, 3000) / 1000f, random.Next(-3000, 3000) / 1000f, random.Next(-3000, 3000) / 1000f) });
-            //    entity1.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0f) });
-            //    entity1.AddComponent(new Shader{VertexShader = "Shaders/VertexShader.cso", PixelShader = "Shaders/PixelShader.cso" });
-            //    entity1.AddComponent(new Mesh{Filename = "this_is_file.mesh" });
-            //}
+            var random = new Random();
+            //for (var i = 0; i < 10900; ++i)
+            {
 
-            //var cameraEntity = _world.CreateEntity();
-            //cameraEntity.AddComponent<Transform3D>();
-            //cameraEntity.AddComponent<Camera>();
 
-            var entity1 = _world.CreateEntity();
-            entity1.AddComponent<TransformRect>(new TransformRect{Position = new Vector3(600, 200, 0), Size = new Size(100)});
+                var entity1 = _world.CreateEntity();
+                entity1.AddComponent(new TransformRect { Position = new Vector3(600, 200, 0), Size = new Size(100) });
+                entity1.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\link.png"), Color = new Color(1, 1, 1) });
 
+                var entity2 = _world.CreateEntity();
+                entity2.AddComponent(new TransformRect { Position = new Vector3(100, 200, 0), Size = new Size(200) });
+                entity2.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\tree01.png"), Color = new Color(1, 1, 1) });
+
+
+                for (var i = 0; i < 100; ++i)
+                {
+                    var entity3 = _world.CreateEntity();
+                    entity3.AddComponent(new Transform2D { Position = new Vector2(1920 / 2f, 1080 / 2f), Scale = Vector2.One });
+                    entity3.AddComponent(new Velocity { Value = new Vector3(random.Next(-5000, 5000) / 100f, random.Next(-5000, 5000) / 100f, 0) });
+                    entity3.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\link.png"), Color = new Color(1, 1, 1) });
+                }
+                
+            }
             var engine = _container.GetInstance<GameEngine>();
             
             OnStart();
@@ -121,24 +129,26 @@ namespace Titan
 
         private IWorld CreateWorld()
         {
-            const int componentSize = 1000;
+            const int componentSize = 40000;
 
             var configuration = new WorldConfigurationBuilder("Donkey")
                 .WithContainer(_container.CreateChildContainer()) // Add a child container for this world (might be a better way to do this)
-                .WithSystem<MovementSystem>()
+                .WithSystem<MovementSystem3D>()
+                .WithSystem<MovementSystem2D>()
 
-
-                .WithSystem<D3D11ModelLoaderSystem>()
-                .WithSystem<D3D11ShaderLoaderSystem>()
-                .WithSystem<D3D11Camera3DSystem>()
+                //.WithSystem<D3D11ModelLoaderSystem>()
+                //.WithSystem<D3D11ShaderLoaderSystem>()
+                //.WithSystem<D3D11Camera3DSystem>()
                 //.WithSystem<D3D11Render3DSystem>()
                 .WithSystem<SpriteRenderSystem>()
                 .WithSystem<UIRenderSystem>()
                 .WithComponent<Transform3D>(componentSize)
+                .WithComponent<Transform2D>(componentSize)
                 .WithComponent<Velocity>(componentSize)
                 .WithComponent<Mesh>(componentSize)
                 .WithComponent<Shader>(componentSize)
                 .WithComponent<TransformRect>(componentSize)
+                .WithComponent<Sprite>(componentSize)
 
                 .WithComponent<D3D11Model>(componentSize)
                 .WithComponent<D3D11Shader>(componentSize)

@@ -81,6 +81,17 @@ namespace Titan.D3D11.Device
             D3D11DeviceContextBindings.PSSetConstantBuffers_(Handle, startSlot, 1, constantBuffer.Handle);
         }
 
+        public void PSSetShaderResources(uint startSlot, ID3D11ShaderResourceView resourceView)
+        {
+            D3D11DeviceContextBindings.PSSetShaderResources_(Handle, startSlot, 1, resourceView.Handle);
+        }
+
+        public void PSSetSamplers(uint startSlot, ID3D11SamplerState sampler)
+        {
+            D3D11DeviceContextBindings.PSSetSamplers_(Handle, startSlot, 1, sampler.Handle);
+        }
+
+
         public void OMSetDepthStencilState(ID3D11DepthStencilState stencilState, uint stencilRef)
         {
             D3D11DeviceContextBindings.OMSetDepthStencilState_(Handle, stencilState.Handle, stencilRef);

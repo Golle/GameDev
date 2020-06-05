@@ -102,6 +102,22 @@ namespace Titan.D3D11.Bindings
             [In] D3D11DepthStencilViewDesc* pDesc,
             [Out] out IntPtr ppDepthStencilView
         );
+
+
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern HRESULT CreateSamplerState_(
+            [In] IntPtr device,
+            [In] in D3D11SamplerDesc samplerDesc,
+            [Out] out IntPtr ppSamplerState
+        );
+
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern HRESULT CreateShaderResourceView_(
+            [In] IntPtr device,
+            [In] IntPtr resource,
+            [In] in D3D11ShaderResourceViewDesc desc,
+            [Out] out IntPtr ppShaderResourceView
+        );
     }
 
     [StructLayout(LayoutKind.Explicit, Size = 20)] // Size = 20 is in 64 bit architecture, wont work in x86.

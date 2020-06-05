@@ -117,3 +117,23 @@ EXPORT HRESULT CreateDepthStencilView_(
 {
 	return device->CreateDepthStencilView(pResource, pDesc, ppDepthStencilView);
 }
+
+
+EXPORT HRESULT CreateSamplerState_(
+	ID3D11Device* device,
+	const D3D11_SAMPLER_DESC* pSamplerDesc,
+	ID3D11SamplerState** ppSamplerState
+)
+{
+	return device->CreateSamplerState(pSamplerDesc, ppSamplerState);
+}
+
+EXPORT HRESULT CreateShaderResourceView_(
+	ID3D11Device* device,
+	ID3D11Resource* pResource,
+	const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc,
+	ID3D11ShaderResourceView** ppSRView
+) 
+{
+	return device->CreateShaderResourceView(pResource, pDesc, ppSRView);
+}

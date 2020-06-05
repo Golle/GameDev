@@ -182,6 +182,26 @@ namespace Titan.D3D11.Device
             return new D3D11DepthStencilView(stencilView);
         }
 
+        public ID3D11SamplerState CreateSamplerState(in D3D11SamplerDesc desc)
+        {
+            var result = D3D11DeviceBindings.CreateSamplerState_(_handle, desc, out var sampleState);
+            if (result.Failed)
+            {
+                throw new Win32Exception($"Device CreateSamplerState failed with code: 0x{result.Code.ToString("X")}");
+            }
+            return new D3D11SamplerState(sampleState);
+        }
+
+        public ID3D11ShaderResourceView CreateShaderResourceView(ID3D11Resource resource, D3D11ShaderResourceViewDesc desc)
+        {
+            var result = D3D11DeviceBindings.CreateShaderResourceView_(_handle, resource.Handle, desc, out var resourceView);
+            if (result.Failed)
+            {
+                throw new Win32Exception($"Device CreateShaderResourceView failed with code: 0x{result.Code.ToString("X")}");
+            }
+            return new D3D11ShaderResourceView(resourceView);
+        }
+
         public void Dispose()
         {
             SwapChain.Dispose();

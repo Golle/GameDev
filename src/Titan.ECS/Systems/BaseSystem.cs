@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Titan.ECS.Systems
 {
@@ -9,7 +10,6 @@ namespace Titan.ECS.Systems
         private readonly ISet<uint> _addedEntities = new HashSet<uint>(100);
         private readonly ISet<uint> _removedEntities = new HashSet<uint>(100);
         private readonly ISet<uint> _entites = new HashSet<uint>(10_000);
-
         protected IEnumerable<uint> Entities => _entites;
 
         private bool _isDirty;

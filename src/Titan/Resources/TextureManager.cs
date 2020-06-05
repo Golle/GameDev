@@ -6,8 +6,8 @@ namespace Titan.Resources
     internal class TextureManager : ITextureManager
     {
         private readonly ITextureLoader _textureLoader;
-
         private readonly IDictionary<string, ITexture2D> _loadedTextures = new Dictionary<string, ITexture2D>();
+        
         public TextureManager(ITextureLoader textureLoader)
         {
             _textureLoader = textureLoader;
@@ -37,6 +37,11 @@ namespace Titan.Resources
                 texture.Dispose();
             }
             _loadedTextures.Clear();
+        }
+
+        public void Dispose()
+        {
+            ReleaseAll();
         }
     }
 }

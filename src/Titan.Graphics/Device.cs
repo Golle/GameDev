@@ -1,4 +1,5 @@
 using System;
+using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using Titan.D3D11;
 using Titan.D3D11.Bindings.Models;
@@ -7,6 +8,7 @@ using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
 using Titan.Graphics.Shaders;
+using Titan.Graphics.Text;
 using Titan.Graphics.Textures;
 
 namespace Titan.Graphics
@@ -167,22 +169,48 @@ namespace Titan.Graphics
             desc.BindFlags = D3D11BindFlag.ShaderResource;
             desc.MipLevels = 1; // TODO: add support for this
             desc.ArraySize = 1; // TODO: add support for this
-            desc.Format = DxgiFormat.R8G8B8A8Uint;
+            desc.Format = DxgiFormat.R8G8B8A8Unorm;
             desc.SampleDesc.Count = 1;
             desc.SampleDesc.Quality = 0;
             desc.CPUAccessFlags = D3D11CpuAccessFlag.Unspecified;
             desc.MiscFlags = 0;
-
-            D3D11SubresourceData data = default;
-            data.SysMemPitch = width * 4; // Width * size of R8G8B8A8Uint
+            
+            ID3D11Texture2D texture;
             unsafe
             {
                 fixed (byte* b = pixels)
                 {
+                    D3D11SubresourceData data = default;
+                    data.SysMemPitch = width * 4; // Width * size of R8G8B8A8Uint
                     data.pSysMem = b;
-                    return new Texture2D(_device.CreateTexture2D(desc, data));
+                    texture = _device.CreateTexture2D(desc, data);
+                    
                 }
             }
+
+            D3D11ShaderResourceViewDesc resourceViewDesc = default;
+            resourceViewDesc.Format = desc.Format;
+            resourceViewDesc.ViewDimension = D3D11SrvDimension.Texture2D;
+            resourceViewDesc.Texture2D.MostDetailedMip = 0;
+            resourceViewDesc.Texture2D.MipLevels = 1;
+
+            var textureView = _device.CreateShaderResourceView(texture, resourceViewDesc);
+
+            return new Texture2D(_device.Context, texture, textureView, width, height);
+        }
+
+        public ISampler CreateSampler()
+        {
+            D3D11SamplerDesc desc = default;
+            desc.Filter = D3D11Filter.MinMagMipLinear;
+            desc.AddressU = D3D11TextureAddressMode.Wrap;
+            desc.AddressV = D3D11TextureAddressMode.Wrap;
+            desc.AddressW = D3D11TextureAddressMode.Wrap;
+
+            var sampler = _device.CreateSamplerState(desc);
+
+            return new Sampler(_device.Context, sampler);
+
         }
 
         public void BeginRender()

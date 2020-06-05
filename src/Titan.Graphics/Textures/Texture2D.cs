@@ -1,30 +1,33 @@
-using System.Numerics;
 using Titan.D3D11.Device;
 
 namespace Titan.Graphics.Textures
 {
     internal class Texture2D : ITexture2D
     {
-        private readonly ID3D11Texture2D _texture;
-        private Vector2 _topLeft = new Vector2(0,0);
-        private Vector2 _bottomRight = new Vector2(1,1);
+        public uint Width { get; }
+        public uint Height { get; }
 
-        public Texture2D(ID3D11Texture2D texture)
+        private readonly ID3D11Texture2D _texture;
+        private readonly ID3D11ShaderResourceView _textureView;
+        private readonly ID3D11DeviceContext _context;
+        public Texture2D(ID3D11DeviceContext context, ID3D11Texture2D texture, ID3D11ShaderResourceView textureView, uint width, in uint height)
         {
+            _context = context;
             _texture = texture;
+            _textureView = textureView;
+            Width = width;
+            Height = height;
         }
 
         public void Dispose()
         {
             _texture.Dispose();
+            _textureView.Dispose();
         }
-
-        public ref readonly Vector2 TopLeft => ref _topLeft;
-
-        public ref readonly Vector2 BottomRight => ref _bottomRight;
-        public void Bind()
+        
+        public void Bind(uint startSlot = 0u)
         {
-            
+            _context.PSSetShaderResources(startSlot, _textureView);
         }
     }
 }

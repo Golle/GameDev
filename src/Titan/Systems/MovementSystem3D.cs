@@ -5,12 +5,12 @@ using Titan.ECS.Systems;
 
 namespace Titan.Systems
 {
-    internal class MovementSystem : BaseSystem
+    internal class MovementSystem3D : BaseSystem
     {
         private readonly IComponentMapper<Transform3D> _tranform3D;
         private readonly IComponentMapper<Velocity> _velocity;
 
-        public MovementSystem(IComponentManager componentManager) 
+        public MovementSystem3D(IComponentManager componentManager) 
             : base(typeof(Transform3D), typeof(Velocity))
         {
             _tranform3D = componentManager.GetComponentMapper<Transform3D>();

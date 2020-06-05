@@ -19,6 +19,8 @@ namespace Titan.D3D11.Device
         void DrawIndexed(uint indexCount, uint startIndexLocation, int baseVertexLocation);
         void VSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer);
         void PSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer);
+        void PSSetShaderResources(uint startSlot, ID3D11ShaderResourceView resourceView);
+        void PSSetSamplers(uint startSlot, ID3D11SamplerState sampler);
         void OMSetDepthStencilState(ID3D11DepthStencilState stencilState, uint stencilRef);
         unsafe void UpdateSubresourceData(ID3D11Resource resource, void * data);
     }

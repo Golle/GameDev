@@ -1,4 +1,9 @@
-float4 main(float4 color : COLOR) : SV_TARGET
+Texture2D tex : register(t0);
+
+SamplerState splr;
+
+
+float4 main(float2 texCoords : TexCoord) : SV_TARGET
 {
-	return color;
+	return tex.Sample(splr, texCoords);
 }
