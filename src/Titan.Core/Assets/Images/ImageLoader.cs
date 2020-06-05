@@ -20,9 +20,9 @@ namespace Titan.Core.Assets.Images
                 using var bitmap = new Bitmap(image);
 
                 var bytes = new List<byte>(bitmap.Width * bitmap.Height * 4);
-                for (var x = 0; x < bitmap.Width; ++x)
+                for (var y = bitmap.Height-1; y >= 0; --y)
                 {
-                    for (var y = 0; y < bitmap.Height; ++y)
+                    for(var x = 0; x < bitmap.Width; ++x)
                     {
                         var pixel = bitmap.GetPixel(x, y);
                         bytes.Add(pixel.R);
@@ -31,6 +31,7 @@ namespace Titan.Core.Assets.Images
                         bytes.Add(pixel.A);
                     }
                 }
+                
                 return new ImageAsset((uint) image.Height, (uint) image.Width, bytes.ToArray());
             }
             catch (IOException)
