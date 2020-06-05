@@ -8,10 +8,10 @@ namespace Titan.D3D11.Bindings
     internal class D3D11DeviceContextBindings
     {
         [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        public static extern void OMSetRenderTargets_(
+        public static extern unsafe void OMSetRenderTargets_(
             [In] IntPtr context,
             [In] uint numViews,
-            [In] IntPtr[] ppRenderTargetViews,
+            [In] IntPtr* ppRenderTargetViews,
             [In] IntPtr pDepthStencilView);
 
         [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
@@ -80,10 +80,10 @@ namespace Titan.D3D11.Bindings
         );
 
         [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        public static extern void RSSetViewports_(
+        public static extern unsafe void RSSetViewports_(
             [In] IntPtr context,
             [In] uint numViewports,
-            [In] D3D11Viewport[] viewports
+            [In] D3D11Viewport* viewports
         );
 
 
@@ -129,6 +129,14 @@ namespace Titan.D3D11.Bindings
             [In] IntPtr handle,
             [In] IntPtr pDepthStencilState,
             [In] uint stencilRef
+        );
+
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern void OMSetBlendState_(
+            [In] IntPtr handle,
+            [In] IntPtr blendState,
+            [In] in Color blendFactor,
+            [In] uint sampleMask
         );
 
         [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]

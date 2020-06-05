@@ -23,7 +23,12 @@ namespace Titan.D3D11.Device
 
         public void OMSetRenderTargets(ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencil)
         {
-            D3D11DeviceContextBindings.OMSetRenderTargets_(Handle, 1, new[]{ renderTarget.Handle}, depthStencil?.Handle ?? IntPtr.Zero);
+            unsafe
+            {
+                var renderTargetViews = stackalloc IntPtr[1];
+                renderTargetViews[0] = renderTarget.Handle;
+                D3D11DeviceContextBindings.OMSetRenderTargets_(Handle, 1, renderTargetViews, depthStencil?.Handle ?? IntPtr.Zero);
+            }
         }
 
         public void ClearRenderTargetView(ID3D11RenderTargetView renderTarget, in Color color)
@@ -48,7 +53,12 @@ namespace Titan.D3D11.Device
 
         public void SetViewport(in D3D11Viewport viewport)
         {
-            D3D11DeviceContextBindings.RSSetViewports_(Handle, 1, new[] {viewport});
+            unsafe
+            {
+                var viewports = stackalloc D3D11Viewport[1];
+                viewports[0] = viewport;
+                D3D11DeviceContextBindings.RSSetViewports_(Handle, 1, viewports);
+            }
         }
 
         public void SetPrimitiveTopology(D3D11PrimitiveTopology topology)
@@ -91,7 +101,6 @@ namespace Titan.D3D11.Device
             D3D11DeviceContextBindings.PSSetSamplers_(Handle, startSlot, 1, sampler.Handle);
         }
 
-
         public void OMSetDepthStencilState(ID3D11DepthStencilState stencilState, uint stencilRef)
         {
             D3D11DeviceContextBindings.OMSetDepthStencilState_(Handle, stencilState.Handle, stencilRef);
@@ -100,6 +109,11 @@ namespace Titan.D3D11.Device
         public unsafe void UpdateSubresourceData(ID3D11Resource resource, void * data)
         {
             D3D11DeviceContextBindings.UpdateSubresource_(Handle, resource.Handle, 0, (D3D11Box*)null, data, 0,0);
+        }
+
+        public void OMSetBlendState(ID3D11BlendState blendState, Color blendFactor, uint sampleMask)
+        {
+            D3D11DeviceContextBindings.OMSetBlendState_(Handle, blendState.Handle, blendFactor, sampleMask);
         }
     }
 }

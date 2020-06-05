@@ -22,5 +22,6 @@ namespace Titan.D3D11.Device
         ID3D11DepthStencilView CreateDepthStencilView(ID3D11Resource resource, in D3D11DepthStencilViewDesc desc);
         ID3D11SamplerState CreateSamplerState(in D3D11SamplerDesc desc);
         ID3D11ShaderResourceView CreateShaderResourceView(ID3D11Resource resource, D3D11ShaderResourceViewDesc desc);
+        ID3D11BlendState CreateBlendState(in D3D11BlendDesc desc);
     }
 }

@@ -23,5 +23,6 @@ namespace Titan.D3D11.Device
         void PSSetSamplers(uint startSlot, ID3D11SamplerState sampler);
         void OMSetDepthStencilState(ID3D11DepthStencilState stencilState, uint stencilRef);
         unsafe void UpdateSubresourceData(ID3D11Resource resource, void * data);
+        void OMSetBlendState(ID3D11BlendState blendState, Color blendFactor, uint sampleMask);
     }
 }

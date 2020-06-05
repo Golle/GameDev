@@ -202,6 +202,16 @@ namespace Titan.D3D11.Device
             return new D3D11ShaderResourceView(resourceView);
         }
 
+        public ID3D11BlendState CreateBlendState(in D3D11BlendDesc desc)
+        {
+            var result = D3D11DeviceBindings.CreateBlendState_(_handle, desc, out var blendState);
+            if (result.Failed)
+            {
+                throw new Win32Exception($"Device CreateBlendState failed with code: 0x{result.Code.ToString("X")}");
+            }
+            return new D3D11BlendState(blendState);
+        }
+
         public void Dispose()
         {
             SwapChain.Dispose();

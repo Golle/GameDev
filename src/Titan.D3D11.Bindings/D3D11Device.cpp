@@ -137,3 +137,12 @@ EXPORT HRESULT CreateShaderResourceView_(
 {
 	return device->CreateShaderResourceView(pResource, pDesc, ppSRView);
 }
+
+EXPORT HRESULT STDMETHODCALLTYPE CreateBlendState_(
+	ID3D11Device* device,
+	const D3D11_BLEND_DESC* pBlendStateDesc,
+	ID3D11BlendState** ppBlendState
+) 
+{
+	return device->CreateBlendState(pBlendStateDesc, ppBlendState);
+}

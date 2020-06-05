@@ -19,7 +19,7 @@ namespace Titan.Graphics
         private readonly ID3D11RenderTargetView _renderTarget;
         private readonly ID3D11DepthStencilView _depthStencilView;
 
-        private readonly Color _clearColor = new Color{Blue = 0.1f, Alpha = 1f};
+        private readonly Color _clearColor = new Color{Blue = 0.6f, Alpha = 1f};
 
         private readonly bool _vSync = true;
 
@@ -211,6 +211,19 @@ namespace Titan.Graphics
 
             return new Sampler(_device.Context, sampler);
 
+        }
+
+        public IBlendState CreateBlendState()
+        {
+            var desc = D3D11BlendDesc.Default;
+            desc.RenderTargets[0].BlendEnable = true;
+            desc.RenderTargets[0].RenderTargetWriteMask = D3D11ColorWriteEnable.All;
+            desc.RenderTargets[0].SrcBlend = D3D11Blend.SrcAlpha;
+            desc.RenderTargets[0].DestBlend = D3D11Blend.InvSrcAlpha;
+            
+            var blendState = _device.CreateBlendState(desc);
+
+            return new BlendState(_device.Context, blendState);
         }
 
         public void BeginRender()

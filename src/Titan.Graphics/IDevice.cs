@@ -21,6 +21,7 @@ namespace Titan.Graphics
         IInputLayout CreateInputLayout(VertexLayout vertexLayout, IBlob vertexShaderBlob);
         ITexture2D CreateTexture2D(uint width, uint height, in byte[] pixels);
         ISampler CreateSampler();
+        IBlendState CreateBlendState();
         void BeginRender();
         void EndRender();
         void DrawIndexed(uint numberOfIndices, uint startIndexLocation, int baseVertexLocation);

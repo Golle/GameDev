@@ -46,6 +46,7 @@ namespace Titan.Graphics.Renderer
         private IConstantBuffer<Camera> _cameraBuffer;
         private ITexture2D[] _textures = new ITexture2D[MaxTextures];
         private ISampler _sampler;
+        private IBlendState _blendState;
 
         public SpriteBatchRenderer(IDevice device, IBlobReader blobReader, ICameraFactory cameraFactory)
         {
@@ -55,6 +56,7 @@ namespace Titan.Graphics.Renderer
             _buffer = device.CreateVertexBuffer<Vertex2D>(MaxVertices);
             _indices = device.CreateIndexBuffer(CreateIndices());
             _sampler = device.CreateSampler();
+            _blendState = device.CreateBlendState();
             _cameraBuffer = device.CreateConstantBuffer(new Camera {Transform = _camera.ViewProjection});
             using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/VertexShader2D.cso");
             _vertexShader = device.CreateVertexShader(vertexShaderBlob);
@@ -146,6 +148,7 @@ namespace Titan.Graphics.Renderer
                 _pixelShader.Bind();
                 _sampler.Bind();
                 _textures[0].Bind();
+                _blendState.Bind();
 
 
                 _device.DrawIndexed(_numberOfIndices, 0, 0);
@@ -165,6 +168,8 @@ namespace Titan.Graphics.Renderer
             _vertexShader?.Dispose();
             _pixelShader?.Dispose();
             _inputLayout?.Dispose();
+            _blendState?.Dispose();
+            _sampler?.Dispose();
         }
     }
 }

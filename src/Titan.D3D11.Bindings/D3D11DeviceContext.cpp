@@ -184,6 +184,17 @@ EXPORT void OMSetDepthStencilState_(
 	context->OMSetDepthStencilState(pDepthStencilState, stencilRef);
 }
 
+EXPORT void OMSetBlendState_(
+	ID3D11DeviceContext* context,
+	ID3D11BlendState* pBlendState,
+	const FLOAT blendFactor[4],
+	UINT sampleMask
+)
+{
+	context->OMSetBlendState(pBlendState, blendFactor, sampleMask);
+}
+
+
 EXPORT void UpdateSubresource_(
 	ID3D11DeviceContext* context,
 	ID3D11Resource* pDstResource,

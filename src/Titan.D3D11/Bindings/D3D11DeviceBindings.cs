@@ -118,11 +118,12 @@ namespace Titan.D3D11.Bindings
             [In] in D3D11ShaderResourceViewDesc desc,
             [Out] out IntPtr ppShaderResourceView
         );
-    }
 
-    [StructLayout(LayoutKind.Explicit, Size = 20)] // Size = 20 is in 64 bit architecture, wont work in x86.
-    internal struct D3D11RenderTargetViewDesc
-    {
-        // this struct has union, can use FieldOffsetAttribute to mimic that behavior. For now we'll leave it at null.
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern HRESULT CreateBlendState_(
+            [In] IntPtr device,
+            [In] in D3D11BlendDesc desc,
+            [Out] out IntPtr ppBlendState
+        );
     }
 }
