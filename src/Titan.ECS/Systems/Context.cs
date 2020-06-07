@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Titan.Core.EventSystem;
 using Titan.Core.Logging;
 
 namespace Titan.ECS.Systems
@@ -10,41 +9,9 @@ namespace Titan.ECS.Systems
         private readonly IDictionary<uint, ulong> _entityComponentSignature = new Dictionary<uint, ulong>(100_000);
         private readonly IList<ISystem> _systems = new List<ISystem>();
 
-        public Context(ILogger logger, IEventManager eventManager)
+        public Context(ILogger logger)
         {
             _logger = logger;
-
-            eventManager.Subscribe<ComponentCreatedEvent>(OnComponentCreated);
-            eventManager.Subscribe<ComponentDestroyedEvent>(OnComponentDestroyed);
-        }
-
-        private void OnComponentDestroyed(in ComponentDestroyedEvent @event)
-        {
-            var oldSignature = _entityComponentSignature[@event.EntityId];
-            foreach (var system in _systems)
-            {
-                if (system.Contains(@event.Id) && system.IsMatch(oldSignature))
-                {
-                    system.Remove(@event.EntityId);
-                }
-            }
-
-            _entityComponentSignature[@event.EntityId] ^= @event.Id;
-            //_logger.Debug("Removed Component ID {0} with index {1} to entity {2}", component.Id, component.Index, component.Entity.Id);
-        }
-
-        private void OnComponentCreated(in ComponentCreatedEvent @event)
-        {
-            // TODO: do something with the component.Index
-            var signature = _entityComponentSignature[@event.EntityId] |= @event.Id;
-            //_logger.Debug("Added Component ID {0} with index {1} to entity {2}", component.Id, component.Index, component.Entity.Id);
-            foreach (var system in _systems)
-            {
-                if (system.IsMatch(signature))
-                {
-                    system.Add(@event.EntityId);
-                }
-            }
         }
 
         public void RegisterSystem(ISystem system)
@@ -52,21 +19,39 @@ namespace Titan.ECS.Systems
             _systems.Add(system);
         }
 
-        public void OnEntityDestroyed(uint entity)
+        public void OnComponentCreated(uint entity, ulong componentId)
         {
-            var signature = _entityComponentSignature[entity];
+            _entityComponentSignature.TryGetValue(entity, out var signature);
+            _entityComponentSignature[entity] = signature |= componentId;
             foreach (var system in _systems)
             {
-                if ((system.Signature & signature) == system.Signature)
+                if (system.IsMatch(signature))
+                {
+                    system.Add(entity);
+                }
+            }
+        }
+
+        public void OnComponentDestroyed(uint entity, ulong componentId)
+        {
+            var oldSignature = _entityComponentSignature[entity];
+            foreach (var system in _systems)
+            {
+                if (system.HasComponent(componentId) && system.IsMatch(oldSignature))
                 {
                     system.Remove(entity);
                 }
             }
-            
-            _entityComponentSignature.Remove(entity);
-            //_logger.Debug("Removed entity {0}", entity.Id);
+            _entityComponentSignature[entity] ^= componentId;
+        }
 
-            
+        public void OnEntityDestroyed(uint entity)
+        {
+            foreach (var system in _systems)
+            {
+                system.Remove(entity);
+            }
+            _entityComponentSignature[entity] = 0UL;
         }
 
         public void OnEntityCreated(uint entity)

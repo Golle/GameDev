@@ -27,7 +27,7 @@ namespace Titan.Systems.Rendering
                 ref var sprite = ref _sprite[entity];
                 ref var transform = ref _transform[entity];
 
-                _spriteBatchRenderer.Push(sprite.Texture, transform.Position, new Vector2(50,50), sprite.Color);
+                _spriteBatchRenderer.Push(sprite.Texture, transform.WorldPosition, new Vector2(50,50), sprite.Color);
             }
         }
     }

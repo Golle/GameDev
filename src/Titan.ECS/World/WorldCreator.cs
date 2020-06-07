@@ -14,8 +14,11 @@ namespace Titan.ECS.World
                 .AddRegistry<ECSRegistry>();
 
 
-            // Create component mappers and pools
-            var componentManager = container.GetInstance<IComponentManager>();
+            // Create component mappers, pools and base internal components
+            var componentManager = container
+                .GetInstance<IComponentManager>()
+                .RegisterComponent<Relationship>(configuration.MaxNumberOfEntities);
+
             foreach (var component in configuration.Components)
             {
                 componentManager.RegisterComponent(component.Type, component.Capacity);

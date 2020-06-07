@@ -10,5 +10,6 @@ namespace Titan.ECS.Components
         ref T CreateComponent(uint entity);
         ref T this[uint entity] { get; }
         ref T Get(uint entity);
+        bool Exists(uint entity);
     }
 }

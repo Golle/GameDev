@@ -22,7 +22,7 @@ namespace Titan.Core.EventSystem
                 _listeners[i](@event);
             }
         }
-
+        
         public void Publish(in T @event)
         {
             _eventQueue.Enqueue(@event);
@@ -32,7 +32,10 @@ namespace Titan.Core.EventSystem
         {
             while(_eventQueue.TryDequeue(out var @event))
             {
-                PublishImmediate(@event);
+                for (var i = 0; i < _listeners.Count; ++i)
+                {
+                    _listeners[i](@event);
+                }
             }
         }
     }

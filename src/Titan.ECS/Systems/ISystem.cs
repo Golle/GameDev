@@ -5,9 +5,8 @@ namespace Titan.ECS.Systems
         ulong Signature { get; }
         void Remove(uint entity);
         void Add(uint entity);
-
         void Update(float deltaTime);
         bool IsMatch(ulong signature);
-        bool Contains(ulong componentId);
+        bool HasComponent(ulong componentId);
     }
 }

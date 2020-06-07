@@ -1,16 +1,16 @@
 using System;
-using System.Collections;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Titan.Core.Ioc;
 using Titan.ECS.World;
-using Titan.Graphics.Camera;
 
 namespace Titan.Game
 {
     internal class Program : Application<Program>
     {
-        private MyTestClass _test;
 
+        private MyTestClass _test;
         static void Main(string[] args)
         {
             Start();

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Titan.Core.EventSystem;
+using System.Runtime.CompilerServices;
 using Titan.ECS.Systems;
 
 namespace Titan.ECS.Components
@@ -9,26 +9,25 @@ namespace Titan.ECS.Components
     internal class ComponentManager : IComponentManager
     {
         private readonly IContext _context;
-        private readonly IEventManager _eventManager;
         private readonly IDictionary<ulong, IComponentMapper> _componentMappers = new Dictionary<ulong, IComponentMapper>();
-        public ComponentManager(IContext context, IEventManager eventManager)
+        public ComponentManager(IContext context)
         {
             _context = context;
-            _eventManager = eventManager;
         }
 
-        public void RegisterComponent<T>(uint capacity) where T : struct
+        public IComponentManager RegisterComponent<T>(uint capacity) where T : struct
         {
-            RegisterComponent(typeof(T), capacity);
+            return RegisterComponent(typeof(T), capacity);
         }
         
-        public void RegisterComponent(Type type, uint capacity)
+        public IComponentManager RegisterComponent(Type type, uint capacity)
         {
             var componentId = type.ComponentMask();
             Debug.Assert(!_componentMappers.ContainsKey(componentId), $"The component {type} has already been registered.");
 
-            var instance = Activator.CreateInstance(typeof(ComponentMapper<>).MakeGenericType(type), capacity, _eventManager) ?? throw new InvalidOperationException($"Failed to created a ComponentMapper for type {type}");
+            var instance = Activator.CreateInstance(typeof(ComponentMapper<>).MakeGenericType(type), capacity, _context) ?? throw new InvalidOperationException($"Failed to created a ComponentMapper for type {type}");
             _componentMappers[componentId] = (IComponentMapper)instance;
+            return this;
         }
 
         public IComponentMapper<T> GetComponentMapper<T>() where T : struct
@@ -59,6 +58,7 @@ namespace Titan.ECS.Components
             return componentId;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Free(uint entityId, ulong componentId)
         {
             _componentMappers[componentId].DestroyComponent(entityId);

@@ -9,14 +9,16 @@ namespace Titan.ECS.World
     public class WorldConfigurationBuilder
     {
         private readonly string _name;
+        private readonly uint _maxNumberOfEntities;
 
         private readonly IList<ISystem> _systems = new List<ISystem>();
         private readonly IList<ComponentConfiguration> _components = new List<ComponentConfiguration>();
         private IContainer? _container;
 
-        public WorldConfigurationBuilder(string name)
+        public WorldConfigurationBuilder(string name, uint maxNumberOfEntities)
         {
             _name = name;
+            _maxNumberOfEntities = maxNumberOfEntities;
             _container = null;
         }
 
@@ -75,7 +77,7 @@ namespace Titan.ECS.World
             {
                 throw new InvalidOperationException("No container has been registered.");
             }
-            return new WorldConfiguration(_name, _components.ToArray(), _container);
+            return new WorldConfiguration(_name, _components.ToArray(), _container, _maxNumberOfEntities);
         }
     }
 }

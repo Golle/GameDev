@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Titan.ECS.Components
 {
 
     // TODO: Look into options to use a big memory block instead of arrays per type
     // TODO: Maybe allocate new byte[1GB] or something similar and have this class get pointers to that memory blob (IMemory/ISpan) or raw byte* 
+    // TODO: Marshal.AllocHGlobal(sizeof(T) * size) is an option as well. Will prevent GC from moving the memory and flagging it for garbage collecting. 
     internal class ComponentPool<T> : IComponentPool<T> where T : struct
     {
         private readonly T[] _componentPool;
@@ -13,6 +15,7 @@ namespace Titan.ECS.Components
         private uint _count;
         public ComponentPool(uint size)
         {
+            
             _componentPool = new T[size];
         }
 

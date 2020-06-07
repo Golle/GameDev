@@ -7,11 +7,13 @@ namespace Titan.ECS.World
         public string Name { get;  }
         public ComponentConfiguration[] Components { get; }
         public IContainer Container { get; }
-        public WorldConfiguration(string name, ComponentConfiguration[] components, IContainer container)
+        public uint MaxNumberOfEntities { get; }
+        public WorldConfiguration(string name, ComponentConfiguration[] components, IContainer container, uint maxNumberOfEntities)
         {
             Name = name;
             Components = components;
             Container = container;
+            MaxNumberOfEntities = maxNumberOfEntities;
         }
     }
 }

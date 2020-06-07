@@ -40,7 +40,7 @@ namespace Titan.Graphics
             D3D11DepthStencilDesc depthDesc = default;
             depthDesc.DepthEnable = true;
             depthDesc.DepthWriteMask = D3D11DepthWriteMask.Zero;
-            depthDesc.DepthFunc = D3D11ComparisonFunc.LessEqual;
+            depthDesc.DepthFunc = D3D11ComparisonFunc.LessEqual;  // this is needed to add alpha-blending to sprites, not sure why.
             using var depthStencilState = d3D11Device.CreateDepthStencilState(depthDesc);
             d3D11Device.Context.OMSetDepthStencilState(depthStencilState, 1u);
 

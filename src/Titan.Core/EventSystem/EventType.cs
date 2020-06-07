@@ -1,6 +1,6 @@
 namespace Titan.Core.EventSystem
 {
-    public enum EventType
+    public enum EventType : int
     {
         MouseDown,
         KeyDown,
@@ -30,12 +30,14 @@ namespace Titan.Core.EventSystem
 
         EntityCreated,
         EntityDestroyed,
+        EntityFreed,
         EntityDisabled,
         EntityEnabled,
+        EntityAttached, 
+        EntityDetached,
 
         NumberOfEvents // must be the last one
 
-
-        ,
+        
     }
 }

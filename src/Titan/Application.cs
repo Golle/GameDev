@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Numerics;
 using Titan.Components;
 using Titan.Configuration;
@@ -8,7 +9,6 @@ using Titan.Core.GameLoop;
 using Titan.Core.GameLoop.Events;
 using Titan.Core.Ioc;
 using Titan.Core.Logging;
-using Titan.Core.Math;
 using Titan.D3D11;
 using Titan.ECS;
 using Titan.ECS.World;
@@ -28,10 +28,7 @@ namespace Titan
                 .AddRegistry<GraphicsRegistry>()
                 .AddRegistry<ECSGlobalRegistry>()
                 .AddRegistry<EngineRegistry>()
-                
                 .Register<GameEngine>()
-
-
             ;
 
         private readonly ILogger _logger;
@@ -91,34 +88,57 @@ namespace Titan
 
             var random = new Random();
             //for (var i = 0; i < 10900; ++i)
-            {
 
 
-                var entity1 = _world.CreateEntity();
-                entity1.AddComponent(new TransformRect { Position = new Vector3(600, 200, 0), Size = new Size(100) });
-                entity1.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\link.png"), Color = new Color(1, 1, 1) });
-
-                var entity2 = _world.CreateEntity();
-                entity2.AddComponent(new TransformRect { Position = new Vector3(100, 200, 0), Size = new Size(200) });
-                entity2.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\tree01.png"), Color = new Color(1, 1, 1) });
+                //var entity1 = _world.CreateEntity();
+                //entity1.AddComponent(new TransformRect { Position = new Vector3(600, 200, 0), Size = new Size(100) });
+                //entity1.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\link.png"), Color = new Color(1, 1, 1) });
 
 
-                for (var i = 0; i < 100; ++i)
+                //var entity2 = _world.CreateEntity();
+                //entity2.AddComponent(new TransformRect { Position = new Vector3(100, 200, 0), Size = new Size(200) });
+                //entity2.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\tree01.png"), Color = new Color(1, 1, 1) });
+                
+                //entity1.AddChild(entity2);
+
+                var simpleEntity = _world.CreateEntity();
+                _world.AddComponent(simpleEntity, new Transform2D { Position = new Vector2(1920 / 2f, 1080 / 2f) });
+
+                var parentEntity = _world.CreateEntity();
+                _world.AddComponent(parentEntity, new Transform2D{Position = new Vector2(1920 / 2f, 1080 / 2f) });
+
+                for (var i = 0; i < 1000; ++i)
                 {
                     var entity3 = _world.CreateEntity();
-                    entity3.AddComponent(new Transform2D { Position = new Vector2(1920 / 2f, 1080 / 2f), Scale = Vector2.One });
-                    entity3.AddComponent(new Velocity { Value = new Vector3(random.Next(-5000, 5000) / 100f, random.Next(-5000, 5000) / 100f, 0) });
-                    entity3.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\link.png"), Color = new Color(1, 1, 1) });
+                    _world.AddComponent(entity3, new Transform2D { Position = Vector2.Zero, Scale = Vector2.One });
+                    _world.AddComponent(entity3, new Velocity { Value = new Vector3(random.Next(-5000, 5000) / 100f, random.Next(-5000, 5000) / 100f, 0) });
+                    _world.AddComponent(entity3, new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\link.png"), Color = new Color(1, 1, 1) });
+                    _world.SetParent(entity3, parentEntity);
+                    //parentEntity.AddChild(entity3);
                 }
                 
-            }
+                
             var engine = _container.GetInstance<GameEngine>();
             
             OnStart();
-
+            var count = 300;
             _logger.Debug("Start main loop");
             GetInstance<IGameLoop>()
-                .Run(engine.Execute);
+                .Run(() =>
+                {
+                    var execute = engine.Execute();
+                    if (count-- == 0)
+                    {
+                        //simpleEntity.Destroy();
+                        //var s = Stopwatch.StartNew();
+                        //parentEntity?.Destroy(); parentEntity = null;
+                        //s.Stop();
+
+                        //_logger.Debug("{0} ms to destroy the entity", s.Elapsed.TotalMilliseconds);
+                        
+                    }
+                    return execute;
+                });
 
 
             _world.Destroy();
@@ -131,27 +151,28 @@ namespace Titan
         {
             const int componentSize = 40000;
 
-            var configuration = new WorldConfigurationBuilder("Donkey")
+            var configuration = new WorldConfigurationBuilder("Donkey", maxNumberOfEntities: 10_000)
                 .WithContainer(_container.CreateChildContainer()) // Add a child container for this world (might be a better way to do this)
-                .WithSystem<MovementSystem3D>()
+                //.WithSystem<MovementSystem3D>()
                 .WithSystem<MovementSystem2D>()
 
                 //.WithSystem<D3D11ModelLoaderSystem>()
                 //.WithSystem<D3D11ShaderLoaderSystem>()
                 //.WithSystem<D3D11Camera3DSystem>()
                 //.WithSystem<D3D11Render3DSystem>()
+                .WithSystem<Transform2DSystem>()
                 .WithSystem<SpriteRenderSystem>()
                 .WithSystem<UIRenderSystem>()
-                .WithComponent<Transform3D>(componentSize)
+                //.WithComponent<Transform3D>(componentSize)
                 .WithComponent<Transform2D>(componentSize)
                 .WithComponent<Velocity>(componentSize)
-                .WithComponent<Mesh>(componentSize)
-                .WithComponent<Shader>(componentSize)
+                //.WithComponent<Mesh>(componentSize)
+                //.WithComponent<Shader>(componentSize)
                 .WithComponent<TransformRect>(componentSize)
                 .WithComponent<Sprite>(componentSize)
 
-                .WithComponent<D3D11Model>(componentSize)
-                .WithComponent<D3D11Shader>(componentSize)
+                //.WithComponent<D3D11Model>(componentSize)
+                //.WithComponent<D3D11Shader>(componentSize)
                 .WithComponent<Camera>(10)
 
                 .Build()

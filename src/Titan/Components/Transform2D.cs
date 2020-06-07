@@ -9,5 +9,8 @@ namespace Titan.Components
         public Vector2 Position;
         public Vector2 Scale;
         public float Rotation;
+
+
+        internal Vector2 WorldPosition;
     }
 }
