@@ -24,7 +24,11 @@ namespace Titan.Game
                 
                 var entity1 = world.CreateEntity();
                 entity1.Add<Transform2D>();
-                //entity1.Set(new Transform2D{Position = new Vector2(1,2), Scale =  Vector2.One});
+                ref var ta = ref entity1.Get<Transform2D>();
+                entity1.Set(new Transform2D{Position = new Vector2(1,2), Scale =  Vector2.One});
+                entity1.Remove<Transform2D>();
+                entity1.Add<Transform2D>();
+                
                 ref var t = ref entity1.Get<Transform2D>();
                 t.Rotation = 10f;
                 var entity2 = world.CreateEntity();

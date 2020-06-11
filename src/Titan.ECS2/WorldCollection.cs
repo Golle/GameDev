@@ -18,8 +18,12 @@ namespace Titan.ECS2
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static void SetComponent<T>(ushort worldId, uint entityId, in T value) where T : struct => _worlds[worldId].SetComponent<T>(entityId, value);
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static void AddComponent<T>(ushort worldId, uint entityId, in T value) where T : struct => _worlds[worldId].AddComponent<T>(entityId, value);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void RemoveComponent<T>(ushort worldId, uint entityId) where T : struct => _worlds[worldId].RemoveComponent<T>(entityId);
+
         public static IWorld CreateWorld(in uint maxEntities, IEnumerable<(Type componentType, uint size)> components)
         {
             var worldId = (ushort)Interlocked.Increment(ref _nextId);
@@ -31,7 +35,7 @@ namespace Titan.ECS2
                 }
             }
 
-            var simplePublisher = new SimplePublisher(worldId);
+            var simplePublisher = new Publisher(worldId);
             simplePublisher.Subscribe<WorldDestroyedMessage>(WorldDestroyed);
 
             var entityManager = new EntityManager(worldId);

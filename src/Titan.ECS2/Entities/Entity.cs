@@ -36,6 +36,9 @@ namespace Titan.ECS2.Entities
         public void Add<T>(in T value = default) where T : struct => WorldCollection.AddComponent<T>(WorldId, Id, value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Remove<T>() where T : struct => WorldCollection.RemoveComponent<T>(WorldId, Id);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Set<T>(in T value) where T : struct => WorldCollection.SetComponent<T>(WorldId, Id, value);
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Destroy() => WorldCollection.DestroyEntity(WorldId, Id);

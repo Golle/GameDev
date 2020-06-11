@@ -38,7 +38,7 @@ namespace Titan.ECS2.Components
         public void Destroy(uint entityId)
         {
             ref var index = ref _componentMap[entityId];
-            Debug.Assert(index !=0, "Trying to destroy a component that doesn't exist.");
+            Debug.Assert(index != 0, "Trying to destroy a component that doesn't exist.");
             _pool.Destroy(index);
             index = 0;
         }

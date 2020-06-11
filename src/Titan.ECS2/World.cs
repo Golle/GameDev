@@ -42,6 +42,9 @@ namespace Titan.ECS2
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddComponent<T>(uint entityId, in T value) where T : struct => _componentManager.GetMapper<T>().Create(entityId, value);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void RemoveComponent<T>(uint entityId) where T : struct => _componentManager.GetMapper<T>().Destroy(entityId);
+
         internal void DestroyEntity(uint entityId)
         {
             _entityManager.Destroy(entityId);
