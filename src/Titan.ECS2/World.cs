@@ -1,4 +1,6 @@
 using System;
+using System.Runtime.CompilerServices;
+using Titan.ECS2.Components;
 using Titan.ECS2.Entities;
 using Titan.ECS2.Messages;
 
@@ -9,12 +11,14 @@ namespace Titan.ECS2
         private readonly ushort _id;
 
         private readonly IEntityManager _entityManager;
+        private readonly IComponentManager _componentManager;
         private readonly IPublisher _publisher;
 
-        internal World(ushort id, IEntityManager entityManager, IPublisher publisher)
+        internal World(ushort id, IEntityManager entityManager, IComponentManager componentManager, IPublisher publisher)
         {
             _id = id;
             _entityManager = entityManager;
+            _componentManager = componentManager;
             _publisher = publisher;
         }
 
@@ -26,21 +30,30 @@ namespace Titan.ECS2
 
             return entity;
         }
-
+        
         public void Destroy() => _publisher.Publish(new WorldDestroyedMessage(_id));
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal ref T GetComponent<T>(uint entityId) where T : struct => ref _componentManager.GetMapper<T>()[entityId];
 
-        internal ref T GetComponent<T>(uint entityId) where T : struct => throw new NotImplementedException();
-        internal void SetComponent<T>(uint entityId, in T value) where T : struct => throw new NotImplementedException();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void SetComponent<T>(uint entityId, in T value) where T : struct => _componentManager.GetMapper<T>()[entityId] = value;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddComponent<T>(uint entityId, in T value) where T : struct => _componentManager.GetMapper<T>().Create(entityId, value);
 
         internal void DestroyEntity(uint entityId)
         {
             _entityManager.Destroy(entityId);
             _publisher.Publish(new EntityDestroyedMessage(entityId));
+            // TODO: destroy components
+            // TODO: destroy children
         }
 
         public void Dispose()
         {
             _publisher.Dispose();
+            _componentManager.Dispose();
         }
     }
 }
