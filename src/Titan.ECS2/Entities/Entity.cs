@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Titan.ECS2.Entities
 {
     [StructLayout(LayoutKind.Explicit, Size = sizeof(uint) + sizeof(ushort))]
-    public readonly struct Entity
+    public readonly ref struct Entity
     {
         [field: FieldOffset(0)]
         public uint Id { get; }
@@ -12,7 +12,7 @@ namespace Titan.ECS2.Entities
         [field: FieldOffset(4)]
         public ushort WorldId { get; }
 
-        public Entity(uint id, ushort worldId)
+        internal Entity(uint id, ushort worldId)
         {
             Id = id;
             WorldId = worldId;

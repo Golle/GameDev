@@ -4,5 +4,7 @@ namespace Titan.ECS2.Entities
     {
         Entity Create();
         void Destroy(uint entityId);
+
+        ref EntityInfo GetEntityInfo(uint entityId);
     }
 }

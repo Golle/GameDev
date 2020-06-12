@@ -18,6 +18,9 @@ namespace Titan.ECS2.Components
         public bool Contains(ulong component) => (component & _mask) > 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Matches(in ComponentSignature signature) => (_mask & signature._mask) == signature._mask;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(ulong component) => _mask |= component;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

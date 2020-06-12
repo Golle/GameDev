@@ -19,6 +19,6 @@ namespace Titan.ECS2
             return this;
         }
 
-        public IWorld Build() => WorldCollection.CreateWorld(_maxEntities, _components);
+        public World Build() => WorldCollection.CreateWorld(_maxEntities, _components);
     }
 }

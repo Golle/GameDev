@@ -22,9 +22,9 @@ namespace Titan.ECS2
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static void AddComponent<T>(ushort worldId, uint entityId, in T value) where T : struct => _worlds[worldId].AddComponent<T>(entityId, value);
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RemoveComponent<T>(ushort worldId, uint entityId) where T : struct => _worlds[worldId].RemoveComponent<T>(entityId);
+        internal static void RemoveComponent<T>(ushort worldId, uint entityId) where T : struct => _worlds[worldId].RemoveComponent<T>(entityId);
 
-        public static IWorld CreateWorld(in uint maxEntities, IEnumerable<(Type componentType, uint size)> components)
+        public static World CreateWorld(in uint maxEntities, IEnumerable<(Type componentType, uint size)> components)
         {
             var worldId = (ushort)Interlocked.Increment(ref _nextId);
             lock (_worlds)
@@ -38,14 +38,14 @@ namespace Titan.ECS2
             var simplePublisher = new Publisher(worldId);
             simplePublisher.Subscribe<WorldDestroyedMessage>(WorldDestroyed);
 
-            var entityManager = new EntityManager(worldId);
+            var entityManager = new EntityManager(worldId, maxEntities);
             var componentManager = new ComponentManager(maxEntities);
             foreach (var (componentType, size) in components)
             {
                 componentManager.RegisterComponent(componentType, size);
             }
 
-            return _worlds[worldId] = new World(worldId, entityManager, componentManager, simplePublisher);
+            return _worlds[worldId] = new World(worldId, maxEntities, entityManager, componentManager, simplePublisher);
         }
 
         private static void WorldDestroyed(in WorldDestroyedMessage @event)

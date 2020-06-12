@@ -4,5 +4,7 @@ namespace Titan.ECS.Entities
     {
         uint Create();
         void Free(uint entity);
+
+
     }
 }
