@@ -14,6 +14,7 @@ namespace Titan.ECS3
 
             var systemRunner = new SystemsRunnerBuilder(world, worldContainer)
                 .WithSystem<TestSystem1>()
+                .WithSystem<TestSystem2>()
                 .Build();
 
 

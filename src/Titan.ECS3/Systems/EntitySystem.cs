@@ -9,11 +9,21 @@ namespace Titan.ECS3.Systems
     {
         protected EntitySystem(IWorld world)
         {
-            
         }
+
         public void Update(float deltaTime)
         {
-            throw new NotImplementedException();
+            OnPreUpdate();
+            
+            OnUpdate(deltaTime, GetEntities());
+            
+            OnPostUpdate();
         }
+
+        protected virtual void OnPreUpdate() { }
+        protected abstract void OnUpdate(float deltaTime, ReadOnlySpan<uint> entities);
+        protected virtual void OnPostUpdate() { }
+
+        protected ReadOnlySpan<uint> GetEntities() => new uint[10];
     }
 }
