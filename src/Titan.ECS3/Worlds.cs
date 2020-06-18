@@ -22,16 +22,18 @@ namespace Titan.ECS3
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static void AddComponent<T>(uint worldId, uint entityId, in T value) where T : struct => _worlds[worldId].ComponentManager.Add<T>(entityId, value);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void RemoveComponent<T>(uint worldId, uint entityId) where T : struct => _worlds[worldId].ComponentManager.Remove<T>(entityId);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void DestroyWorld(World world)
+        internal static void DestroyWorld(World world)
         {
             _worlds[world.Id] = null;
             IdDispatcher.Free(world.Id);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint AddWorld(World world)
+        internal static uint AddWorld(World world)
         {
             var id = IdDispatcher.Next();
             _worlds[id] = world;
