@@ -34,6 +34,8 @@ namespace Titan.ECS3
 
 
             var entity = world.CreateEntity();
+            entity.AddComponent<Transform1D>();
+            entity.AddComponent(new Transform45D());
 
             var entity1 = world.CreateEntity();
             var entity2 = world.CreateEntity();

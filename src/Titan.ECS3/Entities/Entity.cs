@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Titan.ECS3.Entities
@@ -18,6 +19,12 @@ namespace Titan.ECS3.Entities
             Id = id;
         }
 
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddComponent<T>() where T : struct => Worlds.AddComponent<T>(WorldId, Id);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddComponent<T>(in T value) where T : struct => Worlds.AddComponent<T>(WorldId, Id, value);
         public void Destroy()
         {
             Debug.Assert(WorldId != 0, "Entity was not created in a World");

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Titan.ECS3.Components
 {
@@ -27,5 +28,13 @@ namespace Titan.ECS3.Components
             Debug.Assert(_componentMaps.ContainsKey(componentId) == false, $"Component {type.Name} has already been registered");
             _componentMaps[componentId] = Activator.CreateInstance(typeof(ComponentMap<>).MakeGenericType(type), _maxEntities, size); ;
         }
+
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Add<T>(uint entityId) where T : struct => ((ComponentMap<T>)_componentMaps[ComponentId<T>.Id]).Add(entityId);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Add<T>(uint entityId, in T value) where T : struct => ((ComponentMap<T>)_componentMaps[ComponentId<T>.Id]).Add(entityId, value);
     }
 }
