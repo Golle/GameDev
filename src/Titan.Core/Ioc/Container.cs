@@ -63,17 +63,26 @@ namespace Titan.Core.Ioc
         public TTypeToResolve CreateInstance<TTypeToResolve>()
         {
             var typeToResolve = typeof(TTypeToResolve);
-            if (_containerObjects.TryGetValue(typeToResolve, out var type))
+            return (TTypeToResolve)CreateInstance(typeToResolve);
+        }
+
+        public object CreateInstance(Type typeToResolve)
+        {
+            if (_containerObjects.TryGetValue(typeToResolve, out var containerObject))
             {
-                return (TTypeToResolve)CreateInstance(type);
+                return CreateInstance(containerObject);
             }
 
-            if(_parentContainer != null)
-            {
-                _parentContainer.CreateInstance<TTypeToResolve>();
-            }
+            // Create instance will not look for registered types in parent containers, but it will use the parent when resolving types for the constructor
 
-            throw new TypeNotRegisteredException($"The type {typeToResolve.Name} has not been registered.");
+            //var instance = _parentContainer?.CreateInstance(typeToResolve);
+            //if (instance != null)
+            //{
+            //    return instance;
+            //}
+
+            // Try to create an instance of the type even if it hasn't been registered. Returns null if it fails.
+            return CreateInstance(new ContainerObject(typeToResolve, typeToResolve));
         }
 
         private object GetOrCreateInstance(ContainerObject containerObject)

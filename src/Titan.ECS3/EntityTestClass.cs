@@ -1,38 +1,31 @@
-using System.Collections.Generic;
-using Titan.ECS3.Entities;
+using Titan.Core.Ioc;
+using Titan.ECS3.Systems;
 
 namespace Titan.ECS3
 {
-
-
     public class EntityTestClass
     {
-        public void Run()
+        public void Run(IContainer container)
         {
-            var manager = new EntityManager(10_000);
-
-            var entity = manager.Create();
-            var entity1 = manager.Create();
-            var entity2 = manager.Create();
-            var entity3 = manager.Create();
-            var entity4 = manager.Create();
-
-            manager.Attach(entity.Id, entity1.Id);
-            manager.Attach(entity1.Id, entity2.Id);
-            manager.Attach(entity1.Id, entity3.Id);
-            manager.Attach(entity2.Id, entity4.Id);
-            
-
-            manager.Detach(entity3.Id);
-
-            manager.Destroy(entity.Id);
-            var info = new EntityInfo();
-
-            info.Children = new List<uint>();
-
-            info = default;
+            var worldContainer = container.CreateChildContainer();
+            using var world = new WorldBuilder()
+                .Build();
 
 
+            var systemRunner = new SystemsRunnerBuilder(world, worldContainer)
+                .WithSystem<TestSystem1>()
+                .Build();
+
+
+            var entity = world.CreateEntity();
+
+            var entity1 = world.CreateEntity();
+            var entity2 = world.CreateEntity();
+            var entity3 = world.CreateEntity();
+            var entity4 = world.CreateEntity();
+            entity.Destroy();
+
+            systemRunner.Update(1f);
 
         }
     }

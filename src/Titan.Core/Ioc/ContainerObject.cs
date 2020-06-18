@@ -8,7 +8,10 @@ namespace Titan.Core.Ioc
         public object? Instance { get; private set; }
         public ContainerObject(Type typeToResolve, Type concreteType, object instance = null)
         {
-            RegisteredObject = new RegisteredObject(typeToResolve, concreteType);
+            if (instance == null)
+            {
+                RegisteredObject = new RegisteredObject(typeToResolve, concreteType);
+            }
             Instance = instance;
         }
 

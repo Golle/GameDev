@@ -1,51 +1,27 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace Titan.ECS3.Entities
 {
-
-
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    internal struct EntityInfo
-    {
-        internal uint Parent;
-        internal List<uint> Children;
-        //internal ComponentSomething ComponentFlags; TODO: add component mask here
-        //internal ushort NumberOfParents; TODO: add calculation of number of parents to enable sorting based on a hierachry
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal bool HasParent() => Parent > 0u;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal bool HasChildren() => Children?.Count > 0;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void Reset()
-        {
-            Parent = 0u;
-            Children?.Clear();
-        }
-    }
-
     internal class EntityManager
     {
-        private readonly EntityIdDispatcher _entityIdDispatcher = new EntityIdDispatcher();
+        private readonly uint _worldId;
+        private readonly IdDispatcher _idDispatcher = new IdDispatcher();
         private readonly EntityInfo[] _entityInfos;
-        public EntityManager(uint maxEntities)
+        public EntityManager(uint worldId, uint maxEntities)
         {
+            _worldId = worldId;
             _entityInfos = new EntityInfo[maxEntities];
         }
         public Entity Create()
         {
-            var id = _entityIdDispatcher.Next();
+            var id = _idDispatcher.Next();
             // we could use entityInfo = default but that would put the heap allocated list in the GC. We don't want that. If we've allocated memory for it we wont clear it.
             ref var entityInfo = ref _entityInfos[id];
             entityInfo.Reset();
 
-            return new Entity(id);
+            return new Entity(id, _worldId);
         }
 
 
@@ -72,7 +48,7 @@ namespace Titan.ECS3.Entities
             //Console.WriteLine($"Freeing entity: {entityId}");
 
             // TODO: Send Entity Destroyed message
-            _entityIdDispatcher.Free(entityId);
+            _idDispatcher.Free(entityId);
         }
 
         // Attach a child entity to a parent

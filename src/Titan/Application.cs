@@ -1,6 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.Numerics;
 using Titan.Components;
 using Titan.Configuration;
 using Titan.Core;
@@ -9,7 +7,6 @@ using Titan.Core.GameLoop;
 using Titan.Core.GameLoop.Events;
 using Titan.Core.Ioc;
 using Titan.Core.Logging;
-using Titan.D3D11;
 using Titan.ECS;
 using Titan.ECS.World;
 using Titan.Graphics;
@@ -84,7 +81,7 @@ namespace Titan
                 .RegisterSingleton(display.Window);
             
             using var textureManager = GetInstance<ITextureManager>();
-            _world = CreateWorld();
+            //_world = CreateWorld();
 
             var random = new Random();
             //for (var i = 0; i < 10900; ++i)
@@ -101,21 +98,21 @@ namespace Titan
                 
                 //entity1.AddChild(entity2);
 
-                var simpleEntity = _world.CreateEntity();
-                _world.AddComponent(simpleEntity, new Transform2D { Position = new Vector2(1920 / 2f, 1080 / 2f) });
+                //var simpleEntity = _world.CreateEntity();
+                //_world.AddComponent(simpleEntity, new Transform2D { Position = new Vector2(1920 / 2f, 1080 / 2f) });
 
-                var parentEntity = _world.CreateEntity();
-                _world.AddComponent(parentEntity, new Transform2D{Position = new Vector2(1920 / 2f, 1080 / 2f) });
+                //var parentEntity = _world.CreateEntity();
+                //_world.AddComponent(parentEntity, new Transform2D{Position = new Vector2(1920 / 2f, 1080 / 2f) });
 
-                for (var i = 0; i < 1000; ++i)
-                {
-                    var entity3 = _world.CreateEntity();
-                    _world.AddComponent(entity3, new Transform2D { Position = Vector2.Zero, Scale = Vector2.One });
-                    _world.AddComponent(entity3, new Velocity { Value = new Vector3(random.Next(-5000, 5000) / 100f, random.Next(-5000, 5000) / 100f, 0) });
-                    _world.AddComponent(entity3, new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\link.png"), Color = new Color(1, 1, 1) });
-                    _world.SetParent(entity3, parentEntity);
-                    //parentEntity.AddChild(entity3);
-                }
+                //for (var i = 0; i < 1000; ++i)
+                //{
+                //    var entity3 = _world.CreateEntity();
+                //    _world.AddComponent(entity3, new Transform2D { Position = Vector2.Zero, Scale = Vector2.One });
+                //    _world.AddComponent(entity3, new Velocity { Value = new Vector3(random.Next(-5000, 5000) / 100f, random.Next(-5000, 5000) / 100f, 0) });
+                //    _world.AddComponent(entity3, new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\link.png"), Color = new Color(1, 1, 1) });
+                //    _world.SetParent(entity3, parentEntity);
+                //    //parentEntity.AddChild(entity3);
+                //}
                 
                 
             var engine = _container.GetInstance<GameEngine>();
@@ -141,7 +138,7 @@ namespace Titan
                 });
 
 
-            _world.Destroy();
+            //_world.Destroy();
             _logger.Debug("Main loop ended");
             OnQuit();
             _logger.Debug("Ending application");

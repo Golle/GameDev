@@ -21,7 +21,7 @@ namespace Titan.Game
         private MyTestClass _test;
         static void Main(string[] args)
         {
-            new EntityTestClass().Run();
+            
 
 
             Start();
@@ -30,6 +30,8 @@ namespace Titan.Game
         protected override void OnInitialize(IContainer container)
         {
             _test = container.GetInstance<MyTestClass>();
+
+            new EntityTestClass().Run(container);
         }
 
         protected override void OnStart()
