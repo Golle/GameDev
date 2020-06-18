@@ -14,6 +14,11 @@ namespace Titan.ECS3.Systems
         {
             for (var i = 0; i < _systems.Length; ++i)
             {
+                _systems[i].PreUpdate();
+            }
+
+            for (var i = 0; i < _systems.Length; ++i)
+            {
                 _systems[i].Update(deltaTime);
             }
         }

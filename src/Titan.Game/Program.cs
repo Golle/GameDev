@@ -1,13 +1,6 @@
 using System;
-using System.Diagnostics;
-using System.Numerics;
-using Titan.Components;
 using Titan.Core.Ioc;
 using Titan.ECS.World;
-using Titan.ECS2;
-using Titan.ECS2.Components;
-using Titan.ECS2.Entities;
-using Titan.ECS2.Systems;
 using Titan.ECS3;
 
 namespace Titan.Game
@@ -21,9 +14,6 @@ namespace Titan.Game
         private MyTestClass _test;
         static void Main(string[] args)
         {
-            
-
-
             Start();
         }
 

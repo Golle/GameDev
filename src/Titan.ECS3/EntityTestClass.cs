@@ -1,3 +1,4 @@
+using System;
 using Titan.Core.Ioc;
 using Titan.ECS3.Systems;
 
@@ -7,10 +8,12 @@ namespace Titan.ECS3
     {
         public void Run(IContainer container)
         {
+
+
+            
             var worldContainer = container.CreateChildContainer();
             using var world = new WorldBuilder()
                 .Build();
-
 
             var systemRunner = new SystemsRunnerBuilder(world, worldContainer)
                 .WithSystem<TestSystem1>()

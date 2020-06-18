@@ -14,6 +14,11 @@ namespace Titan.ECS3.Systems
             _world = world;
         }
 
+        public void PreUpdate()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Update(float deltaTime)
         {
             OnPreUpdate();

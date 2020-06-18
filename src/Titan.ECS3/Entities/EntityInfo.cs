@@ -10,7 +10,7 @@ namespace Titan.ECS3.Entities
         internal uint Parent;
         internal List<uint> Children;
         //internal ComponentSomething ComponentFlags; TODO: add component mask here
-        //internal ushort NumberOfParents; TODO: add calculation of number of parents to enable sorting based on a hierachry
+        //internal ushort NumberOfParents; TODO: add calculation of number of parents to enable sorting based on a hierarchy
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
