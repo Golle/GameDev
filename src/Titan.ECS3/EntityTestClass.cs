@@ -1,18 +1,30 @@
 using System;
 using Titan.Core.Ioc;
+using Titan.ECS3.Components;
 using Titan.ECS3.Systems;
 
 namespace Titan.ECS3
 {
     public class EntityTestClass
     {
+        struct Transform45D
+        {
+            public uint A;
+            public uint B;
+        }
+        
+        struct Transform1D
+        {
+            public uint A;
+            public uint B;
+        }
+
         public void Run(IContainer container)
         {
-
-
-            
             var worldContainer = container.CreateChildContainer();
             using var world = new WorldBuilder()
+                .WithComponent<Transform1D>()
+                .WithComponent<Transform45D>(100)
                 .Build();
 
             var systemRunner = new SystemsRunnerBuilder(world, worldContainer)
