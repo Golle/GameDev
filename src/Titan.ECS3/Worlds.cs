@@ -11,28 +11,26 @@ namespace Titan.ECS3
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void AttachEntity(uint worldId, uint parent, uint child) => _worlds[worldId].EntityManager.Attach(parent, child);
+        internal static void AttachEntity(uint worldId, uint parent, uint child) => _worlds[worldId].AttachEntity(parent, child);
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void DestroyEntity(uint worldId, uint entityId) => _worlds[worldId].EntityManager.Destroy(entityId);
+        internal static void DestroyEntity(uint worldId, uint entityId) => _worlds[worldId].DestroyEntity(entityId);
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void AddComponent<T>(uint worldId, uint entityId) where T : struct => _worlds[worldId].ComponentManager.Add<T>(entityId);
+        internal static void AddComponent<T>(uint worldId, uint entityId) where T : struct => _worlds[worldId].AddComponent<T>(entityId);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void AddComponent<T>(uint worldId, uint entityId, in T value) where T : struct => _worlds[worldId].ComponentManager.Add<T>(entityId, value);
+        internal static void AddComponent<T>(uint worldId, uint entityId, in T value) where T : struct => _worlds[worldId].AddComponent<T>(entityId, value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void RemoveComponent<T>(uint worldId, uint entityId) where T : struct => _worlds[worldId].ComponentManager.Remove<T>(entityId);
+        internal static void RemoveComponent<T>(uint worldId, uint entityId) where T : struct => _worlds[worldId].RemoveComponent<T>(entityId);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static void DestroyWorld(World world)
         {
             _worlds[world.Id] = null;
             IdDispatcher.Free(world.Id);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static uint AddWorld(World world)
         {
             var id = IdDispatcher.Next();

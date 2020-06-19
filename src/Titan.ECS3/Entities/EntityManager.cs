@@ -18,6 +18,7 @@ namespace Titan.ECS3.Entities
             _publisher = publisher;
             _entityInfos = new EntityInfo[maxEntities];
         }
+
         public Entity Create()
         {
             var id = _idDispatcher.Next();

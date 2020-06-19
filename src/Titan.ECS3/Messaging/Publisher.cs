@@ -25,7 +25,7 @@ namespace Titan.ECS3.Messaging
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void Publish<T>(in T message)
         {
-            Console.WriteLine($"Message: {message.GetType().Name}");
+            Console.WriteLine($"Message: {message.GetType()}");
             PublisherInternal<T>.Publish(_worldId, message);
         }
 

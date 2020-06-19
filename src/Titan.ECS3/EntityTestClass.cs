@@ -32,6 +32,8 @@ namespace Titan.ECS3
                 .WithSystem<TestSystem2>()
                 .Build();
 
+            
+
 
             var entity = world.CreateEntity();
             entity.AddComponent<Transform1D>();

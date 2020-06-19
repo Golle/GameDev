@@ -18,5 +18,15 @@ namespace Titan.ECS3.Components
         public bool Contains(in ComponentMask mask) => (mask.Components & Components) == mask.Components;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsSupsetOf(in ComponentMask mask) => (mask.Components & Components) == Components;
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ComponentMask operator |(in ComponentMask mask1, in ComponentMask mask2) => new ComponentMask(mask1.Components | mask2.Components);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ComponentMask operator |(in ComponentMask mask1, ulong componentId) => new ComponentMask(mask1.Components | componentId);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ComponentMask operator ^(in ComponentMask mask1, ulong componentId) => new ComponentMask(mask1.Components ^ componentId);
     }
 }

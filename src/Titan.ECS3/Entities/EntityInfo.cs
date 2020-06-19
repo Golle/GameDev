@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Titan.ECS3.Components;
 
 namespace Titan.ECS3.Entities
 {
@@ -9,7 +10,7 @@ namespace Titan.ECS3.Entities
     {
         internal uint Parent;
         internal List<uint> Children;
-        //internal ComponentSomething ComponentFlags; TODO: add component mask here
+        internal ComponentMask Components;
         internal ushort NumberOfParents;
 
         internal bool HasParent
