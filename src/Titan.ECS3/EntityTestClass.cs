@@ -25,6 +25,7 @@ namespace Titan.ECS3
             using var world = new WorldBuilder()
                 .WithComponent<Transform1D>()
                 .WithComponent<Transform45D>(100)
+                .WithComponent<Transform2D>(100)
                 .Build();
 
             var systemRunner = new SystemsRunnerBuilder(world, worldContainer)
@@ -36,14 +37,14 @@ namespace Titan.ECS3
 
 
             var entity = world.CreateEntity();
-            entity.AddComponent<Transform1D>();
+            entity.AddComponent<Transform2D>();
             entity.AddComponent(new Transform45D());
-            entity.RemoveComponent<Transform1D>();
             entity.AddComponent<Transform1D>();
 
             var entity1 = world.CreateEntity();
             var entity2 = world.CreateEntity();
             var entity3 = world.CreateEntity();
+            entity3.AddComponent<Transform2D>();
             var entity4 = world.CreateEntity();
             entity1.Attach(entity2);
             entity2.Attach(entity3);

@@ -5,14 +5,13 @@ namespace Titan.ECS3
 {
     public class TestSystem2 : EntitySystem
     {
-        public TestSystem2(IWorld world) : base(world)
+        public TestSystem2(IWorld world) : base(world, world.EntityFilter().With<uint>())
         {
         }
-
-        protected override void OnUpdate(float deltaTime, ReadOnlySpan<uint> entities)
+        
+        protected override void OnUpdate(float deltaTime, uint entityId)
         {
             Console.WriteLine("UPDATE!");
-            Console.WriteLine($"Entities: {entities.Length}");
         }
     }
 }

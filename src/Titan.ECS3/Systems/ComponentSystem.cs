@@ -8,7 +8,6 @@ namespace Titan.ECS3.Systems
     public abstract class ComponentSystem<T> : ISystem where T : struct
     {
         private readonly IWorld _world;
-
         protected ComponentSystem(IWorld world)
         {
             _world = world;
@@ -33,5 +32,10 @@ namespace Titan.ECS3.Systems
         protected virtual void OnPreUpdate(){}
         protected abstract void OnUpdate(float deltaTime, ref T component);
         protected virtual void OnPostUpdate(){}
+
+        public void Dispose()
+        {
+            // noop 
+        }
     }
 }

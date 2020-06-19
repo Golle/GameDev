@@ -1,8 +1,9 @@
+using System;
+
 namespace Titan.ECS3.Systems
 {
-    public interface ISystem
+    public interface ISystem : IDisposable
     {
-        void PreUpdate();
         void Update(float deltaTime);
     }
 }

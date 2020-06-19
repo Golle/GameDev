@@ -43,7 +43,7 @@ namespace Titan.ECS3
         {
             Worlds.DestroyWorld(this);
         }
-        
+
         public void RemoveComponent<T>(in uint entityId) where T : struct
         {
             var components = _entityManager.GetInfo(entityId).Components ^= ComponentId<T>.Id;
@@ -63,5 +63,14 @@ namespace Titan.ECS3
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void DestroyEntity(in uint entityId) => _entityManager.Destroy(entityId);
+
+        EntityFilter IWorld.EntityFilter(uint maxEntitiesInFilter)
+        {
+            if (maxEntitiesInFilter == 0)
+            {
+                maxEntitiesInFilter = _maxEntities;
+            }
+            return new EntityFilter(_maxEntities, maxEntitiesInFilter, _publisher);
+        }
     }
 }
