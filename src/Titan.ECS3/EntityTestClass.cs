@@ -43,7 +43,11 @@ namespace Titan.ECS3
             var entity2 = world.CreateEntity();
             var entity3 = world.CreateEntity();
             var entity4 = world.CreateEntity();
-            entity.Destroy();
+            entity1.Attach(entity2);
+            entity2.Attach(entity3);
+            entity3.Attach(entity4);
+            
+            entity2.Destroy();
 
             systemRunner.Update(1f);
 

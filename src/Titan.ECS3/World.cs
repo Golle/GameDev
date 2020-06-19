@@ -1,15 +1,15 @@
-using System.Runtime.CompilerServices;
 using Titan.ECS3.Components;
 using Titan.ECS3.Entities;
+using Titan.ECS3.Messaging;
 
 namespace Titan.ECS3
 {
     internal class World : IWorld
     {
         internal uint Id { get; }
-
         internal EntityManager EntityManager { get; }
         internal ComponentManager ComponentManager { get; }
+        internal Publisher Publisher { get; }
 
         private readonly uint _maxEntities;
         uint IWorld.MaxEntities => _maxEntities;
@@ -18,8 +18,11 @@ namespace Titan.ECS3
         {
             Id = Worlds.AddWorld(this);
             _maxEntities = configuration.MaxEntities;
-            EntityManager = new EntityManager(Id, configuration.MaxEntities);
             
+            Publisher = new Publisher(Id);
+
+            EntityManager = new EntityManager(Id, configuration.MaxEntities, Publisher);
+
             ComponentManager = new ComponentManager(configuration.MaxEntities);
             foreach (var (componentType, size) in configuration.Components())
             {
@@ -27,7 +30,6 @@ namespace Titan.ECS3
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Entity CreateEntity()
         {
             var entity = EntityManager.Create();

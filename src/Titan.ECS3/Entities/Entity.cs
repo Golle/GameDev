@@ -27,6 +27,9 @@ namespace Titan.ECS3.Entities
         public void AddComponent<T>(in T value) where T : struct => Worlds.AddComponent<T>(WorldId, Id, value);
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RemoveComponent<T>() where T : struct => Worlds.RemoveComponent<T>(WorldId, Id);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Attach(in Entity entity) => Worlds.AttachEntity(WorldId, Id, entity.Id);
         public void Destroy()
         {
             Debug.Assert(WorldId != 0, "Entity was not created in a World");
