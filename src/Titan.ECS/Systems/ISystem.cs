@@ -1,12 +1,9 @@
+using System;
+
 namespace Titan.ECS.Systems
 {
-    public interface ISystem
+    public interface ISystem : IDisposable
     {
-        ulong Signature { get; }
-        void Remove(uint entity);
-        void Add(uint entity);
         void Update(float deltaTime);
-        bool IsMatch(ulong signature);
-        bool HasComponent(ulong componentId);
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using Titan.Graphics.Renderer;
 
 namespace Titan.Graphics.Buffers
 {

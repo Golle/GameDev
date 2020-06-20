@@ -2,66 +2,44 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Titan.ECS.Systems;
 
 namespace Titan.ECS.Components
 {
-    internal class ComponentManager : IComponentManager
+    internal class ComponentManager
     {
-        private readonly IContext _context;
-        private readonly IDictionary<ulong, IComponentMapper> _componentMappers = new Dictionary<ulong, IComponentMapper>();
-        public ComponentManager(IContext context)
-        {
-            _context = context;
-        }
+        private readonly uint _maxEntities;
 
-        public IComponentManager RegisterComponent<T>(uint capacity) where T : struct
+        private readonly IDictionary<ulong, object> _componentMaps = new Dictionary<ulong, object>();
+
+        public ComponentManager(uint maxEntities)
         {
-            return RegisterComponent(typeof(T), capacity);
+            _maxEntities = maxEntities;
         }
         
-        public IComponentManager RegisterComponent(Type type, uint capacity)
+        public void RegisterComponent<T>(uint size) where T : struct
         {
-            var componentId = type.ComponentMask();
-            Debug.Assert(!_componentMappers.ContainsKey(componentId), $"The component {type} has already been registered.");
-
-            var instance = Activator.CreateInstance(typeof(ComponentMapper<>).MakeGenericType(type), capacity, _context) ?? throw new InvalidOperationException($"Failed to created a ComponentMapper for type {type}");
-            _componentMappers[componentId] = (IComponentMapper)instance;
-            return this;
+            Debug.Assert(_componentMaps.ContainsKey(ComponentId<T>.Id) == false, $"Component {typeof(T).Name} has already been registered");
+            _componentMaps[ComponentId<T>.Id] = new ComponentPool<T>(_maxEntities, size);
         }
 
-        public IComponentMapper<T> GetComponentMapper<T>() where T : struct
+        public void RegisterComponent(Type type, uint size)
         {
-            var componentId = typeof(T).ComponentMask();
-            Debug.Assert(_componentMappers.ContainsKey(componentId), $"The component {typeof(T)} has not been registered.");
-            return (IComponentMapper<T>)_componentMappers[componentId];
+            var componentId = (ulong) typeof(ComponentId<>).MakeGenericType(type).GetProperty("Id").GetValue(null);
+            Debug.Assert(_componentMaps.ContainsKey(componentId) == false, $"Component {type.Name} has already been registered");
+            _componentMaps[componentId] = Activator.CreateInstance(typeof(ComponentPool<>).MakeGenericType(type), _maxEntities, size); ;
         }
 
-        public ulong Create<T>(uint entity, in T initialData) where T : struct
-        {
-            var componentId = typeof(T).ComponentMask();
-            Debug.Assert(_componentMappers.ContainsKey(componentId), $"The component {typeof(T)} has not been registered.");
-
-            var mapper = (IComponentMapper<T>)_componentMappers[componentId];
-            ref var component = ref mapper.CreateComponent(entity);
-            component = initialData;
-            return componentId;
-        }
-
-        public ulong Create<T>(uint entity) where T : struct
-        {
-            var componentId = typeof(T).ComponentMask();
-            Debug.Assert(_componentMappers.ContainsKey(componentId), $"The component {typeof(T)} has not been registered.");
-
-            var mapper = (IComponentMapper<T>)_componentMappers[componentId];
-            mapper.CreateComponent(entity);
-            return componentId;
-        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Free(uint entityId, ulong componentId)
-        {
-            _componentMappers[componentId].DestroyComponent(entityId);
-        }
+        public void Add<T>(uint entityId) where T : struct => ((ComponentPool<T>)_componentMaps[ComponentId<T>.Id]).Add(entityId);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Add<T>(uint entityId, in T value) where T : struct => ((ComponentPool<T>)_componentMaps[ComponentId<T>.Id]).Add(entityId, value);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Remove<T>(uint entityId) where T : struct => ((ComponentPool<T>)_componentMaps[ComponentId<T>.Id]).Remove(entityId);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IComponentMap<T> Map<T>() where T : struct => (IComponentMap<T>)_componentMaps[ComponentId<T>.Id];
     }
 }

@@ -1,16 +1,12 @@
 using System;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Titan.Core.Ioc;
-using Titan.ECS.World;
 
 namespace Titan.Game
 {
     internal class Program : Application<Program>
     {
-
         private MyTestClass _test;
+
         static void Main(string[] args)
         {
             Start();
@@ -19,6 +15,8 @@ namespace Titan.Game
         protected override void OnInitialize(IContainer container)
         {
             _test = container.GetInstance<MyTestClass>();
+
+            //new EntityTestClass().Run(container);
         }
 
         protected override void OnStart()
@@ -39,12 +37,6 @@ namespace Titan.Game
 
     internal class MyTestClass
     {
-        
-        public MyTestClass(IWorldCreator worldCreator)
-        {
-            
-        }
-
         public void OnStart()
         {
             

@@ -1,44 +1,121 @@
 using System.Collections.Generic;
-using System.Threading;
-using Titan.ECS.Systems;
+using System.Runtime.CompilerServices;
+using Titan.ECS.Messaging;
+using Titan.ECS.Messaging.Messages;
 
 namespace Titan.ECS.Entities
 {
-    internal class EntityManager : IEntityManager
+    internal class EntityManager
     {
-        private readonly IContext _context;
-        private uint _index; // TODO: ID is unique per world, which means we need to handle events both global (full engine) and local (each World)
+        private readonly uint _worldId;
+        private readonly Publisher _publisher;
 
-        //private readonly ConcurrentQueue<uint> _freeEntities = new ConcurrentQueue<uint>(); // TODO: Use this when/if we decide to use multithreading when creating entities
-        
-        private readonly Queue<uint> _freeEntities = new Queue<uint>(100);
-        public EntityManager(IContext context)
+        private readonly IdDispatcher _idDispatcher = new IdDispatcher();
+        private readonly EntityInfo[] _entityInfos;
+        public EntityManager(uint worldId, uint maxEntities, Publisher publisher)
         {
-            _context = context;
+            _worldId = worldId;
+            _publisher = publisher;
+            _entityInfos = new EntityInfo[maxEntities];
         }
 
-        public uint Create()
+        public Entity Create()
         {
-            if (!_freeEntities.TryDequeue(out var entity))
+            var id = _idDispatcher.Next();
+            // we could use entityInfo = default but that would put the heap allocated list in the GC. We don't want that. If we've allocated memory for it we wont clear it.
+            ref var entityInfo = ref _entityInfos[id];
+            entityInfo.Reset();
+
+            _publisher.Publish(new EntityCreatedMessage(id));
+
+            return new Entity(id, _worldId);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void Destroy(in Entity entity) => Destroy(entity.Id);
+
+        internal void Destroy(uint entityId)
+        {
+            // Detach the entity from its parent
+            ref var info = ref _entityInfos[entityId];
+            if (info.HasParent)
             {
-                entity = Interlocked.Increment(ref _index);
+                var parentId = info.Parent;
+                ref var parent = ref _entityInfos[parentId];
+                parent.Children.Remove(entityId);
+                _publisher.Publish(new EntityDetachedMessage(parentId, entityId));
             }
-            _context.OnEntityCreated(entity);
-            return entity;
+            RecursiveFree(entityId);
         }
 
-        public void Free(uint entity)
+        internal void RecursiveFree(uint entityId)
         {
-            //TODO: Free the Components used by this entity
-            //TODO: handle entity destruction with events 
-            // 1. Disable entity
-            // 2. Flag for destruction (+ all children)
-            // 3. Destroy entity (return it to pool)
-
-            // do something
-            
-            _context.OnEntityDestroyed(entity);
-            _freeEntities.Enqueue(entity);
+            ref var info = ref _entityInfos[entityId];
+            if (info.HasChildren)
+            {
+                for (var i = 0; i < info.Children.Count; ++i)
+                {
+                    RecursiveFree(info.Children[i]);
+                }
+            }
+            //Console.WriteLine($"Freeing entity: {entityId}");
+            _idDispatcher.Free(entityId);
+            _publisher.Publish(new EntityDestroyedMessage(entityId));
         }
+
+        // Attach a child entity to a parent
+        internal void Attach(uint parentId, uint childId)
+        {
+            //Console.WriteLine($"Attaching {childId} to {parentId}");
+            ref var parent = ref _entityInfos[parentId];
+            ref var child = ref _entityInfos[childId];
+
+            // If the entity already has a parent, detach it first.
+            if (child.Parent != 0u)
+            {
+                Detach(childId);
+            }
+
+            child.Parent = parentId;
+            (parent.Children ??= new List<uint>()).Add(childId);
+
+            UpdateNumberOfParents(childId, parent.NumberOfParents + 1u);
+            _publisher.Publish(new EntityAttachedMessage(parentId, childId));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        private void UpdateNumberOfParents(uint entityId, uint numberOfParents)
+        {
+            ref var entityInfo = ref _entityInfos[entityId];
+            entityInfo.NumberOfParents = (ushort) numberOfParents;
+            if (!entityInfo.HasChildren)
+            {
+                return;
+            }
+
+            for (var i = 0; i < entityInfo.Children.Count; ++i)
+            {
+                UpdateNumberOfParents(entityInfo.Children[i], numberOfParents + 1u);
+            }
+        }
+
+        // Detach a child from a parent (only the child ID is required)
+        internal void Detach(uint entityId)
+        {
+            ref var child = ref _entityInfos[entityId];
+            
+            var parentId = child.Parent;
+            ref var parent = ref _entityInfos[parentId];// 0 will reference the first element in the array (which wont be used by any valid entity)
+            
+            child.Parent = 0u;
+            parent.Children?.Remove(entityId);
+
+            UpdateNumberOfParents(entityId, 0);
+            _publisher.Publish(new EntityDetachedMessage(parentId, entityId));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal ref EntityInfo GetInfo(uint entityId) => ref _entityInfos[entityId];
     }
 }

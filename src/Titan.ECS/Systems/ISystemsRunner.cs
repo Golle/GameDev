@@ -1,8 +1,7 @@
 namespace Titan.ECS.Systems
 {
-    internal interface ISystemsRunner
+    public interface ISystemsRunner
     {
-        void RegisterSystem(ISystem system);
         void Update(float deltaTime);
     }
 }

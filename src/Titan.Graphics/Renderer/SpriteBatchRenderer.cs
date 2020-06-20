@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Titan.D3D11;
@@ -7,7 +6,6 @@ using Titan.Graphics.Buffers;
 using Titan.Graphics.Camera;
 using Titan.Graphics.Layout;
 using Titan.Graphics.Shaders;
-using Titan.Graphics.Text;
 using Titan.Graphics.Textures;
 
 namespace Titan.Graphics.Renderer

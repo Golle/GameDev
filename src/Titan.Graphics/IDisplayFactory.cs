@@ -1,5 +1,3 @@
-using System;
-
 namespace Titan.Graphics
 {
     public interface IDisplayFactory

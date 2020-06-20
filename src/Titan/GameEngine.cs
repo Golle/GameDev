@@ -1,9 +1,7 @@
 using Titan.Core.EventSystem;
 using Titan.Core.Logging;
-using Titan.D3D11.Device;
 using Titan.Graphics.Camera;
 using Titan.Graphics.Renderer;
-using Titan.Resources;
 using Titan.Windows.Input;
 using Titan.Windows.Window;
 

@@ -2,7 +2,6 @@ using System;
 using System.Numerics;
 using Titan.Core.EventSystem;
 using Titan.Core.GameLoop.Events;
-using Titan.Core.Math;
 using Titan.Windows.Window.Events;
 
 namespace Titan.Graphics.Camera

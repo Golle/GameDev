@@ -1,43 +1,67 @@
-using System.Collections.Generic;
+using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace Titan.ECS.Components
 {
-
-    // TODO: Look into options to use a big memory block instead of arrays per type
-    // TODO: Maybe allocate new byte[1GB] or something similar and have this class get pointers to that memory blob (IMemory/ISpan) or raw byte* 
-    // TODO: Marshal.AllocHGlobal(sizeof(T) * size) is an option as well. Will prevent GC from moving the memory and flagging it for garbage collecting. 
-    internal class ComponentPool<T> : IComponentPool<T> where T : struct
+    internal sealed class ComponentPool<T> : IComponentMap<T> where T : struct
     {
-        private readonly T[] _componentPool;
-        private readonly Queue<uint> _free = new Queue<uint>(100);
-        private uint _count;
-        public ComponentPool(uint size)
+        private readonly T[] _components;
+        private readonly int[] _entityMap;
+
+        private int _lastIndex = -1;
+        public ComponentPool(uint maxEntities, uint size)
         {
+            Debug.Assert(size <= maxEntities, "Component pool is greater than the max number of entities.");
+            _components = new T[size];
+            _entityMap = new int[maxEntities];
+            Array.Fill(_entityMap, -1);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Add(uint entityId, in T initialValue)
+        {
+            Debug.Assert(_entityMap[entityId] == -1, $"Component {typeof(T)} has already been added to entity {entityId}");
+            _components[_entityMap[entityId] = ++_lastIndex] = initialValue;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Add(uint entityId)
+        {
+            Debug.Assert(_entityMap[entityId] == -1, $"Component {typeof(T)} has already been added to entity {entityId}");
+            _entityMap[entityId] = ++_lastIndex;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Remove(uint entityId)
+        {
+            Debug.Assert(_entityMap[entityId] != -1, $"Component {typeof(T)} does not exist on entity {entityId}");
             
-            _componentPool = new T[size];
-        }
-
-        public uint Create()
-        {
-            Debug.Assert(_count < _componentPool.Length, "No more components available");
-            return _free.TryDequeue(out var index) ? index : _count++;
-        }
-
-        public uint Create(out T value)
-        {
-            Debug.Assert(_count < _componentPool.Length || _free.Count > 0, "No more components available");
-            if (!_free.TryDequeue(out var index))
+            ref var index = ref _entityMap[entityId];
+            if (index != _lastIndex)
             {
-                index = _count++;
+                for (var i = 0; i < _entityMap.Length; ++i)
+                {
+                    if (_entityMap[i] == _lastIndex)
+                    {
+                        _entityMap[i] = index;
+                        _components[index] = _components[_lastIndex];
+                        break;
+                    }
+                }
             }
-            value = _componentPool[index];
-            return index;
+            
+            index = -1;
+            --_lastIndex;
         }
 
-        public ref T Get(uint index) => ref _componentPool[index];
-        public ref T this[uint index] => ref _componentPool[index];
-        public void Free(uint index) => _free.Enqueue(index);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Span<T> AsSpan() => new Span<T>(_components, 0, _lastIndex + 1);
+
+        public ref T this[uint entityId]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => ref _components[_entityMap[entityId]];
+        }
     }
 }
