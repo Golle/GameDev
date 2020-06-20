@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Titan.ECS3.Components
 {
-    internal sealed class ComponentPool<T> where T : struct
+    internal sealed class ComponentPool<T> : IComponentMap<T> where T : struct
     {
         private readonly T[] _components;
         private readonly int[] _entityMap;
@@ -54,6 +54,9 @@ namespace Titan.ECS3.Components
             index = -1;
             --_lastIndex;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Span<T> AsSpan() => new Span<T>(_components, 0, _lastIndex + 1);
 
         public ref T this[uint entityId]
         {

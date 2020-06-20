@@ -72,5 +72,8 @@ namespace Titan.ECS3
             }
             return new EntityFilter(_maxEntities, maxEntitiesInFilter, _publisher);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        IComponentMap<T> IWorld.GetComponentMap<T>() where T : struct => _componentManager.Map<T>();
     }
 }

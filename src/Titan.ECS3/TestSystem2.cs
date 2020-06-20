@@ -12,7 +12,7 @@ namespace Titan.ECS3
 
         protected override void OnUpdate(float deltaTime, ref Transform2D component)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Transform2D");
         }
     }
 

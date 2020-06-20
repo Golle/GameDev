@@ -38,5 +38,8 @@ namespace Titan.ECS3.Components
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Remove<T>(uint entityId) where T : struct => ((ComponentPool<T>)_componentMaps[ComponentId<T>.Id]).Remove(entityId);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IComponentMap<T> Map<T>() where T : struct => (IComponentMap<T>)_componentMaps[ComponentId<T>.Id];
     }
 }

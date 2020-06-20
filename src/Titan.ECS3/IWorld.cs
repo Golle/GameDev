@@ -1,4 +1,5 @@
 using System;
+using Titan.ECS3.Components;
 using Titan.ECS3.Entities;
 
 namespace Titan.ECS3
@@ -10,5 +11,6 @@ namespace Titan.ECS3
         internal uint MaxEntities { get; }
 
         internal EntityFilter EntityFilter(uint maxEntitiesInFilter = 0);
+        internal IComponentMap<T> GetComponentMap<T>() where T : struct;
     }
 }

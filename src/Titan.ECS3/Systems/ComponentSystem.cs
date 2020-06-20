@@ -1,4 +1,4 @@
-using System;
+using Titan.ECS3.Components;
 
 namespace Titan.ECS3.Systems
 {
@@ -7,24 +7,26 @@ namespace Titan.ECS3.Systems
     /// </summary>
     public abstract class ComponentSystem<T> : ISystem where T : struct
     {
-        private readonly IWorld _world;
-        protected ComponentSystem(IWorld world)
+        private readonly bool _skipUpdateIfEmpty;
+        private readonly IComponentMap<T> _components;
+        protected ComponentSystem(IWorld world, bool skipUpdateIfEmpty = false)
         {
-            _world = world;
-
-        }
-
-        public void PreUpdate()
-        {
-            throw new NotImplementedException();
+            _skipUpdateIfEmpty = skipUpdateIfEmpty;
+            _components = world.GetComponentMap<T>();
         }
 
         public void Update(float deltaTime)
         {
-            OnPreUpdate();
-            foreach (var entity in new uint[10])
+            var components = _components.AsSpan();
+            if (components.IsEmpty && _skipUpdateIfEmpty)
             {
-                T component = default;
+                return;
+            }
+
+            OnPreUpdate();
+            for(var i = 0; i < components.Length; ++i)
+            {
+                ref var component = ref components[i];
                 OnUpdate(deltaTime, ref component);
             }
             OnPostUpdate();
