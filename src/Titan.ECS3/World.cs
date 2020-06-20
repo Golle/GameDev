@@ -64,7 +64,7 @@ namespace Titan.ECS3
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void DestroyEntity(in uint entityId) => _entityManager.Destroy(entityId);
 
-        EntityFilter IWorld.EntityFilter(uint maxEntitiesInFilter)
+        public EntityFilter EntityFilter(uint maxEntitiesInFilter)
         {
             if (maxEntitiesInFilter == 0)
             {

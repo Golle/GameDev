@@ -1,6 +1,5 @@
-using System;
 using System.Runtime.CompilerServices;
-using System.Threading;
+using Titan.ECS3.Components;
 
 namespace Titan.ECS3.Systems
 {
@@ -9,10 +8,12 @@ namespace Titan.ECS3.Systems
     /// </summary>
     public abstract class EntitySystem : ISystem
     {
+        private readonly IWorld _world;
         private readonly EntityFilter _filter;
         
         protected EntitySystem(IWorld world, EntityFilter filter)
         {
+            _world = world;
             _filter = filter;
         }
 
@@ -36,5 +37,8 @@ namespace Titan.ECS3.Systems
         {
             _filter.Dispose();
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected IComponentMap<T> Map<T>() where T : struct => _world.GetComponentMap<T>();
     }
 }

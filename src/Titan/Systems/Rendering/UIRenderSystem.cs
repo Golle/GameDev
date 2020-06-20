@@ -1,35 +1,33 @@
 using System.Numerics;
 using Titan.Components;
 using Titan.D3D11;
-using Titan.ECS.Components;
-using Titan.ECS.Systems;
+using Titan.ECS3;
+using Titan.ECS3.Components;
+using Titan.ECS3.Systems;
 using Titan.Graphics.Renderer;
 
 namespace Titan.Systems.Rendering
 {
-    internal class UIRenderSystem : BaseSystem
+    internal class UIRenderSystem : EntitySystem
     {
         private readonly ISpriteBatchRenderer _spriteBatchRenderer;
-        private readonly IComponentMapper<TransformRect> _transform;
-        private readonly IComponentMapper<Sprite> _sprite;
+        private readonly IComponentMap<TransformRect> _transform;
+        private readonly IComponentMap<Sprite> _sprite;
 
-        public UIRenderSystem(IComponentManager componentManager, ISpriteBatchRenderer spriteBatchRenderer) 
-            : base(typeof(TransformRect), typeof(Sprite))
+        public UIRenderSystem(IWorld world, ISpriteBatchRenderer spriteBatchRenderer) 
+            : base( world, world.EntityFilter().With<TransformRect>().With<Sprite>())
         {
             _spriteBatchRenderer = spriteBatchRenderer;
-            _transform = componentManager.GetComponentMapper<TransformRect>();
-            _sprite = componentManager.GetComponentMapper<Sprite>();
+            _transform = Map<TransformRect>();
+            _sprite = Map<Sprite>();
         }
 
-        protected override void OnUpdate(float deltaTime)
+        protected override void OnUpdate(float deltaTime, uint entityId)
         {
-            foreach (var entity in Entities)
-            {
-                ref var rect = ref _transform[entity];
-                ref var sprite = ref _sprite[entity];
+            ref var rect = ref _transform[entityId];
+            ref var sprite = ref _sprite[entityId];
 
-                _spriteBatchRenderer.Push(sprite.Texture, new Vector2(rect.Position.X, rect.Position.Y), new Vector2(rect.Size.Width, rect.Size.Height), new Color(1,0,0));
-            }
+            _spriteBatchRenderer.Push(sprite.Texture, new Vector2(rect.Position.X, rect.Position.Y), new Vector2(rect.Size.Width, rect.Size.Height), new Color(1, 0, 0));
         }
     }
 }

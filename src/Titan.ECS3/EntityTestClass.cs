@@ -9,35 +9,35 @@ namespace Titan.ECS3
     {
         public void Run(IContainer container)
         {
-            var worldContainer = container.CreateChildContainer();
-            using var world = new WorldBuilder()
-                .WithComponent<Transform2D>(100)
-                .Build();
+            //var worldContainer = container.CreateChildContainer();
+            //using var world = new WorldBuilder()
+            //    .WithComponent<Transform2D>(100)
+            //    .Build();
 
-            var systemRunner = new SystemsRunnerBuilder(world, worldContainer)
-                .WithSystem<TestSystem1>()
-                .WithSystem<TestSystem2>()
-                .WithSystem<TestSystem3>()
+            //var systemRunner = new SystemsRunnerBuilder(world, worldContainer)
+            //    .WithSystem<TestSystem1>()
+            //    .WithSystem<TestSystem2>()
+            //    .WithSystem<TestSystem3>()
 
-                .Build();
+            //    .Build();
 
 
 
-            var entity = world.CreateEntity();
-            entity.AddComponent<Transform2D>();
+            //var entity = world.CreateEntity();
+            //entity.AddComponent<Transform2D>();
 
-            var entity1 = world.CreateEntity();
-            var entity2 = world.CreateEntity();
-            var entity3 = world.CreateEntity();
-            entity3.AddComponent<Transform2D>();
-            var entity4 = world.CreateEntity();
-            entity1.Attach(entity2);
-            entity2.Attach(entity3);
-            entity3.Attach(entity4);
+            //var entity1 = world.CreateEntity();
+            //var entity2 = world.CreateEntity();
+            //var entity3 = world.CreateEntity();
+            //entity3.AddComponent<Transform2D>();
+            //var entity4 = world.CreateEntity();
+            //entity1.Attach(entity2);
+            //entity2.Attach(entity3);
+            //entity3.Attach(entity4);
             
-            entity2.Destroy();
+            //entity2.Destroy();
 
-            systemRunner.Update(1f);
+            //systemRunner.Update(1f);
 
         }
     }

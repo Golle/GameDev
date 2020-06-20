@@ -1,34 +1,32 @@
 using System.Numerics;
 using Titan.Components;
-using Titan.ECS.Components;
-using Titan.ECS.Systems;
+using Titan.ECS3;
+using Titan.ECS3.Components;
+using Titan.ECS3.Systems;
 using Titan.Graphics.Renderer;
 
 namespace Titan.Systems.Rendering
 {
-    internal class SpriteRenderSystem : BaseSystem
+    internal class SpriteRenderSystem : EntitySystem
     {
         private readonly ISpriteBatchRenderer _spriteBatchRenderer;
-        private readonly IComponentMapper<Transform2D> _transform;
-        private readonly IComponentMapper<Sprite> _sprite;
+        private readonly IComponentMap<Transform2D> _transform;
+        private readonly IComponentMap<Sprite> _sprite;
 
-        public SpriteRenderSystem(IComponentManager componentManager, ISpriteBatchRenderer spriteBatchRenderer) :
-            base(typeof(Transform2D), typeof(Sprite))
+        public SpriteRenderSystem(IWorld world, ISpriteBatchRenderer spriteBatchRenderer) :
+            base(world, world.EntityFilter().With<Transform2D>().With<Sprite>())
         {
             _spriteBatchRenderer = spriteBatchRenderer;
-            _transform = componentManager.GetComponentMapper<Transform2D>();
-            _sprite = componentManager.GetComponentMapper<Sprite>();
+            _transform = Map<Transform2D>();
+            _sprite = Map<Sprite>();
         }
 
-        protected override void OnUpdate(float deltaTime)
+        protected override void OnUpdate(float deltaTime, uint entityId)
         {
-            foreach (var entity in Entities)
-            {
-                ref var sprite = ref _sprite[entity];
-                ref var transform = ref _transform[entity];
+            ref var sprite = ref _sprite[entityId];
+            ref var transform = ref _transform[entityId];
 
-                _spriteBatchRenderer.Push(sprite.Texture, transform.WorldPosition, new Vector2(50,50), sprite.Color);
-            }
+            _spriteBatchRenderer.Push(sprite.Texture, transform.WorldPosition, new Vector2(50, 50), sprite.Color);
         }
     }
 }

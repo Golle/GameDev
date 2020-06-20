@@ -1,32 +1,30 @@
 using System.Numerics;
 using Titan.Components;
-using Titan.ECS.Components;
-using Titan.ECS.Systems;
+using Titan.ECS3;
+using Titan.ECS3.Components;
+using Titan.ECS3.Systems;
 
 namespace Titan.Systems
 {
-    internal class MovementSystem2D : BaseSystem
+    internal class MovementSystem2D : EntitySystem
     {
-        private readonly IComponentMapper<Transform2D> _tranform;
-        private readonly IComponentMapper<Velocity> _velocity;
+        private readonly IComponentMap<Transform2D> _transform;
+        private readonly IComponentMap<Velocity> _velocity;
 
-        public MovementSystem2D(IComponentManager componentManager)
-            : base(typeof(Transform2D), typeof(Velocity))
+        public MovementSystem2D(IWorld world) 
+            : base(world, world.EntityFilter().With<Transform2D>().With<Velocity>())
         {
-            _tranform = componentManager.GetComponentMapper<Transform2D>();
-            _velocity = componentManager.GetComponentMapper<Velocity>();
+            _transform = Map<Transform2D>();
+            _velocity = Map<Velocity>();
         }
 
-        protected override void OnUpdate(float deltaTime)
+        protected override void OnUpdate(float deltaTime, uint entityId)
         {
-            foreach (var entity in Entities)
+            ref var velocity = ref _velocity[entityId].Value;
+            if (velocity != Vector3.Zero)
             {
-                ref var velocity = ref _velocity[entity].Value;
-                if (velocity != Vector3.Zero)
-                {
-                    ref var transform = ref _tranform[entity];
-                    transform.Position += new Vector2(velocity.X * deltaTime, velocity.Y * deltaTime);
-                }
+                ref var transform = ref _transform[entityId];
+                transform.Position += new Vector2(velocity.X * deltaTime, velocity.Y * deltaTime);
             }
         }
     }
