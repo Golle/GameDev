@@ -11,6 +11,7 @@ namespace Titan.ECS3.Systems
         protected ComponentSystem(IWorld world)
         {
             _world = world;
+
         }
 
         public void PreUpdate()

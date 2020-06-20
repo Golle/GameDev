@@ -1,39 +1,64 @@
-using System.Collections.Concurrent;
+using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Threading;
 
 namespace Titan.ECS3.Components
 {
     internal sealed class ComponentPool<T> where T : struct
     {
         private readonly T[] _components;
-        private uint _nextIndex;
-        private readonly ConcurrentQueue<uint> _free = new ConcurrentQueue<uint>();
+        private readonly int[] _entityMap;
 
-        public ComponentPool(uint size)
+        private int _lastIndex = -1;
+        public ComponentPool(uint maxEntities, uint size)
         {
+            Debug.Assert(size <= maxEntities, "Component pool is greater than the max number of entities.");
             _components = new T[size];
+            _entityMap = new int[maxEntities];
+            Array.Fill(_entityMap, -1);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public uint Create()
+        public void Add(uint entityId, in T initialValue)
         {
-            if (!_free.TryDequeue(out var index))
-            {
-                index = Interlocked.Increment(ref _nextIndex);
-            }
-            return index;
+            Debug.Assert(_entityMap[entityId] == -1, $"Component {typeof(T)} has already been added to entity {entityId}");
+            _components[_entityMap[entityId] = ++_lastIndex] = initialValue;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Destroy(uint index) => _free.Enqueue(index);
-
+        public void Add(uint entityId)
+        {
+            Debug.Assert(_entityMap[entityId] == -1, $"Component {typeof(T)} has already been added to entity {entityId}");
+            _entityMap[entityId] = ++_lastIndex;
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ref T Get(uint index) => ref _components[index];
-        public ref T this[uint index]
+        public void Remove(uint entityId)
+        {
+            Debug.Assert(_entityMap[entityId] != -1, $"Component {typeof(T)} does not exist on entity {entityId}");
+            
+            ref var index = ref _entityMap[entityId];
+            if (index != _lastIndex)
+            {
+                for (var i = 0; i < _entityMap.Length; ++i)
+                {
+                    if (_entityMap[i] == _lastIndex)
+                    {
+                        _entityMap[i] = index;
+                        _components[index] = _components[_lastIndex];
+                        break;
+                    }
+                }
+            }
+            
+            index = -1;
+            --_lastIndex;
+        }
+
+        public ref T this[uint entityId]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => ref _components[index];
+            get => ref _components[_entityMap[entityId]];
         }
     }
 }

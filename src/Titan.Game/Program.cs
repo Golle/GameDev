@@ -10,6 +10,7 @@ namespace Titan.Game
     internal class Program : Application<Program>
     {
         private MyTestClass _test;
+
         static void Main(string[] args)
         {
             Start();
