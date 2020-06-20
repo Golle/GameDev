@@ -1,9 +1,9 @@
 using System.Numerics;
 using Titan.Components;
 using Titan.D3D11;
-using Titan.ECS3;
-using Titan.ECS3.Components;
-using Titan.ECS3.Systems;
+using Titan.ECS;
+using Titan.ECS.Components;
+using Titan.ECS.Systems;
 using Titan.Graphics.Renderer;
 
 namespace Titan.Systems.Rendering

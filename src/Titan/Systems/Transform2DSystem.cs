@@ -1,6 +1,6 @@
 using Titan.Components;
-using Titan.ECS3;
-using Titan.ECS3.Systems;
+using Titan.ECS;
+using Titan.ECS.Systems;
 
 namespace Titan.Systems
 {

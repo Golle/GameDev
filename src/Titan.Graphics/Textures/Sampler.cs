@@ -1,6 +1,6 @@
 using Titan.D3D11.Device;
 
-namespace Titan.Graphics.Text
+namespace Titan.Graphics.Textures
 {
     internal class Sampler : ISampler
     {

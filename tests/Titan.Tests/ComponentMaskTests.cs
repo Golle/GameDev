@@ -1,6 +1,5 @@
-﻿using NUnit.Framework;
-using Titan.ECS3;
-using Titan.ECS3.Components;
+using NUnit.Framework;
+using Titan.ECS.Components;
 
 namespace Titan.Tests
 {

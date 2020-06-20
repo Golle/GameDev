@@ -1,6 +1,4 @@
-using System;
 using Titan.Core.EventSystem;
-using Titan.Windows.Win32;
 using Titan.Windows.Window.Events;
 
 namespace Titan.Windows.Input

@@ -1,5 +1,4 @@
 using System;
-using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using Titan.D3D11;
 using Titan.D3D11.Bindings.Models;
@@ -8,7 +7,6 @@ using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
 using Titan.Graphics.Shaders;
-using Titan.Graphics.Text;
 using Titan.Graphics.Textures;
 
 namespace Titan.Graphics

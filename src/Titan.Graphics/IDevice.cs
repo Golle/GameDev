@@ -3,7 +3,6 @@ using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
 using Titan.Graphics.Shaders;
-using Titan.Graphics.Text;
 using Titan.Graphics.Textures;
 
 namespace Titan.Graphics

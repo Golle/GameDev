@@ -1,6 +1,5 @@
 using System;
 using Titan.Core.Ioc;
-using Titan.ECS3;
 
 namespace Titan.Game
 {
