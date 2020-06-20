@@ -5,8 +5,6 @@ using Titan.ECS3;
 
 namespace Titan.Game
 {
-
-    
     internal class Program : Application<Program>
     {
         private MyTestClass _test;
