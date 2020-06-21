@@ -47,6 +47,7 @@ namespace Titan.ECS
             if (index != -1)
             {
                 _entities[index] = _entities[--_count];
+                index = -1;
             }
         }
 
