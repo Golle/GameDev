@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using Titan.Components;
 using Titan.Configuration;
@@ -11,6 +12,7 @@ using Titan.Core.Logging;
 using Titan.Core.Math;
 using Titan.D3D11;
 using Titan.ECS;
+using Titan.ECS.Entities;
 using Titan.ECS.Systems;
 using Titan.Graphics;
 using Titan.Resources;
@@ -86,27 +88,20 @@ namespace Titan
             _container.GetInstance<IEventManager>()
                 .Subscribe<UpdateEvent>((in UpdateEvent @event) => systemsRummer.Update(@event.ElapsedTime));
 
+
+            var parentEntity = world.CreateEntity();
+            parentEntity.AddComponent(new Transform2D { Position = new Vector2(1920 / 2f, 1080 / 2f) });
+
+            
+            var l = new Queue<Entity>(20000);
+            
+
             var random = new Random();
             for (var i = 0; i < 1; ++i) {
-
-
                 var entity1 = world.CreateEntity();
                 entity1.AddComponent(new TransformRect { Position = new Vector3(600, 200, 0), Size = new Size(100) });
                 entity1.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\link.png"), Color = new Color(1, 1, 1) });
-
-
-                //var entity2 = _world.CreateEntity();
-                //entity2.AddComponent(new TransformRect { Position = new Vector3(100, 200, 0), Size = new Size(200) });
-                //entity2.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\tree01.png"), Color = new Color(1, 1, 1) });
-
-                //entity1.AddChild(entity2);
-
-                //var simpleEntity = _world.CreateEntity();
-                //_world.AddComponent(simpleEntity, new Transform2D { Position = new Vector2(1920 / 2f, 1080 / 2f) });
-
-                var parentEntity = world.CreateEntity();
-                parentEntity.AddComponent(new Transform2D{Position = new Vector2(1920 / 2f, 1080 / 2f) });
-
+              
                 for (var j = 0; j < 10800; ++j)
                 {
                     var entity3 = world.CreateEntity();
@@ -114,6 +109,7 @@ namespace Titan
                     entity3.AddComponent(new Velocity { Value = new Vector3(random.Next(-5000, 5000) / 100f, random.Next(-5000, 5000) / 100f, 0) });
                     entity3.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\link.png"), Color = new Color(1, 1, 1) });
                     parentEntity.Attach(entity3);
+                    l.Enqueue(entity3);
                     //parentEntity.AddChild(entity3);
                 }
             }    
@@ -127,17 +123,21 @@ namespace Titan
                 .Run(() =>
                 {
                     var execute = engine.Execute();
-                    
-                    //if (count-- == 0)
-                    //{
-                    //    //simpleEntity.Destroy();
-                    //    //var s = Stopwatch.StartNew();
-                    //    //parentEntity?.Destroy(); parentEntity = null;
-                    //    //s.Stop();
 
-                    //    //_logger.Debug("{0} ms to destroy the entity", s.Elapsed.TotalMilliseconds);
-                        
-                    //}
+                    if (count-- == 0)
+                    {
+                        parentEntity.RemoveComponent<Transform2D>();
+                    }
+
+                    if (count == -300)
+                    {
+                        parentEntity.AddComponent(new Transform2D { Position = new Vector2(1920 / 2f, 1080 / 2f) });
+
+                    }
+                    if(count < -300)
+                        if(l.TryDequeue(out var ent))
+                            ent.Destroy();
+
                     return execute;
                 });
 

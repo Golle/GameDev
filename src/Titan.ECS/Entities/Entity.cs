@@ -6,7 +6,7 @@ namespace Titan.ECS.Entities
 {
     [DebuggerDisplay("Id = {" + nameof(Id) + "}, WorldId = {" + nameof(WorldId) + "}")]
     [StructLayout(LayoutKind.Explicit)]
-    public readonly ref struct Entity
+    public readonly struct Entity
     {
         [field: FieldOffset(0)]
         public uint Id { get; }
