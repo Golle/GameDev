@@ -5,7 +5,7 @@ using Titan.ECS.Messaging.Messages;
 
 namespace Titan.ECS.Entities
 {
-    internal class EntityManager
+    internal class EntityManager : IRelationship
     {
         private readonly uint _worldId;
         private readonly Publisher _publisher;
@@ -117,5 +117,14 @@ namespace Titan.ECS.Entities
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal ref EntityInfo GetInfo(uint entityId) => ref _entityInfos[entityId];
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool TryGetParent(uint entityId, out uint parentId)
+        {
+            ref var info = ref _entityInfos[entityId];
+            parentId = info.Parent;
+            return info.HasParent;
+        }
+
     }
 }

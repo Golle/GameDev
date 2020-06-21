@@ -104,18 +104,18 @@ namespace Titan
                 //var simpleEntity = _world.CreateEntity();
                 //_world.AddComponent(simpleEntity, new Transform2D { Position = new Vector2(1920 / 2f, 1080 / 2f) });
 
-                //var parentEntity = world.CreateEntity();
-                //parentEntity.AddComponent(new Transform2D{Position = new Vector2(1920 / 2f, 1080 / 2f) });
+                var parentEntity = world.CreateEntity();
+                parentEntity.AddComponent(new Transform2D{Position = new Vector2(1920 / 2f, 1080 / 2f) });
 
-                //for (var j = 0; j < 1000; ++j)
-                //{
-                //    var entity3 = world.CreateEntity();
-                //    entity3.AddComponent(new Transform2D { Position = Vector2.Zero, Scale = Vector2.One });
-                //    entity3.AddComponent(new Velocity { Value = new Vector3(random.Next(-5000, 5000) / 100f, random.Next(-5000, 5000) / 100f, 0) });
-                //    entity3.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\link.png"), Color = new Color(1, 1, 1) });
-                //    entity3.Attach(parentEntity);
-                //    //parentEntity.AddChild(entity3);
-                //}
+                for (var j = 0; j < 10800; ++j)
+                {
+                    var entity3 = world.CreateEntity();
+                    entity3.AddComponent(new Transform2D { Position = Vector2.Zero, Scale = Vector2.One });
+                    entity3.AddComponent(new Velocity { Value = new Vector3(random.Next(-5000, 5000) / 100f, random.Next(-5000, 5000) / 100f, 0) });
+                    entity3.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Texture = textureManager.GetTexture(@"F:\Git\GameDev\resources\link.png"), Color = new Color(1, 1, 1) });
+                    parentEntity.Attach(entity3);
+                    //parentEntity.AddChild(entity3);
+                }
             }    
                 
             var engine = _container.GetInstance<GameEngine>();
@@ -155,7 +155,7 @@ namespace Titan
             //const int componentSize = 40000;
 
 
-            var world = new WorldBuilder()
+            var world = new WorldBuilder(maxEntities: 100000, defaultComponentPoolSize: 100000)
                 .WithComponent<Transform2D>()
                 .WithComponent<TransformRect>()
                 .WithComponent<Velocity>()
@@ -165,7 +165,7 @@ namespace Titan
 
             var systemsRummer = new SystemsRunnerBuilder(world, _container.CreateChildContainer())
                 .WithSystem<MovementSystem2D>()
-                .WithSystem<Transform2DSystem>()
+                .WithSystem<Transform2DEntitySystem>()
                 .WithSystem<SpriteRenderSystem>()
                 .WithSystem<UIRenderSystem>()
                 .Build();

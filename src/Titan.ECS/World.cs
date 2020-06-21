@@ -75,5 +75,7 @@ namespace Titan.ECS
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         IComponentMap<T> IWorld.GetComponentMap<T>() where T : struct => _componentManager.Map<T>();
+
+        IRelationship IWorld.GetRelationship() => _entityManager;
     }
 }

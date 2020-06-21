@@ -1,3 +1,4 @@
+using System;
 using Titan.ECS.Components;
 
 namespace Titan.ECS.Systems
@@ -26,8 +27,7 @@ namespace Titan.ECS.Systems
             OnPreUpdate();
             for(var i = 0; i < components.Length; ++i)
             {
-                ref var component = ref components[i];
-                OnUpdate(deltaTime, ref component);
+                OnUpdate(deltaTime, ref components[i]);
             }
             OnPostUpdate();
         }

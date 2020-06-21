@@ -63,5 +63,8 @@ namespace Titan.ECS.Components
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => ref _components[_entityMap[entityId]];
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Has(uint entityId) => _entityMap[entityId] != -1;
     }
 }

@@ -1,32 +1,52 @@
 using Titan.Components;
 using Titan.ECS;
+using Titan.ECS.Components;
 using Titan.ECS.Systems;
 
 namespace Titan.Systems
 {
-    internal class Transform2DSystem : ComponentSystem<Transform2D>
+    /// <summary>
+    /// Transform2D with parents (single level)
+    /// </summary>
+    internal class Transform2DEntitySystem : EntitySystem
     {
-        public Transform2DSystem(IWorld world) 
+        private readonly IComponentMap<Transform2D> _transform;
+        private readonly IRelationship _relationship;
+
+        // TODO: Add support for sorting the entities based on parent count
+        public Transform2DEntitySystem(IWorld world) 
+            : base(world, world.EntityFilter().With<Transform2D>())
+        {
+            _transform = Map<Transform2D>();
+            _relationship = Relationship();
+        }
+
+        protected override void OnUpdate(float deltaTime, uint entityId)
+        {
+            ref var transform = ref _transform[entityId];
+            if (_relationship.TryGetParent(entityId, out var parentId) && _transform.Has(parentId))
+            {
+                transform.WorldPosition = transform.Position + _transform[parentId].WorldPosition;
+            }
+            else
+            {
+                transform.WorldPosition = transform.Position;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Transform2D without parents
+    /// </summary>
+    internal class Transform2DComponentSystem : ComponentSystem<Transform2D>
+    {
+        public Transform2DComponentSystem(IWorld world) 
             : base(world, true)
         {
         }
-
-                //ref var transform = ref _transform[entity];
-                //ref var relationship = ref _relationship[entity];
-                //if(_transform.Exists(relationship.Parent))
-                //{
-                //    ref var parentTransform = ref _transform[relationship.Parent];
-                //    transform.WorldPosition = transform.Position + parentTransform.Position;
-                //}
-                //else
-                //{
-                //    transform.WorldPosition = transform.Position;
-                //}
-
+        
         protected override void OnUpdate(float deltaTime, ref Transform2D component)
         {
-            // TODO: relationships.. DOh
-            
             component.WorldPosition = component.Position;
         }
     }

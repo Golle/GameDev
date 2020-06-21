@@ -17,7 +17,7 @@ namespace Titan.ECS
         private readonly uint[] _entities;
         private readonly int[] _mapping;
 
-        private int _count = 0;
+        private int _count;
         internal EntityFilter(uint maxEntities, uint maxEntitiesInFilter, Publisher publisher)
         {
             _publisher = publisher;
@@ -43,12 +43,10 @@ namespace Titan.ECS
 
         private void RemoveEntity(uint entityId)
         {
-            Console.WriteLine("Trying to remove entity");
             ref var index = ref _mapping[entityId];
             if (index != -1)
             {
                 _entities[index] = _entities[--_count];
-                Console.WriteLine("Entity removed");
             }
         }
 
@@ -65,12 +63,10 @@ namespace Titan.ECS
         {
             if (_withMask.IsSupsetOf(message.Components))
             {
-                Console.WriteLine("Trying to add entity");
                 ref var index = ref _mapping[message.EntityId];
                 if (index == -1)
                 {
                     _entities[index = _count++] = message.EntityId;
-                    Console.WriteLine("Entity added");
                 }
             }
         }

@@ -6,5 +6,6 @@ namespace Titan.ECS.Components
     {
         Span<T> AsSpan();
         ref T this[uint entityId] {get; }
+        bool Has(uint entityId);
     }
 }

@@ -12,5 +12,6 @@ namespace Titan.ECS
 
         EntityFilter EntityFilter(uint maxEntitiesInFilter = 0);
         internal IComponentMap<T> GetComponentMap<T>() where T : struct;
+        internal IRelationship GetRelationship();
     }
 }
