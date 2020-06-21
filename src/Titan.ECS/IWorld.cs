@@ -1,6 +1,7 @@
 using System;
 using Titan.ECS.Components;
 using Titan.ECS.Entities;
+using Titan.ECS.Messaging;
 
 namespace Titan.ECS
 {
@@ -8,10 +9,11 @@ namespace Titan.ECS
     {
         Entity CreateEntity();
 
-        internal uint MaxEntities { get; }
-
+        uint MaxEntities { get; }
+        uint Id { get; }
         EntityFilter EntityFilter(uint maxEntitiesInFilter = 0);
         internal IComponentMap<T> GetComponentMap<T>() where T : struct;
         internal IRelationship GetRelationship();
+        internal IDisposable Subscribe<T>(MessageHandler<T> messageHandler) where T : struct;
     }
 }

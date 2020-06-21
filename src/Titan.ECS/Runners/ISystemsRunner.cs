@@ -1,4 +1,4 @@
-namespace Titan.ECS.Systems
+namespace Titan.ECS.Runners
 {
     public interface ISystemsRunner
     {

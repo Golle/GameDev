@@ -5,9 +5,15 @@ using Titan.Graphics.Textures;
 namespace Titan.Components
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct Sprite
+    public struct Texture2D
     {
         public ITexture2D Texture;
+    }
+
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct Sprite
+    {
         public TextureCoordinates TextureCoordinates;
 
         public Color Color;

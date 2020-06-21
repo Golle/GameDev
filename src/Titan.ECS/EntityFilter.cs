@@ -35,7 +35,7 @@ namespace Titan.ECS
             
             return this;
         }
-
+        
         private void EntityDestroyed(in EntityDestroyedMessage message)
         {
             RemoveEntity(message.Id);

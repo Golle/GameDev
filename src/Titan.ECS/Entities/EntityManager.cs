@@ -60,8 +60,8 @@ namespace Titan.ECS.Entities
                 }
             }
             //Console.WriteLine($"Freeing entity: {entityId}");
-            _idDispatcher.Free(entityId);
             _publisher.Publish(new EntityDestroyedMessage(entityId));
+            _idDispatcher.Free(entityId);
         }
 
         // Attach a child entity to a parent
@@ -125,6 +125,5 @@ namespace Titan.ECS.Entities
             parentId = info.Parent;
             return info.HasParent;
         }
-
     }
 }

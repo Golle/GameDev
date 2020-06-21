@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using Titan.ECS.Components;
 using Titan.ECS.Entities;
@@ -8,19 +9,15 @@ namespace Titan.ECS
 {
     internal class World : IWorld
     {
-        internal uint Id { get; }
-
         private readonly EntityManager _entityManager;
         private readonly ComponentManager _componentManager;
         private readonly Publisher _publisher;
-
-        private readonly uint _maxEntities;
-        uint IWorld.MaxEntities => _maxEntities;
-
+        public uint MaxEntities { get; }
+        public uint Id { get; }
         internal World(WorldConfiguration configuration)
         {
             Id = Worlds.AddWorld(this);
-            _maxEntities = configuration.MaxEntities;
+            MaxEntities = configuration.MaxEntities;
             
             _publisher = new Publisher(Id);
 
@@ -47,8 +44,8 @@ namespace Titan.ECS
         public void RemoveComponent<T>(in uint entityId) where T : struct
         {
             var components = _entityManager.GetInfo(entityId).Components ^= ComponentId<T>.Id;
-            _componentManager.Remove<T>(entityId);
             _publisher.Publish(new ComponentRemovedMessage<T>(entityId, components));
+            _componentManager.Remove<T>(entityId);
         }
 
         public void AddComponent<T>(in uint entityId, in T value = default) where T : struct
@@ -66,16 +63,14 @@ namespace Titan.ECS
 
         public EntityFilter EntityFilter(uint maxEntitiesInFilter)
         {
-            if (maxEntitiesInFilter == 0)
-            {
-                maxEntitiesInFilter = _maxEntities;
-            }
-            return new EntityFilter(_maxEntities, maxEntitiesInFilter, _publisher);
+            return new EntityFilter(MaxEntities, maxEntitiesInFilter == 0 ? MaxEntities : maxEntitiesInFilter, _publisher);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         IComponentMap<T> IWorld.GetComponentMap<T>() where T : struct => _componentManager.Map<T>();
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         IRelationship IWorld.GetRelationship() => _entityManager;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        IDisposable IWorld.Subscribe<T>(MessageHandler<T> messageHandler) => _publisher.Subscribe(messageHandler);
     }
 }

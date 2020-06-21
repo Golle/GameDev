@@ -1,6 +1,7 @@
 using System;
+using Titan.ECS.Systems;
 
-namespace Titan.ECS.Systems
+namespace Titan.ECS.Runners
 {
     public class SynchronousSystemsRunner : ISystemsRunner
     {

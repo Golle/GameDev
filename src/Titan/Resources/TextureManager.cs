@@ -1,47 +1,35 @@
-using System.Collections.Generic;
+using System;
+using Titan.Components;
+using Titan.ECS.Entities;
+using Titan.ECS.Systems;
 using Titan.Graphics.Textures;
 
 namespace Titan.Resources
 {
-    internal class TextureManager : ITextureManager
+    internal class TextureManager : ResourceManager<string, ITexture2D>, ITextureManager
     {
         private readonly ITextureLoader _textureLoader;
-        private readonly IDictionary<string, ITexture2D> _loadedTextures = new Dictionary<string, ITexture2D>();
         
         public TextureManager(ITextureLoader textureLoader)
         {
             _textureLoader = textureLoader;
         }
 
-        public ITexture2D GetTexture(string filename)
+        protected override ITexture2D Load(in string identifier)
         {
-            if (_loadedTextures.TryGetValue(filename, out var texture))
-            {
-                return texture;
-            }
-            return _loadedTextures[filename] = _textureLoader.LoadTexture(filename);
+            Console.WriteLine($"Texture: {identifier} loaded");
+            return _textureLoader.LoadTexture(identifier);
         }
 
-        public void ReleaseTexture(string filename)
+        protected override void Unload(ITexture2D resource)
         {
-            if (_loadedTextures.Remove(filename, out var texture))
-            {
-                texture.Dispose();
-            }
+            Console.WriteLine($"Texture unloaded");
+            resource.Dispose();
         }
 
-        public void ReleaseAll()
+        protected override void OnLoaded(Entity entity, ITexture2D resource)
         {
-            foreach (var texture in _loadedTextures.Values)
-            {
-                texture.Dispose();
-            }
-            _loadedTextures.Clear();
-        }
-
-        public void Dispose()
-        {
-            ReleaseAll();
+            entity.AddComponent(new Texture2D{Texture = resource});
         }
     }
 }

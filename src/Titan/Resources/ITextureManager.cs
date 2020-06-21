@@ -1,12 +1,10 @@
 using System;
-using Titan.Graphics.Textures;
+using Titan.ECS;
 
 namespace Titan.Resources
 {
-    public interface ITextureManager : IDisposable
+    public interface ITextureManager
     {
-        ITexture2D GetTexture(string filename);
-        void ReleaseTexture(string filename);
-        void ReleaseAll();
+        void Manage(IWorld world);
     }
 }
