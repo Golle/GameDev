@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Numerics;
 using Titan.Components;
 using Titan.Configuration;
@@ -13,10 +12,11 @@ using Titan.Core.Logging;
 using Titan.Core.Math;
 using Titan.D3D11;
 using Titan.ECS;
-using Titan.ECS.Entities;
 using Titan.ECS.Runners;
 using Titan.ECS.Systems;
 using Titan.Graphics;
+using Titan.Graphics.Layout;
+using Titan.Graphics.Shaders;
 using Titan.Graphics.Textures;
 using Titan.Resources;
 using Titan.Systems;
@@ -83,13 +83,19 @@ namespace Titan
             _container
                 .RegisterSingleton(display.Device)
                 .RegisterSingleton(display.Window);
+
+
             
-            var textureManager = GetInstance<ITextureManager>();
+
+            
 
             var (world, systemsRummer) = CreateWorld();
-            
-            // Set the texture manager as a handler for the world
-            textureManager.Manage(world);
+
+            // Set the resource managers as a handler for the world
+            foreach (var resourceManager in _container.GetAll<IResourceManager>())
+            {
+                resourceManager.Manage(world);
+            }
 
             _container.GetInstance<IEventManager>()
                 .Subscribe((in UpdateEvent @event) => systemsRummer.Update(@event.ElapsedTime));
@@ -99,12 +105,15 @@ namespace Titan
             parentEntity.AddComponent(new Transform2D { Position = new Vector2(1920 / 2f, 1080 / 2f) });
             
             var random = new Random();
-            for (var i = 0; i < 1; ++i) 
-            {
+            //for (var i = 0; i < 1; ++i) 
+            //{
                 var entity1 = world.CreateEntity();
                 entity1.AddComponent(new TransformRect { Position = new Vector3(600, 200, 0), Size = new Size(100) });
                 entity1.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Color = new Color(1, 1, 1) });
                 entity1.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\link.png"));
+                
+                entity1.AddComponent(new Resource<(string, VertexLayout), (IVertexShader, IInputLayout)>(("Shaders/VertexShader.cso", ColoredVertex.VertexLayout)));
+                entity1.AddComponent(new Resource<string, IPixelShader>("Shaders/PixelShader.cso"));
 
                 for (var j = 0; j < 2; ++j)
                 {
@@ -115,7 +124,7 @@ namespace Titan
                     entity3.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\link.png"));
                     parentEntity.Attach(entity3);
                 }
-            }    
+            //}    
                 
             var engine = _container.GetInstance<GameEngine>();
             
@@ -141,6 +150,7 @@ namespace Titan
                     if (count == -300)
                     {
                         parentEntity.Destroy();
+                        entity1.Destroy();
                     }
                 
 
@@ -156,6 +166,7 @@ namespace Titan
 
         }
 
+
         private (IWorld world, ISystemsRunner systemsRummer) CreateWorld()
         {
             var world = new WorldBuilder(maxEntities: 100000, defaultComponentPoolSize: 100000)
@@ -164,8 +175,13 @@ namespace Titan
                 .WithComponent<Velocity>()
                 .WithComponent<Sprite>()
                 .WithComponent<Camera>(10)
+                // TODO: Add a better way to handle resources
                 .WithComponent<Resource<string, ITexture2D>>()
+                .WithComponent<Resource<string, IPixelShader>>()
+                .WithComponent<Resource<(string, VertexLayout), (IVertexShader, IInputLayout)>>()
                 .WithComponent<Texture2D>()
+                .WithComponent<VertexShader>()
+                .WithComponent<PixelShader>()
                 .Build();
 
             var systemsRummer = new SystemsRunnerBuilder(world, _container.CreateChildContainer())

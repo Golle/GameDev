@@ -11,7 +11,9 @@ namespace Titan
             container
                 .Register<IEngineConfigurationHandler, EngineConfigurationHandler>()
 
-                .Register<ITextureManager, TextureManager>()
+                .Register<TextureManager>()
+                .Register<PixelShaderManager>()
+                .Register<VertexShaderManager>()
                 ;
         }
     }

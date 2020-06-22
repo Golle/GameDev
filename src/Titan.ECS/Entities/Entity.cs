@@ -27,6 +27,10 @@ namespace Titan.ECS.Entities
         public void AddComponent<T>(in T value) where T : struct => Worlds.AddComponent<T>(WorldId, Id, value);
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RemoveComponent<T>() where T : struct => Worlds.RemoveComponent<T>(WorldId, Id);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool HasComponent<T>() where T : struct => Worlds.HasComponent<T>(WorldId, Id);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ref T GetComponent<T>() where T : struct => ref Worlds.GetComponent<T>(WorldId, Id);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Attach(in Entity entity) => Worlds.AttachEntity(WorldId, Id, entity.Id);

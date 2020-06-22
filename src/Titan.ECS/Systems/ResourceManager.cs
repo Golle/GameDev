@@ -6,7 +6,8 @@ using Titan.ECS.Messaging.Messages;
 
 namespace Titan.ECS.Systems
 {
-    public abstract class ResourceManager<TIdentifier, TResource> // TODO: do we need a Dispose function?
+    public abstract class ResourceManager<TIdentifier, TResource> : IResourceManager
+        // TODO: do we need a Dispose function?
     {
         private readonly IDictionary<TIdentifier, LoadedResource> _loadedResources = new Dictionary<TIdentifier, LoadedResource>();
         

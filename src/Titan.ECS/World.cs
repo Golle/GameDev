@@ -72,5 +72,9 @@ namespace Titan.ECS
         IRelationship IWorld.GetRelationship() => _entityManager;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         IDisposable IWorld.Subscribe<T>(MessageHandler<T> messageHandler) => _publisher.Subscribe(messageHandler);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool HasComponent<T>(uint entityId) where T : struct => _componentManager.Map<T>().Has(entityId);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ref T GetComponent<T>(uint entityId) where T : struct => ref _componentManager.Map<T>()[entityId];
     }
 }

@@ -6,7 +6,7 @@ using Titan.Graphics.Textures;
 
 namespace Titan.Resources
 {
-    internal class TextureManager : ResourceManager<string, ITexture2D>, ITextureManager
+    internal class TextureManager : ResourceManager<string, ITexture2D>
     {
         private readonly ITextureLoader _textureLoader;
         

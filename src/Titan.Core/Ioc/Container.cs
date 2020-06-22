@@ -140,7 +140,7 @@ namespace Titan.Core.Ioc
             var type = typeof(T);
             var parentObjects = _parentContainer?.GetAll<T>() ?? Enumerable.Empty<T>();
             return _containerObjects
-                .Where(r => type.IsAssignableFrom(r.Key) || type.IsAssignableFrom(r.Value.RegisteredObject.ConcreteType))
+                .Where(r => type.IsAssignableFrom(r.Key) || (r.Value.RegisteredObject != null && type.IsAssignableFrom(r.Value.RegisteredObject.ConcreteType)))
                 .Select(r => GetOrCreateInstance(r.Value))
                 .Cast<T>()
                 .Concat(parentObjects);
