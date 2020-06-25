@@ -21,13 +21,13 @@ namespace Titan.Resources
             return _textureLoader.LoadTexture(identifier);
         }
 
-        protected override void Unload(ITexture2D resource)
+        protected override void Unload(in string identifier, ITexture2D resource)
         {
-            Console.WriteLine($"Texture unloaded");
+            Console.WriteLine($"Texture {identifier} unloaded");
             resource.Dispose();
         }
 
-        protected override void OnLoaded(Entity entity, ITexture2D resource)
+        protected override void OnLoaded(Entity entity, in string identifier, ITexture2D resource)
         {
             entity.AddComponent(new Texture2D{Texture = resource});
         }

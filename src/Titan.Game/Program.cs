@@ -1,4 +1,5 @@
 using System;
+using Titan.Core.Assets.WavefrontObj;
 using Titan.Core.Ioc;
 
 namespace Titan.Game
@@ -15,6 +16,12 @@ namespace Titan.Game
         protected override void OnInitialize(IContainer container)
         {
             _test = container.GetInstance<MyTestClass>();
+
+            
+            var result = container.GetInstance<IObjLoader>()
+                    .LoadFromFile(@"F:\Git\GameDev\resources\cottage_obj.obj")
+                ;
+
 
             //new EntityTestClass().Run(container);
         }

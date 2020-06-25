@@ -40,7 +40,7 @@ namespace Titan.ECS.Systems
                 {
                     if (--loadedResource.References <= 0)
                     {
-                        Unload(loadedResource.Value);
+                        Unload(resource.Identifier, loadedResource.Value);
                         _loadedResources.Remove(resource.Identifier);
                     }
                 }
@@ -61,13 +61,13 @@ namespace Titan.ECS.Systems
                     loadedResource = _loadedResources[resource.Identifier] = new LoadedResource(Load(resource.Identifier));
                 }
             }
-            OnLoaded(new Entity(entityId, worldId), loadedResource.Value);
+            OnLoaded(new Entity(entityId, worldId), resource.Identifier, loadedResource.Value);
         }
 
 
         protected abstract TResource Load(in TIdentifier identifier);
-        protected virtual void Unload(TResource resource) => (resource as IDisposable)?.Dispose();
-        protected abstract void OnLoaded(Entity entity, TResource resource);
+        protected virtual void Unload(in TIdentifier identifier, TResource resource) => (resource as IDisposable)?.Dispose();
+        protected abstract void OnLoaded(Entity entity, in TIdentifier identifier, TResource resource);
 
         private class LoadedResource
         {

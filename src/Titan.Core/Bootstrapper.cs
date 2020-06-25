@@ -1,4 +1,4 @@
-using Titan.Core.Assets.Images;
+using Titan.Core.Assets;
 using Titan.Core.Common;
 using Titan.Core.Configuration;
 using Titan.Core.EventSystem;
@@ -13,6 +13,8 @@ namespace Titan.Core
         public static IContainer CreateContainer()
         {
             return new Container()
+
+                    .AddRegistry<AssetsRegistry>()
 
                     // Core functions
                     .Register<IDateTime, DateTimeWrapper>()
@@ -34,7 +36,6 @@ namespace Titan.Core
                     .Register<IGameLoop, BasicGameLoop>()
 
 
-                    .Register<IImageLoader, ImageLoader>()
                 ;
 
         }

@@ -178,7 +178,7 @@ namespace Titan
                 // TODO: Add a better way to handle resources
                 .WithComponent<Resource<string, ITexture2D>>()
                 .WithComponent<Resource<string, IPixelShader>>()
-                .WithComponent<Resource<(string, VertexLayout), (IVertexShader, IInputLayout)>>()
+                //.WithComponent<Resource<VertexShaderInfo, (IVertexShader, IInputLayout)>>()
                 .WithComponent<Texture2D>()
                 .WithComponent<VertexShader>()
                 .WithComponent<PixelShader>()

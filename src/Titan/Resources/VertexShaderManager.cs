@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using Titan.Components;
 using Titan.Core.Logging;
 using Titan.ECS.Entities;
@@ -10,7 +10,17 @@ using Titan.Graphics.Shaders;
 
 namespace Titan.Resources
 {
-    internal class VertexShaderManager : ResourceManager<(string filename, VertexLayout vertexLayout), (IVertexShader vertexShader, IInputLayout inputLayout)>
+
+    public enum InputLayoutTypes
+    {
+        ColoredVertex
+    }
+
+    // TODO: this is a bad design, should create another layer of abstraction with its own handling of internal D3D11 stuff like InputLayout, Shaders 
+    // Maybe something like Model3DManager : ResourceManager<string, IModel3D>
+    // MaterialManager : ResourceManager<string, IMaterial>
+    // Which uses underlying managers for loading and compiling shaders, input layouts, textures etc.
+    internal class VertexShaderManager : ResourceManager<string, IVertexShader>
     {
         private readonly IBlobReader _blobReader;
         private readonly IDevice _device;
@@ -23,26 +33,24 @@ namespace Titan.Resources
             _logger = logger;
         }
 
-        protected override (IVertexShader vertexShader, IInputLayout inputLayout) Load(in (string filename, VertexLayout vertexLayout) resource)
+        protected override IVertexShader Load(in string filename)
         {
-            _logger.Debug("Loading VertexShader from {0}", resource.filename);
+            _logger.Debug("Loading VertexShader from {0}", filename);
 
-            var vertexShaderBlob = _blobReader.ReadFromFile(resource.filename);
-            var vertexShader = _device.CreateVertexShader(vertexShaderBlob);
-            var inputLayout = _device.CreateInputLayout(resource.vertexLayout, vertexShaderBlob);
-
-            return (vertexShader, inputLayout);
+            using var vertexShaderBlob = _blobReader.ReadFromFile(filename);
+            return _device.CreateVertexShader(vertexShaderBlob);
         }
 
-        protected override void OnLoaded(Entity entity, (IVertexShader vertexShader, IInputLayout inputLayout) resource)
+        protected override void Unload(in string identifier, IVertexShader vertexShader)
         {
-            entity.AddComponent(new VertexShader {InputLayout = resource.inputLayout, Shader = resource.vertexShader});
+            _logger.Debug("Unloading resource at {0}", identifier);
+            vertexShader.Dispose();
         }
-        protected override void Unload((IVertexShader vertexShader, IInputLayout inputLayout) resource)
+
+        protected override void OnLoaded(Entity entity, in string identifier, IVertexShader vertexShader)
         {
-            _logger.Debug("Unloading VertexShader");
-            resource.inputLayout.Dispose();
-            resource.vertexShader.Dispose();
+            entity.AddComponent(new VertexShader { Shader = vertexShader });
+
         }
     }
 }

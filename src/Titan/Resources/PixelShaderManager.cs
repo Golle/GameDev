@@ -29,13 +29,13 @@ namespace Titan.Resources
             return _device.CreatePixelShader(blob);
         }
 
-        protected override void Unload(IPixelShader resource)
+        protected override void Unload(in string fileName, IPixelShader resource)
         {
-            _logger.Debug("Unloading PixelShader");
+            _logger.Debug($"Unloading PixelShader {fileName}");
             resource.Dispose();
         }
 
-        protected override void OnLoaded(Entity entity, IPixelShader pixelShader)
+        protected override void OnLoaded(Entity entity, in string filename, IPixelShader pixelShader)
         {
             entity.AddComponent(new PixelShader { Shader = pixelShader});
         }
