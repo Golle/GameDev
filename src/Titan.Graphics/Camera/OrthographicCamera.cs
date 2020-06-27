@@ -23,6 +23,11 @@ namespace Titan.Graphics.Camera
         {
         }
 
+        public void RotateY(float radians)
+        {
+            throw new NotImplementedException();
+        }
+
         public OrthographicCamera(IEventManager eventManager, float left, float right, float bottom, float top)
         {
             _projection = Matrix4x4.CreateOrthographicOffCenter(left, right, bottom, top, -1f, 1f);

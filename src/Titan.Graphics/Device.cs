@@ -76,7 +76,7 @@ namespace Titan.Graphics
             desc.ByteWidth = (numberOfVertices * size);
             desc.StructureByteStride = size;
 
-            return new VertexBuffer<T>(_device.Context, _device.CreateBuffer(desc), size);
+            return new VertexBuffer<T>(_device.Context, _device.CreateBuffer(desc), size, 0);
         }
 
         public IVertexBuffer<T> CreateVertexBuffer<T>(in T[] initialData) where T : unmanaged
@@ -99,7 +99,7 @@ namespace Titan.Graphics
                 {
                     D3D11SubresourceData data = default;
                     data.pSysMem = initialDataPointer;
-                    return new VertexBuffer<T>(_device.Context, _device.CreateBuffer(desc, data), size);
+                    return new VertexBuffer<T>(_device.Context, _device.CreateBuffer(desc, data), size, (uint) initialData.Length);
                 }
             }
         }
@@ -241,6 +241,11 @@ namespace Titan.Graphics
         public void DrawIndexed(uint numberOfIndices, uint startIndexLocation, int baseVertexLocation)
         {
             _device.Context.DrawIndexed(numberOfIndices, startIndexLocation, baseVertexLocation);
+        }
+
+        public void Draw(uint vertexCount, uint startLocation)
+        {
+            _device.Context.Draw(vertexCount, startLocation);
         }
 
         private static void CheckAlignment(uint bytes)

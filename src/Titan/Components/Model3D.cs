@@ -1,10 +1,11 @@
 using System.Runtime.InteropServices;
+using Titan.Graphics.Models;
 
 namespace Titan.Components
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct Mesh
+    internal struct Model3D
     {
-        public string Filename;
+        public IMesh Mesh;
     }
 }

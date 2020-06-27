@@ -24,5 +24,6 @@ namespace Titan.Graphics
         void BeginRender();
         void EndRender();
         void DrawIndexed(uint numberOfIndices, uint startIndexLocation, int baseVertexLocation);
+        void Draw(uint vertexCount, uint startLocation);
     }
 }

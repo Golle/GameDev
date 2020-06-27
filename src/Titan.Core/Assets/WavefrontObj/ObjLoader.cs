@@ -41,7 +41,7 @@ namespace Titan.Core.Assets.WavefrontObj
                     case ObjTypes.Vertex: vertices.Add(_vertexParser.Parse(objLine.Value));break;
                     case ObjTypes.Normal: normals.Add(_normalParser.Parse(objLine.Value));break;
                     case ObjTypes.Texture: textures.Add(_textureParser.Parse(objLine.Value));break;
-                    case ObjTypes.Face: faces.AddRange(_faceParser.Parse(objLine.Value));break;
+                    case ObjTypes.Face: faces.Add(new Face(_faceParser.Parse(objLine.Value)));break;
                     //TODO: Add support for Objects, Groups, Materials, Lights
                     default: 
                         _logger.Debug("Unknown type: {0} value: {1}", objLine.Type, objLine.Value);

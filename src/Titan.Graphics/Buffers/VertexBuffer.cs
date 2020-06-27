@@ -5,15 +5,18 @@ namespace Titan.Graphics.Buffers
 {
     internal class VertexBuffer<T> : IVertexBuffer<T> where T: unmanaged
     {
+        public uint NumberOfVertices { get; private set; }
         private readonly ID3D11DeviceContext _context;
         private readonly ID3D11Buffer _buffer;
         private readonly uint _strides;
 
-        public VertexBuffer(ID3D11DeviceContext context, ID3D11Buffer buffer, uint strides)
+
+        public VertexBuffer(ID3D11DeviceContext context, ID3D11Buffer buffer, uint strides, uint length)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _buffer = buffer ?? throw new ArgumentNullException(nameof(buffer));
             _strides = strides;
+            NumberOfVertices = length;
         }
 
         public void Bind()

@@ -1,11 +1,11 @@
-namespace Titan.Core.Assets.WavefrontObj
+namespace Titan.Core.Assets
 {
-    public readonly struct Face
+    public readonly struct FaceElement
     {
         public readonly int Vertex;
         public readonly int Texture;
         public readonly int Normal;
-        public Face(int vertex, int texture, int normal)
+        public FaceElement(int vertex, int texture, int normal)
         {
             Vertex = vertex;
             Texture = texture;

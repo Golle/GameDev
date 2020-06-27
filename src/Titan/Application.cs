@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Numerics;
 using Titan.Components;
 using Titan.Configuration;
@@ -15,10 +14,8 @@ using Titan.ECS;
 using Titan.ECS.Runners;
 using Titan.ECS.Systems;
 using Titan.Graphics;
-using Titan.Graphics.Layout;
-using Titan.Graphics.Shaders;
+using Titan.Graphics.Models;
 using Titan.Graphics.Textures;
-using Titan.Resources;
 using Titan.Systems;
 using Titan.Systems.Rendering;
 using Titan.Windows;
@@ -85,9 +82,6 @@ namespace Titan
                 .RegisterSingleton(display.Window);
 
 
-            
-
-            
 
             var (world, systemsRummer) = CreateWorld();
 
@@ -102,29 +96,45 @@ namespace Titan
 
 
             var parentEntity = world.CreateEntity();
-            parentEntity.AddComponent(new Transform2D { Position = new Vector2(1920 / 2f, 1080 / 2f) });
+            parentEntity.AddComponent(new Transform2D { Position = new Vector2(1920 / 2f, 1080 / 2f) }); 
             
             var random = new Random();
-            //for (var i = 0; i < 1; ++i) 
-            //{
-                var entity1 = world.CreateEntity();
-                entity1.AddComponent(new TransformRect { Position = new Vector3(600, 200, 0), Size = new Size(100) });
-                entity1.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Color = new Color(1, 1, 1) });
-                entity1.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\link.png"));
-                
-                entity1.AddComponent(new Resource<(string, VertexLayout), (IVertexShader, IInputLayout)>(("Shaders/VertexShader.cso", ColoredVertex.VertexLayout)));
-                entity1.AddComponent(new Resource<string, IPixelShader>("Shaders/PixelShader.cso"));
+        
+            var entity1 = world.CreateEntity();
+            entity1.AddComponent(new TransformRect { Position = new Vector3(600, 200, 0), Size = new Size(100) });
+            entity1.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Color = new Color(1, 1, 1) });
+            entity1.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\link.png"));
+            
+            //entity1.AddComponent(new Resource<(string, VertexLayout), (IVertexShader, IInputLayout)>(("Shaders/VertexShader.cso", ColoredVertex.VertexLayout)));
+            //entity1.AddComponent(new Resource<string, IPixelShader>("Shaders/PixelShader.cso"));
 
-                for (var j = 0; j < 2; ++j)
-                {
-                    var entity3 = world.CreateEntity();
-                    entity3.AddComponent(new Transform2D { Position = Vector2.Zero, Scale = Vector2.One });
-                    entity3.AddComponent(new Velocity { Value = new Vector3(random.Next(-5000, 5000) / 100f, random.Next(-5000, 5000) / 100f, 0) });
-                    entity3.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Color = new Color(1, 1, 1) });
-                    entity3.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\link.png"));
-                    parentEntity.Attach(entity3);
-                }
-            //}    
+            for (var j = 0; j < 2; ++j)
+            {
+                var entity3 = world.CreateEntity();
+                entity3.AddComponent(new Transform2D { Position = Vector2.Zero, Scale = Vector2.One });
+                entity3.AddComponent(new Velocity { Value = new Vector3(random.Next(-5000, 5000) / 100f, random.Next(-5000, 5000) / 100f, 0) });
+                entity3.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Color = new Color(1, 1, 1) });
+                entity3.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\link.png"));
+                parentEntity.Attach(entity3);
+            }
+
+            {
+                var entity = world.CreateEntity();
+                entity.AddComponent(new Transform3D { Position =new Vector3(0, -1, 0), Scale = Vector3.One });
+                //entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\thor hammer.obj"));
+                entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\untitled3.obj"));
+                //entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\untitled2.obj"));
+                //entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\cottage_obj.obj"));
+                entity.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\cottage_diffuse.png"));
+            }
+            
+            {
+                var entity = world.CreateEntity();
+                entity.AddComponent(new Transform3D { Position =new Vector3(0, 1, 0), Scale = new Vector3(2f) });
+                entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\untitled2.obj"));
+                entity.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\cottage_diffuse.png"));
+                entity.AddComponent(new Velocity{Value = new Vector3(0, -0.4f, 0)});
+            }
                 
             var engine = _container.GetInstance<GameEngine>();
             
@@ -171,24 +181,31 @@ namespace Titan
         {
             var world = new WorldBuilder(maxEntities: 100000, defaultComponentPoolSize: 100000)
                 .WithComponent<Transform2D>()
+                .WithComponent<Transform3D>()
                 .WithComponent<TransformRect>()
                 .WithComponent<Velocity>()
                 .WithComponent<Sprite>()
                 .WithComponent<Camera>(10)
+                .WithComponent<Model3D>()
+                .WithComponent<Texture2D>()
+
                 // TODO: Add a better way to handle resources
                 .WithComponent<Resource<string, ITexture2D>>()
-                .WithComponent<Resource<string, IPixelShader>>()
-                //.WithComponent<Resource<VertexShaderInfo, (IVertexShader, IInputLayout)>>()
-                .WithComponent<Texture2D>()
-                .WithComponent<VertexShader>()
-                .WithComponent<PixelShader>()
+                .WithComponent<Resource<string, IMesh>>()
+                
+                
+                //.WithComponent<VertexShader>()
+                //.WithComponent<PixelShader>()
                 .Build();
 
             var systemsRummer = new SystemsRunnerBuilder(world, _container.CreateChildContainer())
                 .WithSystem<MovementSystem2D>()
                 .WithSystem<Transform2DEntitySystem>()
-                .WithSystem<SpriteRenderSystem>()
-                .WithSystem<UIRenderSystem>()
+                .WithSystem<Model3DRenderSystem>()
+                .WithSystem<Transform3DEntitySystem>()
+                .WithSystem<MovementSystem3D>()
+                //.WithSystem<SpriteRenderSystem>()
+                //.WithSystem<UIRenderSystem>()
                 .Build();
                 //.WithSystem<MovementSystem2D>();
 

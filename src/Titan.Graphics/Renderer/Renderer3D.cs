@@ -13,6 +13,7 @@ namespace Titan.Graphics.Renderer
     internal struct ConstantBufferValues
     {
         public Matrix4x4 ViewProjection;
+        public Matrix4x4 ModelSpace;
     }
 
     internal class Renderer3D : IRenderer

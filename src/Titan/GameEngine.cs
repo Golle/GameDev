@@ -60,8 +60,8 @@ namespace Titan
 
             //_renderer.EndScene();
 
-            _spriteBatchRenderer.Flush();
-            _spriteBatchRenderer.Render();
+            //_spriteBatchRenderer.Flush();
+            //_spriteBatchRenderer.Render();
             
             return true;
         }

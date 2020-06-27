@@ -11,7 +11,8 @@ namespace Titan.Core.Assets
         {
 
             container
-
+                
+                .Register<IAssetLoader, AssetLoader>()
                 .Register<IImageLoader, ImageLoader>()
 
                 .Register<IObjLoader, ObjLoader>()

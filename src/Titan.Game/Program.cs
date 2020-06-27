@@ -17,13 +17,6 @@ namespace Titan.Game
         {
             _test = container.GetInstance<MyTestClass>();
 
-            
-            var result = container.GetInstance<IObjLoader>()
-                    .LoadFromFile(@"F:\Git\GameDev\resources\cottage_obj.obj")
-                ;
-
-
-            //new EntityTestClass().Run(container);
         }
 
         protected override void OnStart()

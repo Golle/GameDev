@@ -12,8 +12,9 @@ namespace Titan
                 .Register<IEngineConfigurationHandler, EngineConfigurationHandler>()
 
                 .Register<TextureManager>()
-                .Register<PixelShaderManager>()
-                .Register<VertexShaderManager>()
+                //.Register<PixelShaderManager>() // TODO: add support for this later
+                //.Register<VertexShaderManager>()
+                .Register<MeshManager>()
                 ;
         }
     }

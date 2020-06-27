@@ -1,7 +1,9 @@
+using Titan.Core.Assets;
 using Titan.Core.Ioc;
 using Titan.D3D11;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Camera;
+using Titan.Graphics.Models;
 using Titan.Graphics.Renderer;
 using Titan.Graphics.Stuff;
 using Titan.Graphics.Textures;
@@ -21,8 +23,8 @@ namespace Titan.Graphics
                 .Register<ICameraFactory, CameraFactory>()
                 .Register<IRenderer, Renderer3D>()
                 .Register<ISpriteBatchRenderer, SpriteBatchRenderer>()
-
-
+                
+                .Register<IMeshLoader, MeshLoader>()
                 .Register<ITextureLoader, TextureLoader>()
 
                 ;

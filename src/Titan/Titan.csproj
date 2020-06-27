@@ -15,11 +15,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Systems\MovementSystem3D.cs" />
     <Compile Remove="Systems\Rendering\D3D11ModelLoaderSystem.cs" />
     <Compile Remove="Systems\Rendering\D3D11Render3DSystem.cs" />
     <Compile Remove="Systems\Rendering\D3D11ShaderLoaderSystem.cs" />
-    <Compile Remove="Systems\Transform3DSystem.cs" />
   </ItemGroup>
 
   <ItemGroup>
