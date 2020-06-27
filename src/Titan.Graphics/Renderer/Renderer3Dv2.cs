@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Camera;
@@ -10,6 +11,14 @@ using Titan.Graphics.Textures;
 
 namespace Titan.Graphics.Renderer
 {
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ConstantBufferValues
+    {
+        public Matrix4x4 ViewProjection;
+        public Matrix4x4 ModelSpace;
+    }
+
+
     public class Renderer3Dv2 : IDisposable //: IRendererV2
     {
         private readonly IDevice _device;
@@ -18,6 +27,8 @@ namespace Titan.Graphics.Renderer
         private readonly IPixelShader _pixelShader;
         private readonly IInputLayout _inputLayout;
         private ICamera _camera;
+
+        private ISampler _sampler;
 
         public Renderer3Dv2(IDevice device, IBlobReader blobReader, ICameraFactory cameraFactory)
         {
@@ -36,12 +47,9 @@ namespace Titan.Graphics.Renderer
             _sampler = device.CreateSampler();
         }
 
-
-
         private float _rotationX = 0f;
         private float _rotationZ = 0f;
         private float _rotationY = 0f;
-        private ISampler _sampler;
 
         public void Render(IMesh mesh, in Matrix4x4 modelSpace, ITexture2D texture)
         {

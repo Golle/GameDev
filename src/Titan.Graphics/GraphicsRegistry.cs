@@ -21,7 +21,6 @@ namespace Titan.Graphics
                 .Register<IDisplayFactory, DisplayFactory>()
                 .Register<IBlobReader, BlobReader>()
                 .Register<ICameraFactory, CameraFactory>()
-                .Register<IRenderer, Renderer3D>()
                 .Register<ISpriteBatchRenderer, SpriteBatchRenderer>()
                 
                 .Register<IMeshLoader, MeshLoader>()
