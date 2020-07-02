@@ -1,19 +1,27 @@
-cbuffer CBuf
+cbuffer CBuf : register(b1)
 {
 	matrix transform;
 };
 
-struct VS_OUTPUT {
-	float2 Tex : TexCoord;
-	float4 Pos: SV_Position;
+
+struct VS_INPUT
+{
+    float2 Position : Position;
+    float2 Texture : Textures;
 };
 
-VS_OUTPUT main(float2 pos : Position, float2 tex: TexCoord)
+struct VS_OUTPUT 
+{
+    float2 Texture : Textures;
+	float4 Position: SV_Position;
+};
+
+VS_OUTPUT main(VS_INPUT input)
 {
 	VS_OUTPUT output;
 	
-	output.Pos = mul(float4(pos, 0.0f, 1.0f), transform);
-	output.Tex = tex;
+	output.Position = mul(float4(input.Position, 0.0f, 1.0f), transform);
+	output.Texture = input.Texture;
 
 	return output;
 }

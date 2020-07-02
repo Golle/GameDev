@@ -30,7 +30,7 @@ namespace Titan.Systems.Rendering
 
         protected override void OnPreUpdate()
         {
-            _device.BeginRender();
+            //_device.BeginRender();
             _renderer.Begin();
         }
 
@@ -45,7 +45,7 @@ namespace Titan.Systems.Rendering
         protected override void OnPostUpdate()
         {
             _renderer.End();
-            _device.EndRender();
+            //_device.EndRender();
         }
     }
 }

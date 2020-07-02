@@ -61,7 +61,7 @@ namespace Titan.Graphics.Renderer
             using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/PixelShader2D.cso");
             _pixelShader = device.CreatePixelShader(pixelShaderBlob);
 
-            _inputLayout = device.CreateInputLayout(new VertexLayout(2).Append("Position", VertexLayoutTypes.Position2D).Append("TexCoord", VertexLayoutTypes.Texture2D), vertexShaderBlob);
+            _inputLayout = device.CreateInputLayout(new VertexLayout(2).Append("Position", VertexLayoutTypes.Position2D).Append("Textures", VertexLayoutTypes.Texture2D), vertexShaderBlob);
             //_inputLayout = device.CreateInputLayout(new VertexLayout(2).Append("Position", VertexLayoutTypes.Position2D).Append("Color", VertexLayoutTypes.Float4Color), vertexShaderBlob);
 
         }
@@ -86,7 +86,7 @@ namespace Titan.Graphics.Renderer
         public void Push(ITexture2D texture2D, in Vector2 position, in Vector2 size, in Color color)
         {
             var textureIndex = GetTextureIndex(texture2D);
-            
+
 
             var index = _numberOfVertices;
 
@@ -134,8 +134,7 @@ namespace Titan.Graphics.Renderer
 
         public void Render()
         {
-            _device.BeginRender();
-
+            
             if (_numberOfIndices > 0u)
             {
                 _cameraBuffer.BindToVertexShader();
@@ -148,11 +147,9 @@ namespace Titan.Graphics.Renderer
                 _textures[0].Bind();
                 _blendState.Bind();
 
-
                 _device.DrawIndexed(_numberOfIndices, 0, 0);
                 
             }
-            _device.EndRender();
             _numberOfIndices = 0u;
             _numberOfTextures = 0u;
             _numberOfVertices = 0u;

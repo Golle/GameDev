@@ -23,6 +23,12 @@ namespace Titan.Systems.Rendering
             _texture = Map<Texture2D>();
         }
 
+        protected override void OnPostUpdate()
+        {
+            _spriteBatchRenderer.Flush();
+            _spriteBatchRenderer.Render();
+        }
+
         protected override void OnUpdate(float deltaTime, uint entityId)
         {
             ref var sprite = ref _sprite[entityId];

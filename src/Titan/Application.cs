@@ -92,11 +92,16 @@ namespace Titan
             }
 
             _container.GetInstance<IEventManager>()
-                .Subscribe((in UpdateEvent @event) => systemsRummer.Update(@event.ElapsedTime));
+                .Subscribe((in UpdateEvent @event) =>
+                {
+                    display.Device.BeginRender();
+                    systemsRummer.Update(@event.ElapsedTime);
+                    display.Device.EndRender();
+                });
 
 
-            var parentEntity = world.CreateEntity();
-            parentEntity.AddComponent(new Transform2D { Position = new Vector2(1920 / 2f, 1080 / 2f) }); 
+            //var parentEntity = world.CreateEntity();
+            //parentEntity.AddComponent(new Transform2D { Position = new Vector2(1920 / 2f, 1080 / 2f) }); 
             
             var random = new Random();
         
@@ -108,15 +113,15 @@ namespace Titan
             //entity1.AddComponent(new Resource<(string, VertexLayout), (IVertexShader, IInputLayout)>(("Shaders/VertexShader.cso", ColoredVertex.VertexLayout)));
             //entity1.AddComponent(new Resource<string, IPixelShader>("Shaders/PixelShader.cso"));
 
-            for (var j = 0; j < 2; ++j)
-            {
-                var entity3 = world.CreateEntity();
-                entity3.AddComponent(new Transform2D { Position = Vector2.Zero, Scale = Vector2.One });
-                entity3.AddComponent(new Velocity { Value = new Vector3(random.Next(-5000, 5000) / 100f, random.Next(-5000, 5000) / 100f, 0) });
-                entity3.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Color = new Color(1, 1, 1) });
-                entity3.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\link.png"));
-                parentEntity.Attach(entity3);
-            }
+            //for (var j = 0; j < 2; ++j)
+            //{
+            //    var entity3 = world.CreateEntity();
+            //    entity3.AddComponent(new Transform2D { Position = Vector2.Zero, Scale = Vector2.One });
+            //    entity3.AddComponent(new Velocity { Value = new Vector3(random.Next(-5000, 5000) / 100f, random.Next(-5000, 5000) / 100f, 0) });
+            //    entity3.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Color = new Color(1, 1, 1) });
+            //    entity3.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\link.png"));
+            //    parentEntity.Attach(entity3);
+            //}
 
             //{
             //    var entity = world.CreateEntity();
@@ -202,27 +207,28 @@ namespace Titan
             OnStart();
             var count = 300;
             _logger.Debug("Start main loop");
+            
             GetInstance<IGameLoop>()
                 .Run(() =>
                 {
                     var execute = engine.Execute();
 
-                    if (count-- == 0)
-                    {
-                        parentEntity.RemoveComponent<Transform2D>();
-                    }
+                    //if (count-- == 0)
+                    //{
+                    //    parentEntity.RemoveComponent<Transform2D>();
+                    //}
 
-                    if (count == -300)
-                    {
-                        parentEntity.AddComponent(new Transform2D {Position = new Vector2(1920 / 2f, 1080 / 2f)});
+                    //if (count == -300)
+                    //{
+                    //    parentEntity.AddComponent(new Transform2D {Position = new Vector2(1920 / 2f, 1080 / 2f)});
 
-                    }
+                    //}
 
-                    if (count == -300)
-                    {
-                        parentEntity.Destroy();
-                        entity1.Destroy();
-                    }
+                    //if (count == -300)
+                    //{
+                    //    parentEntity.Destroy();
+                    //    entity1.Destroy();
+                    //}
                 
 
                     return execute;
@@ -267,8 +273,8 @@ namespace Titan
                 .WithSystem<Transform3DEntitySystem>()
                 .WithSystem<MovementSystem3D>()
                 .WithSystem<LightSystem>()
-                //.WithSystem<SpriteRenderSystem>()
-                //.WithSystem<UIRenderSystem>()
+                .WithSystem<SpriteRenderSystem>()
+                .WithSystem<UIRenderSystem>()
                 .Build();
                 //.WithSystem<MovementSystem2D>();
 
