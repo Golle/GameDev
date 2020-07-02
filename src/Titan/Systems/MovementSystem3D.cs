@@ -24,6 +24,14 @@ namespace Titan.Systems
             if (velocity != Vector3.Zero)
             {
                 ref var transform = ref _transform[entityId];
+                if (transform.Position.X > 3f || transform.Position.X < -3f)
+                {
+                    velocity.X *= -1f;
+                }
+                if (transform.Position.Y > 3f || transform.Position.Y < -3f)
+                {
+                    velocity.Y *= -1f;
+                }
                 transform.Position += velocity * deltaTime;
             }
         }

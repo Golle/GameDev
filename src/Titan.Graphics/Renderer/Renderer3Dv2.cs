@@ -16,23 +16,25 @@ using Titan.Windows.Input;
 
 namespace Titan.Graphics.Renderer
 {
-
-    [StructLayout(LayoutKind.Explicit, Size = sizeof(float) * MaxLights * 3 * 2)]
+    // Make sure this is 16 byte aligned
+    [StructLayout(LayoutKind.Explicit, Size = 144)]
     internal struct LightsConstantBuffer
     {
-        private const int MaxLights = 4;
-        [FieldOffset(0)]
-        public unsafe fixed float LightPositions[MaxLights * 3];
+        public const int MaxLights = 4;
+        [FieldOffset(0)] // 16 bytes alignment (float4)
+        public unsafe fixed float LightPositions[MaxLights * 4];
+        
+        [FieldOffset(64)] // 16 bytes alignment (float4)
+        public unsafe fixed float LightColors[MaxLights * 4];
 
-        // Make sure this is 16 byte aligned
-        [FieldOffset(48)]
-        public unsafe fixed float LightColors[MaxLights * 3];
+        [FieldOffset(128)] 
+        public uint NumberOfLights;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetLightPosition(uint index, in Vector3 position)
         {
             Debug.Assert(index < MaxLights, $"Index is out of range. Max lights: {MaxLights}");
-            var parameter = index * 3;
+            var parameter = index * 4;
             unsafe
             {
                 LightPositions[parameter] = position.X;
@@ -44,7 +46,7 @@ namespace Titan.Graphics.Renderer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetLightColor(uint index, in Color color)
         {
-            var parameter = index * 3;
+            var parameter = index * 4;
             unsafe
             {
                 LightColors[parameter] = color.Red;
@@ -88,9 +90,9 @@ namespace Titan.Graphics.Renderer
         private readonly IInputLayout _inputLayout;
         private ICamera _camera;
 
-        private ISampler _sampler;
+        private readonly ISampler _sampler;
 
-        private List<(Vector3 position, Color color)> _lights = new List<(Vector3 position, Color color)>();
+        private readonly List<(Vector3 position, Color color)> _lights = new List<(Vector3 position, Color color)>();
 
         public Renderer3Dv2(IDevice device, IBlobReader blobReader, ICameraFactory cameraFactory, IInputManager inputManager)
         {
@@ -118,17 +120,18 @@ namespace Titan.Graphics.Renderer
 
         public void Begin()
         {
-            // Ypdate per frame cbuffer
-
-            //if (_lights.Count > 0)
-            //{
-            //    var (position, color) = _lights[0];
-            //    //cb.LightColor = color;
-            //    cb.LightPosition = new Vector4(position, 1f);
-            //}
-
             _perFrameConstantBuffer.Update(new PerFrameContantBuffer {ViewProjection = _camera.ViewProjection, View = _camera.View});
             _perFrameConstantBuffer.BindToVertexShader(PerFrameSlot);
+
+            LightsConstantBuffer lights;
+            lights.NumberOfLights = Math.Min((uint)_lights.Count, LightsConstantBuffer.MaxLights);
+            for (var i = 0u; i < lights.NumberOfLights; ++i)
+            {
+                var (position, color) = _lights[(int) i];
+                lights.SetLightColor(i, color);
+                lights.SetLightPosition(i, position);
+            }
+            _lightsConstantBuffer.Update(lights);
             _lightsConstantBuffer.BindToPixelShader(0);
         }
 
@@ -165,14 +168,6 @@ namespace Titan.Graphics.Renderer
 
             _perObjectConstantBuffer.Update(new PerObjectContantBuffer {World = worldMatrix});
 
-            //for (var i = 0; i < _lights.Count; i++)
-            //{
-            //    cb.SetLightPosition((uint) i, _lights[i].position);
-            //    cb.SetLightColor((uint) i, _lights[i].color);
-            //}
-
-            //_constantBuffer.Update(cb);
-
             mesh.VertexBuffer.Bind();
             //mesh.IndexBuffer.Bind();
             _sampler.Bind();
@@ -193,6 +188,7 @@ namespace Titan.Graphics.Renderer
         public void End()
         {
             // noop
+            _lights.Clear();
         }
 
         public void Dispose()
@@ -208,11 +204,7 @@ namespace Titan.Graphics.Renderer
 
         public void SubmitLight(in Color color, in Vector3 position)
         {
-            if (_lights.Count <= 0)
-            {
-                _lights.Add((position, color));
-            }
-            
+            _lights.Add((position, color));
         }
     }
 

@@ -162,14 +162,40 @@ namespace Titan
                 sphere.AddComponent(new Transform3D { Position = new Vector3(0, 3f, 2f), Scale = new Vector3(1f) });
                 sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\cube.obj"));
                 sphere.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\red.png"));
+            } 
+            
+            {
+                var sphere = world.CreateEntity();
+                sphere.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 7f), Scale = new Vector3(10f, 10f, 1f) });
+                sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\cube.obj"));
+                sphere.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\blue.png"));
             }
 
             {
                 var light = world.CreateEntity();
                 light.AddComponent(new Light{Color = new Color(1, 1f, 1f)});
-                light.AddComponent(new Transform3D { Position = new Vector3(0, 0, -1f), Scale = new Vector3(0.1f)});
+                light.AddComponent(new Transform3D { Position = new Vector3(1f, 1f, 0), Scale = new Vector3(0.1f)});
                 light.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
-                light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\red.png"));
+                light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\blue.png"));
+                light.AddComponent(new Velocity{Value = new Vector3{X = -4.5f, Y = 6f}});
+            }
+            
+            {
+                var light = world.CreateEntity();
+                light.AddComponent(new Light{Color = new Color(1, 1f, 1f)});
+                light.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0), Scale = new Vector3(0.1f)});
+                light.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
+                light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\blue.png"));
+                light.AddComponent(new Velocity{Value = new Vector3{X = 2.5f, Y = 3f}});
+            }
+            
+            {
+                var light = world.CreateEntity();
+                light.AddComponent(new Light{Color = new Color(1, 1f, 1f)});
+                light.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0), Scale = new Vector3(0.1f)});
+                light.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
+                light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\blue.png"));
+                light.AddComponent(new Velocity{Value = new Vector3{X = 3.5f, Y = -8f}});
             }
             var engine = _container.GetInstance<GameEngine>();
             

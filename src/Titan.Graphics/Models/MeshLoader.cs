@@ -1,5 +1,4 @@
 using System;
-using System.Numerics;
 using Titan.Core.Assets;
 using Titan.D3D11;
 
@@ -24,7 +23,6 @@ namespace Titan.Graphics.Models
             var vertexData = new TexturedVertex[numberOfVertices];
             var indices = new short[model.Faces.Length * 3];
             
-            var r  = new Random();
             var vertexCount = 0;
             for (var i = 0; i < model.Faces.Length; ++i)
             {
@@ -35,8 +33,7 @@ namespace Titan.Graphics.Models
                     ref var element = ref face.Elements[x];
                     ref var vertex = ref vertexData[vertexCount++];
 
-
-                    vertex.Color = new Color(r.Next(8000, 10000) / 10000f, r.Next(8000, 10000) / 10000f, r.Next(8000, 10000) / 10000f);
+                    vertex.Color = new Color(1f);
                     if (element.Vertex != -1)
                     {
                         vertex.Position = model.Vertices[element.Vertex];
@@ -50,7 +47,6 @@ namespace Titan.Graphics.Models
                     if (element.Texture != -1)
                     {
                         vertex.Texture = model.Textures[element.Texture];
-                        //vertex.Texture.Y = 1f - vertex.Texture.Y;
                     }
                 }
             }
@@ -71,29 +67,5 @@ namespace Titan.Graphics.Models
 
             return new Mesh(_device.CreateVertexBuffer(vertexData), _device.CreateIndexBuffer(indices));
         }
-
-
-        private static readonly short[] Indices = {
-            0, 2, 1, 2, 3, 1,
-            1, 3, 5, 3, 7, 5,
-            2, 6, 3, 3, 6, 7,
-            4, 5, 7, 4, 7, 6,
-            0, 4, 2, 2, 4, 6,
-            0, 1, 4, 1, 5, 4
-        };
-
-        private static readonly TexturedVertex[] Model =
-        {
-            new TexturedVertex {Color = new Color(1f, 0, 0), Position = new Vector3(-1f, -1f, -1f)},
-            new TexturedVertex {Color = new Color(1f, 1f, 0), Position = new Vector3(1f, -1f, -1f)},
-            new TexturedVertex {Color = new Color(1f, 0, 1f), Position = new Vector3(-1f, 1f, -1f)},
-            new TexturedVertex {Color = new Color(0f, 1f, 0), Position = new Vector3(1f, 1f, -1f)},
-            new TexturedVertex {Color = new Color(0f, 1f, 1f), Position = new Vector3(-1f, -1f, 1f)},
-            new TexturedVertex {Color = new Color(1f, 1f, 0), Position = new Vector3(1f, -1f, 1f)},
-            new TexturedVertex {Color = new Color(1f, 1f, 1f), Position = new Vector3(-1f, 1f, 1f)},
-            new TexturedVertex {Color = new Color(1f, 0, 0), Position = new Vector3(1f, 1f, 1f)},
-        };
-
-
     }
 }
