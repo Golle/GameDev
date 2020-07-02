@@ -13,13 +13,13 @@ namespace Titan.Graphics.Buffers
             _buffer = buffer;
         }
 
-        public void BindToPixelShader()
+        public void BindToPixelShader(uint startSlot = 0)
         {
-            _context.PSSetConstantBuffer(0, _buffer);
+            _context.PSSetConstantBuffer(startSlot, _buffer);
         }
-        public void BindToVertexShader()
+        public void BindToVertexShader(uint startSlot = 0)
         {
-            _context.VSSetConstantBuffer(0, _buffer);
+            _context.VSSetConstantBuffer(startSlot, _buffer);
         }
 
         public void Update(in T data)
