@@ -21,10 +21,7 @@ namespace Titan.Graphics.Camera
             _projection = MatrixExtensions.CreatePerspectiveLH(width, height, nearPlane, farPlane);
             _view = Matrix4x4.Identity;
 
-            _viewProjection = Matrix4x4.Transpose(
-                Matrix4x4.CreateTranslation(0, 0f, 0.5f + 2f) *
-                _projection
-            );
+            CalculateViewProjectionMatrix();
         }
 
         public void RotateZ(float radians)
@@ -46,13 +43,22 @@ namespace Titan.Graphics.Camera
         }
 
 
+        private Vector3 _position;
+        public void Move(in Vector3 vector3)
+        {
+            _position += vector3;
+            CalculateViewProjectionMatrix();
+        }
+
+
         private void CalculateViewProjectionMatrix()
         {
             _viewProjection = Matrix4x4.Transpose(
+                Matrix4x4.CreateTranslation(_position) *
                 Matrix4x4.CreateRotationZ(_rotationZ) *
                 Matrix4x4.CreateRotationX(_rotationX) *
                 Matrix4x4.CreateRotationY(_rotationY) *
-                Matrix4x4.CreateTranslation(0, 0f, 0.5f + 2f) *
+                
                 _projection
             );
         }

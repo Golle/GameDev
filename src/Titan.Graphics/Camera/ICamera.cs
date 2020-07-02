@@ -12,5 +12,7 @@ namespace Titan.Graphics.Camera
         void RotateZ(float radians);
         void RotateX(float radians);
         void RotateY(float radians);
+
+        void Move(in Vector3 vector3);
     }
 }

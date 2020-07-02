@@ -24,9 +24,10 @@ namespace Titan.Systems
 
             ref var transform = ref _transform[entityId];
             transform.ModelTransform =
-                Matrix4x4.CreateTranslation(transform.Position) *
                 Matrix4x4.CreateScale(transform.Scale) *
-                Matrix4x4.CreateFromQuaternion(transform.Rotation);
+                Matrix4x4.CreateFromQuaternion(transform.Rotation) *
+                Matrix4x4.CreateTranslation(transform.Position)
+                 ;
             
             if (_relationship.TryGetParent(entityId, out var parentId) && _transform.Has(parentId))
             {

@@ -1,26 +1,52 @@
 //
-cbuffer CBuf 
+//cbuffer CBuf 
+//{
+//	matrix transform;
+//	matrix model;
+//    matrix view;
+//    float3 lights;
+//    float3 lightColors;
+//};
+
+
+
+cbuffer PerFrameBuffer : register(b0)
 {
-	matrix transform;
-	matrix model;
+    matrix View;
+    matrix ViewProjection;
 };
 
+cbuffer PerObjectBuffer : register(b1)
+{
+    matrix World;
+};
+
+
+struct VS_INPUT
+{
+    float3 Position : Position;
+    float3 Normal : Normal;
+    float2 Texture : Texture;
+    float4 Color : Color;
+};
+
+
 struct VS_OUTPUT {
-	float4 Color : COLOR;
-	float2 Tex: Textures;
+	float4 Color : Color;
+	float3 Normal: Normal;
+	float2 Tex: Texture;
 	float4 Pos: SV_Position;
 };
 
-VS_OUTPUT main(float3 pos : Position, float3 norm : Normals, float2 tex : Textures, float4 color : Color)
+VS_OUTPUT main(VS_INPUT input)
 {
 	VS_OUTPUT output;
-
-	float4 position = float4(pos, 22.0f);
-	position = mul(position, model);
-	output.Pos = mul(position, transform);
-	//output.Pos = float4(pos, 22.0f);
-	output.Color = color;
-	output.Tex = tex;
+    
+    float4 worldPosition = mul(float4(input.Position, 1.0f), World);
+    output.Pos = mul(worldPosition, ViewProjection);
+    output.Color = input.Color;
+    output.Tex = input.Texture;
+    output.Normal = mul(input.Normal, (float3x3) World);
+    
 	return output;
-	/*return mul(float4(pos.x, pos.y, pos.z, 1.0f), transform);*/
 }

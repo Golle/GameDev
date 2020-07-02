@@ -18,11 +18,11 @@ namespace Titan.Systems.Rendering
         private readonly IComponentMap<Transform3D> _transform;
         private readonly IComponentMap<Texture2D> _texture;
 
-        public Model3DRenderSystem(IWorld world, IDevice device, IBlobReader blobReader, ICameraFactory cameraFactory) 
+        public Model3DRenderSystem(IWorld world, IDevice device, IBlobReader blobReader, ICameraFactory cameraFactory, Renderer3Dv2 renderer) 
             : base(world, world.EntityFilter().With<Transform3D>().With<Model3D>().With<Texture2D>()) // TODO: add support for materials
         {
             _device = device;
-            _renderer = new Renderer3Dv2(device, blobReader, cameraFactory);
+            _renderer = renderer;
             _model = Map<Model3D>();
             _transform = Map<Transform3D>();
             _texture = Map<Texture2D>();
@@ -31,6 +31,7 @@ namespace Titan.Systems.Rendering
         protected override void OnPreUpdate()
         {
             _device.BeginRender();
+            _renderer.Begin();
         }
 
         protected override void OnUpdate(float deltaTime, uint entityId)
@@ -43,6 +44,7 @@ namespace Titan.Systems.Rendering
 
         protected override void OnPostUpdate()
         {
+            _renderer.End();
             _device.EndRender();
         }
     }

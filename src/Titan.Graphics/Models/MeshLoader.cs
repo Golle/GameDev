@@ -42,10 +42,10 @@ namespace Titan.Graphics.Models
                         vertex.Position = model.Vertices[element.Vertex];
                     }
 
-                    //if (element.Normal != -1)
-                    //{
-                    //    vertex.Normals = model.Normals[element.Normal];
-                    //}
+                    if (element.Normal != -1)
+                    {
+                        vertex.Normals = model.Normals[element.Normal];
+                    }
 
                     if (element.Texture != -1)
                     {

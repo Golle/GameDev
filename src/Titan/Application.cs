@@ -118,24 +118,59 @@ namespace Titan
                 parentEntity.Attach(entity3);
             }
 
-            {
-                var entity = world.CreateEntity();
-                entity.AddComponent(new Transform3D { Position =new Vector3(0, -1, 0), Scale = Vector3.One });
-                //entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\thor hammer.obj"));
-                entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\untitled3.obj"));
-                //entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\untitled2.obj"));
-                //entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\cottage_obj.obj"));
-                entity.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\cottage_diffuse.png"));
-            }
+            //{
+            //    var entity = world.CreateEntity();
+            //    entity.AddComponent(new Transform3D { Position =new Vector3(0, -1, 0), Scale = Vector3.One });
+            //    //entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\thor hammer.obj"));
+            //    entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\untitled3.obj"));
+            //    //entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\untitled2.obj"));
+            //    //entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\cottage_obj.obj"));
+            //    entity.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\cottage_diffuse.png"));
+            //}
             
+            //{
+            //    var entity = world.CreateEntity();
+            //    entity.AddComponent(new Transform3D { Position =new Vector3(0, 1, 0), Scale = new Vector3(0.3f)});
+            //    entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\untitled3.obj"));
+            //    entity.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\cottage_diffuse.png"));
+            //}
+            
+            //{
+            //    var entity = world.CreateEntity();
+            //    entity.AddComponent(new Transform3D { Position =new Vector3(0, 1, 0), Scale = new Vector3(2f) });
+            //    entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\untitled2.obj"));
+            //    entity.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\cottage_diffuse.png"));
+            //    entity.AddComponent(new Velocity{Value = new Vector3(0, -0.4f, 0)});
+            //}
+
             {
-                var entity = world.CreateEntity();
-                entity.AddComponent(new Transform3D { Position =new Vector3(0, 1, 0), Scale = new Vector3(2f) });
-                entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\untitled2.obj"));
-                entity.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\cottage_diffuse.png"));
-                entity.AddComponent(new Velocity{Value = new Vector3(0, -0.4f, 0)});
+                var sphere = world.CreateEntity();
+                sphere.AddComponent(new Transform3D { Position = new Vector3(-3f, 0, 2f), Scale = new Vector3(1f) });
+                sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere1.obj"));
+                sphere.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\red.png"));
             }
-                
+
+            {
+                var sphere = world.CreateEntity();
+                sphere.AddComponent(new Transform3D { Position = new Vector3(2f, 0, 3f), Scale = new Vector3(1f) });
+                sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
+                sphere.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\red.png"));
+            }
+
+            {
+                var sphere = world.CreateEntity();
+                sphere.AddComponent(new Transform3D { Position = new Vector3(0, 3f, 2f), Scale = new Vector3(1f) });
+                sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\cube.obj"));
+                sphere.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\red.png"));
+            }
+
+            {
+                var light = world.CreateEntity();
+                light.AddComponent(new Light{Color = new Color(1, 1f, 1f)});
+                light.AddComponent(new Transform3D { Position = new Vector3(0, 0, -1f), Scale = new Vector3(0.1f)});
+                light.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
+                light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\red.png"));
+            }
             var engine = _container.GetInstance<GameEngine>();
             
             OnStart();
@@ -183,6 +218,7 @@ namespace Titan
                 .WithComponent<Transform2D>()
                 .WithComponent<Transform3D>()
                 .WithComponent<TransformRect>()
+                .WithComponent<Light>()
                 .WithComponent<Velocity>()
                 .WithComponent<Sprite>()
                 .WithComponent<Camera>(10)
@@ -204,6 +240,7 @@ namespace Titan
                 .WithSystem<Model3DRenderSystem>()
                 .WithSystem<Transform3DEntitySystem>()
                 .WithSystem<MovementSystem3D>()
+                .WithSystem<LightSystem>()
                 //.WithSystem<SpriteRenderSystem>()
                 //.WithSystem<UIRenderSystem>()
                 .Build();
