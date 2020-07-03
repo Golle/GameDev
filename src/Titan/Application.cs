@@ -109,17 +109,17 @@ namespace Titan
             entity1.AddComponent(new TransformRect { Position = new Vector3(600, 200, 0), Size = new Size(100) });
             entity1.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Color = new Color(1, 1, 1) });
             entity1.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\link.png"));
-            
+
             //entity1.AddComponent(new Resource<(string, VertexLayout), (IVertexShader, IInputLayout)>(("Shaders/VertexShader.cso", ColoredVertex.VertexLayout)));
             //entity1.AddComponent(new Resource<string, IPixelShader>("Shaders/PixelShader.cso"));
 
             //for (var j = 0; j < 2; ++j)
             //{
-            //    var entity3 = world.CreateEntity();
-            //    entity3.AddComponent(new Transform2D { Position = Vector2.Zero, Scale = Vector2.One });
-            //    entity3.AddComponent(new Velocity { Value = new Vector3(random.Next(-5000, 5000) / 100f, random.Next(-5000, 5000) / 100f, 0) });
-            //    entity3.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Color = new Color(1, 1, 1) });
-            //    entity3.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\link.png"));
+            //var entity3 = world.CreateEntity();
+            //entity3.AddComponent(new Transform2D { Position = Vector2.Zero, Scale = Vector2.One });
+            //entity3.AddComponent(new Velocity { Value = new Vector3(random.Next(-5000, 5000) / 100f, random.Next(-5000, 5000) / 100f, 0) });
+            //entity3.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Color = new Color(1, 1, 1) });
+            //entity3.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\link.png"));
             //    parentEntity.Attach(entity3);
             //}
 
@@ -132,14 +132,14 @@ namespace Titan
             //    //entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\cottage_obj.obj"));
             //    entity.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\cottage_diffuse.png"));
             //}
-            
+
             //{
             //    var entity = world.CreateEntity();
             //    entity.AddComponent(new Transform3D { Position =new Vector3(0, 1, 0), Scale = new Vector3(0.3f)});
             //    entity.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\untitled3.obj"));
             //    entity.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\cottage_diffuse.png"));
             //}
-            
+
             //{
             //    var entity = world.CreateEntity();
             //    entity.AddComponent(new Transform3D { Position =new Vector3(0, 1, 0), Scale = new Vector3(2f) });

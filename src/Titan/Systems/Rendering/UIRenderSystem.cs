@@ -33,5 +33,11 @@ namespace Titan.Systems.Rendering
 
             _spriteBatchRenderer.Push(texture.Texture, new Vector2(rect.Position.X, rect.Position.Y), new Vector2(rect.Size.Width, rect.Size.Height), new Color(1, 0, 0));
         }
+
+        protected override void OnPostUpdate()
+        {
+            _spriteBatchRenderer.Flush();
+            _spriteBatchRenderer.Render();
+        }
     }
 }
