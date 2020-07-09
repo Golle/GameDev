@@ -27,10 +27,7 @@ namespace Titan.Systems.Rendering
             ref var light = ref _light[entityId];
             ref var transform = ref _transform[entityId];
 
-
             _renderer.SubmitLight(light.Color, transform.Position);
-
-
         }
     }
 }

@@ -4,6 +4,7 @@ using Titan.Core.Configuration;
 using Titan.Core.EventSystem;
 using Titan.Core.GameLoop;
 using Titan.Core.Ioc;
+using Titan.Core.Json;
 using Titan.Core.Logging;
 
 namespace Titan.Core
@@ -35,6 +36,7 @@ namespace Titan.Core
                     // GameLoop
                     .Register<IGameLoop, BasicGameLoop>()
 
+                    .Register<IJsonSerializer, JsonSerializerWrapper>()
 
                 ;
 

@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 
 namespace Titan.ECS
@@ -12,17 +13,26 @@ namespace Titan.ECS
             _configuration.DefaultPoolSize = defaultComponentPoolSize;
         }
 
+        public WorldBuilder WithComponent(Type type)
+        {
+            _configuration.AddComponent(type);
+            return this;
+        }
+        
+        public WorldBuilder WithComponent(Type type, uint poolSize)
+        {
+            _configuration.AddComponent(type, poolSize);
+            return this;
+        }
 
         public WorldBuilder WithComponent<T>()
         {
-            _configuration.AddComponent(typeof(T));
-            return this;
+            return WithComponent(typeof(T));
         }
 
         public WorldBuilder WithComponent<T>(uint poolSize)
         {
-            _configuration.AddComponent(typeof(T), poolSize);
-            return this;
+            return WithComponent(typeof(T), poolSize);
         }
 
         public IWorld Build()

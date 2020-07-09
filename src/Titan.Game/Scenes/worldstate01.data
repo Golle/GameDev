@@ -1,0 +1,7 @@
+ComponentType Light Titan.Components.Light,Titan
+ComponentType Model3D Titan.Components.Model3D,Titan
+
+
+Entity 1
+Component Light
+

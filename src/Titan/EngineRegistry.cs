@@ -1,6 +1,7 @@
 using Titan.Configuration;
 using Titan.Core.Ioc;
 using Titan.Resources;
+using Titan.Scenes;
 
 namespace Titan
 {
@@ -15,6 +16,7 @@ namespace Titan
                 //.Register<PixelShaderManager>() // TODO: add support for this later
                 //.Register<VertexShaderManager>()
                 .Register<MeshManager>()
+                .Register<ISceneParser, SceneParser>()
                 ;
         }
     }

@@ -16,6 +16,7 @@ using Titan.ECS.Systems;
 using Titan.Graphics;
 using Titan.Graphics.Models;
 using Titan.Graphics.Textures;
+using Titan.Scenes;
 using Titan.Systems;
 using Titan.Systems.Rendering;
 using Titan.Windows;
@@ -83,7 +84,10 @@ namespace Titan
 
 
 
-            var (world, systemsRummer) = CreateWorld();
+            var descriptor = GetInstance<ISceneParser>()
+                .Parse(@"F:\Git\GameDev\src\Titan.Game\Scenes\scene01.json");
+
+            var (world, systemsRummer) = CreateWorld(descriptor.Configuration);
 
             // Set the resource managers as a handler for the world
             foreach (var resourceManager in _container.GetAll<IResourceManager>())
@@ -106,7 +110,7 @@ namespace Titan
             var random = new Random();
         
             var entity1 = world.CreateEntity();
-            entity1.AddComponent(new TransformRect { Position = new Vector3(600, 200, 0), Size = new Size(100) });
+            entity1.AddComponent(new TransformRect { Position = new Vector3(1920-200, 1080-200, 0), Size = new Size(200) });
             entity1.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Color = new Color(1, 1, 1) });
             entity1.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\link.png"));
 
@@ -244,27 +248,46 @@ namespace Titan
         }
 
 
-        private (IWorld world, ISystemsRunner systemsRummer) CreateWorld()
+        private (IWorld world, ISystemsRunner systemsRummer) CreateWorld(SceneConfiguration configuration)
         {
-            var world = new WorldBuilder(maxEntities: 100000, defaultComponentPoolSize: 100000)
-                .WithComponent<Transform2D>()
-                .WithComponent<Transform3D>()
-                .WithComponent<TransformRect>()
-                .WithComponent<Light>()
-                .WithComponent<Velocity>()
-                .WithComponent<Sprite>()
-                .WithComponent<Camera>(10)
-                .WithComponent<Model3D>()
-                .WithComponent<Texture2D>()
 
-                // TODO: Add a better way to handle resources
-                .WithComponent<Resource<string, ITexture2D>>()
-                .WithComponent<Resource<string, IMesh>>()
+            var t = typeof(Resource<string, ITexture2D>).AssemblyQualifiedName;
+            var s = typeof(string);
+            var builder = new WorldBuilder(maxEntities: configuration.MaxEntities, defaultComponentPoolSize: configuration.ComponentPoolDefaultSize);
+            foreach (var component in configuration.Components)
+            {
+                var type = Type.GetType(component.Name, throwOnError: true);
+                builder.WithComponent(type, component.Size);
+            }
+
+            foreach (var resource in configuration.Resources)
+            {
+                var identifierType = Type.GetType(resource.Identifier, throwOnError: true);
+                var resourceType = Type.GetType(resource.Type, throwOnError: true);
+                builder.WithComponent(typeof(Resource<,>).MakeGenericType(identifierType, resourceType));
+            }
+
+            var world = builder.Build();
+
+            //var world = builder
+            //    .WithComponent<Transform2D>()
+            //    .WithComponent<Transform3D>()
+            //    .WithComponent<TransformRect>()
+            //    .WithComponent<Light>()
+            //    .WithComponent<Velocity>()
+            //    .WithComponent<Sprite>()
+            //    .WithComponent<Camera>(10)
+            //    .WithComponent<Model3D>()
+            //    .WithComponent<Texture2D>()
+
+            //    // TODO: Add a better way to handle resources
+            //    .WithComponent<Resource<string, ITexture2D>>()
+            //    .WithComponent<Resource<string, IMesh>>()
                 
                 
-                //.WithComponent<VertexShader>()
-                //.WithComponent<PixelShader>()
-                .Build();
+            //    //.WithComponent<VertexShader>()
+            //    //.WithComponent<PixelShader>()
+            //    .Build();
 
             var systemsRummer = new SystemsRunnerBuilder(world, _container.CreateChildContainer())
                 .WithSystem<MovementSystem2D>()

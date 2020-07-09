@@ -4,6 +4,11 @@ using Titan.Core.Ioc;
 
 namespace Titan.Game
 {
+
+    struct MyComponent
+    {
+        
+    }
     internal class Program : Application<Program>
     {
         private MyTestClass _test;
