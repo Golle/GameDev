@@ -1,0 +1,63 @@
+{
+    "configuration": {
+        "componentPoolDefaultSize": 1000,
+        "maxEntities": 10000,
+        "systems": [
+            "Titan.Systems.Rendering.UIRenderSystem",
+            "Titan.Systems.Rendering.LightSystem",
+            "Titan.Systems.Rendering.Model3DRenderSystem",
+            "Titan.Systems.Rendering.UIRenderSystem",
+            "Titan.Systems.Transform2DEntitySystem",
+            "Titan.Systems.Transform2DComponentSystem",
+            "Titan.Systems.Transform3DEntitySystem"
+        ],
+        "resources": [
+            {
+                "identifier": "System.String",
+                "type": "Titan.Graphics.Textures.ITexture2D, Titan.Graphics"
+            },
+            {
+                "identifier": "System.String",
+                "type": "Titan.Graphics.Models.IMesh, Titan.Graphics"
+            }
+        ],
+        "components": [
+            {
+                "name": "Titan.Game.MyComponent, Titan.Game",
+                "size": 1
+            },
+            {
+                "name": "Titan.Components.Light",
+                "size": 1000
+            },
+            {
+                "name": "Titan.Components.Model3D",
+                "size": 1000
+            },
+            {
+                "name": "Titan.Components.Sprite",
+                "size": 1000
+            },
+            {
+                "name": "Titan.Components.Texture2D",
+                "size": 1000
+            },
+            {
+                "name": "Titan.Components.Transform2D",
+                "size": 1000
+            },
+            {
+                "name": "Titan.Components.Transform3D",
+                "size": 1000
+            },
+            {
+                "name": "Titan.Components.TransformRect",
+                "size": 1000
+            },
+            {
+                "name": "Titan.Components.Velocity",
+                "size": 1000
+            }
+        ]
+    }
+}
