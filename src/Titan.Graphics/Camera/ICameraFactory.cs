@@ -34,7 +34,7 @@ namespace Titan.Graphics.Camera
 
         public ICamera CreatePerspectiveCamera()
         {
-            return new PerspectiveCamera(1f, _window.Height / (float)_window.Width, 0.5f, 10f);
+            return new PerspectiveCamera(1f, _window.Height / (float)_window.Width, 0.5f, 1000f);
         }
     }
 }

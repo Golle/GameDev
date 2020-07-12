@@ -4,6 +4,7 @@ using Titan.ECS.Components;
 using Titan.ECS.Entities;
 using Titan.ECS.Messaging;
 using Titan.ECS.Messaging.Messages;
+using Titan.ECS.Serialization;
 
 namespace Titan.ECS
 {
@@ -12,6 +13,8 @@ namespace Titan.ECS
         private readonly EntityManager _entityManager;
         private readonly ComponentManager _componentManager;
         private readonly Publisher _publisher;
+        
+        private ISerializer _serializer;
         public uint MaxEntities { get; }
         public uint Id { get; }
         internal World(WorldConfiguration configuration)
@@ -23,11 +26,13 @@ namespace Titan.ECS
 
             _entityManager = new EntityManager(Id, configuration.MaxEntities, _publisher);
 
-            _componentManager = new ComponentManager(configuration.MaxEntities);
+            _componentManager = new ComponentManager(configuration.MaxEntities, _publisher);
             foreach (var (componentType, size) in configuration.Components())
             {
                 _componentManager.RegisterComponent(componentType, size);
             }
+
+            _serializer = new EntitySerializer(this, _publisher);
         }
 
         public Entity CreateEntity()
@@ -61,11 +66,16 @@ namespace Titan.ECS
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void DestroyEntity(in uint entityId) => _entityManager.Destroy(entityId);
 
-        public EntityFilter EntityFilter(uint maxEntitiesInFilter)
+        public EntityFilter EntityFilter(uint maxEntitiesInFilter = 0)
         {
             return new EntityFilter(MaxEntities, maxEntitiesInFilter == 0 ? MaxEntities : maxEntitiesInFilter, _publisher);
         }
-        
+
+        public void WriteToStream()
+        {
+            _serializer.Serialize();
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         IComponentMap<T> IWorld.GetComponentMap<T>() where T : struct => _componentManager.Map<T>();
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

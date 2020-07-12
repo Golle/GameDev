@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Titan.ECS.Messaging;
+using Titan.ECS.Messaging.Messages;
 
 namespace Titan.ECS.Components
 {
@@ -10,12 +12,14 @@ namespace Titan.ECS.Components
         private readonly int[] _entityMap;
 
         private int _lastIndex = -1;
-        public ComponentPool(uint maxEntities, uint size)
+        public ComponentPool(uint maxEntities, uint size, Publisher publisher)
         {
             Debug.Assert(size <= maxEntities, "Component pool is greater than the max number of entities.");
             _components = new T[size];
             _entityMap = new int[maxEntities];
             Array.Fill(_entityMap, -1);
+
+            publisher.Subscribe<QueryComponentsMessage>(On);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -31,7 +35,7 @@ namespace Titan.ECS.Components
             Debug.Assert(_entityMap[entityId] == -1, $"Component {typeof(T)} has already been added to entity {entityId}");
             _entityMap[entityId] = ++_lastIndex;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Remove(uint entityId)
         {
@@ -66,5 +70,14 @@ namespace Titan.ECS.Components
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Has(uint entityId) => _entityMap[entityId] != -1;
+
+        private void On(in QueryComponentsMessage message)
+        {
+            var index = _entityMap[message.EntityId];
+            if (index != -1)
+            {
+                message.Reader.OnRead(_components[index]);
+            }
+        }
     }
 }

@@ -12,8 +12,12 @@ namespace Titan.ECS
         uint MaxEntities { get; }
         uint Id { get; }
         EntityFilter EntityFilter(uint maxEntitiesInFilter = 0);
+
+        void WriteToStream();
         internal IComponentMap<T> GetComponentMap<T>() where T : struct;
         internal IRelationship GetRelationship();
         internal IDisposable Subscribe<T>(MessageHandler<T> messageHandler) where T : struct;
+
+        
     }
 }

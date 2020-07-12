@@ -35,20 +35,21 @@ namespace Titan.ECS
             
             return this;
         }
-        
+
+        public EntityFilter WithAllEntities()
+        {
+            _subscriptions.Add(_publisher.Subscribe<EntityCreatedMessage>(EntityCreated));
+            return this;
+        }
+
+        private void EntityCreated(in EntityCreatedMessage message)
+        {
+            AddEntity(message.Id);
+        }
+
         private void EntityDestroyed(in EntityDestroyedMessage message)
         {
             RemoveEntity(message.Id);
-        }
-
-        private void RemoveEntity(uint entityId)
-        {
-            ref var index = ref _mapping[entityId];
-            if (index != -1)
-            {
-                _entities[index] = _entities[--_count];
-                index = -1;
-            }
         }
 
         private void ComponentRemoved<T>(in ComponentRemovedMessage<T> message) where T : struct
@@ -64,11 +65,28 @@ namespace Titan.ECS
         {
             if (_withMask.IsSupsetOf(message.Components))
             {
-                ref var index = ref _mapping[message.EntityId];
-                if (index == -1)
-                {
-                    _entities[index = _count++] = message.EntityId;
-                }
+                AddEntity(message.EntityId);
+            }
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void AddEntity(uint entityId)
+        {
+            ref var index = ref _mapping[entityId];
+            if (index == -1)
+            {
+                _entities[index = _count++] = entityId;
+            }
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void RemoveEntity(uint entityId)
+        {
+            ref var index = ref _mapping[entityId];
+            if (index != -1)
+            {
+                _entities[index] = _entities[--_count];
+                index = -1;
             }
         }
 

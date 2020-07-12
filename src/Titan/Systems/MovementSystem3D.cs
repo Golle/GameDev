@@ -24,15 +24,20 @@ namespace Titan.Systems
             if (velocity != Vector3.Zero)
             {
                 ref var transform = ref _transform[entityId];
-                if (transform.Position.X > 3f || transform.Position.X < -3f)
+                const float maxDistance = 100f;
+                if (transform.Position.X > maxDistance || transform.Position.X < -maxDistance)
                 {
                     velocity.X *= -1f;
                 }
-                if (transform.Position.Y > 3f || transform.Position.Y < -3f)
+                if (transform.Position.Y > maxDistance || transform.Position.Y < -maxDistance)
                 {
                     velocity.Y *= -1f;
                 }
-                transform.Position += velocity * deltaTime;
+                if (transform.Position.Z > maxDistance || transform.Position.Z < -maxDistance)
+                {
+                    velocity.Z *= -1f;
+                }
+                transform.Position += velocity * deltaTime * 5f;
             }
         }
     }

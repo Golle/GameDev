@@ -133,8 +133,16 @@ namespace Titan.Graphics.Renderer
             }
             _lightsConstantBuffer.Update(lights);
             _lightsConstantBuffer.BindToPixelShader(0);
+
+            _sampler.Bind();
+            _inputLayout.Bind();
+            _vertexShader.Bind();
+            _pixelShader.Bind();
         }
 
+
+        private IVertexBuffer _lastVertexBuffer = null;
+        private ITexture2D _lastTexture = null;
         public void Render(IMesh mesh, in Matrix4x4 worldMatrix, ITexture2D texture)
         {
             #region TestCode
@@ -167,16 +175,27 @@ namespace Titan.Graphics.Renderer
             #endregion
 
             _perObjectConstantBuffer.Update(new PerObjectContantBuffer {World = worldMatrix});
-
-            mesh.VertexBuffer.Bind();
-            //mesh.IndexBuffer.Bind();
-            _sampler.Bind();
-            texture.Bind();
             _perObjectConstantBuffer.BindToVertexShader(PerObjectSlot);
+            
+
+            
+            texture.Bind();
+            //mesh.IndexBuffer.Bind();
+
+            if (mesh.VertexBuffer != _lastVertexBuffer)
+            {
+                mesh.VertexBuffer.Bind();
+                _lastVertexBuffer = mesh.VertexBuffer;
+            }
+
+            if (_lastTexture != texture)
+            {
+                texture.Bind();
+                _lastTexture = texture;
+            }
+
             //_perObjectConstantBuffer.BindToPixelShader();
-            _inputLayout.Bind();
-            _vertexShader.Bind();
-            _pixelShader.Bind();
+            
 
             _device.Draw(mesh.VertexBuffer.NumberOfVertices, 0);
             //_device.DrawIndexed(mesh.IndexBuffer.NumberOfIndices, 0, 0);
@@ -189,6 +208,8 @@ namespace Titan.Graphics.Renderer
         {
             // noop
             _lights.Clear();
+            _lastVertexBuffer = null;
+            _lastTexture = null;
         }
 
         public void Dispose()

@@ -155,16 +155,29 @@ namespace Titan
             {
                 var sphere = world.CreateEntity();
                 sphere.AddComponent(new Transform3D { Position = new Vector3(-3f, 0, 2f), Scale = new Vector3(1f) });
-                sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere1.obj"));
+                sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\table.obj"));
                 sphere.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\red.png"));
             }
 
+
+            for (var i = 0; i < 6000; ++i)
             {
                 var sphere = world.CreateEntity();
-                sphere.AddComponent(new Transform3D { Position = new Vector3(2f, 0, 3f), Scale = new Vector3(1f) });
-                sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
-                sphere.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\red.png"));
+                const float distaneConstant = 100f;
+                sphere.AddComponent(new Transform3D { Position = new Vector3(random.Next(-10000, 10000)/distaneConstant, random.Next(-10000, 10000) / distaneConstant, random.Next(-10000, 10000) / distaneConstant), Scale = new Vector3(random.Next(100, 300)/100f) });
+                sphere.AddComponent(new Velocity{Value = new Vector3(random.Next(-10000, 10000) / 1000f, random.Next(-10000, 10000) / 1000f ,random.Next(-10000, 10000) / 1000f)});
+                switch (random.Next(10) % 3)
+                {
+                    case 0: sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere1.obj")); break;
+                    case 1: sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj")); break;
+                    case 2: sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\cube.obj")); break;
+                }
+
+                sphere.AddComponent(random.Next(10) % 2 == 0
+                    ? new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\blue.png")
+                    : new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\red.png"));
             }
+
 
             {
                 var sphere = world.CreateEntity();
@@ -183,28 +196,36 @@ namespace Titan
             {
                 var light = world.CreateEntity();
                 light.AddComponent(new Light{Color = new Color(1, 1f, 1f)});
-                light.AddComponent(new Transform3D { Position = new Vector3(1f, 1f, 0), Scale = new Vector3(0.1f)});
+                light.AddComponent(new Transform3D { Position = new Vector3(1f, 1f, 0), Scale = new Vector3(0.3f)});
                 light.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
-                light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\blue.png"));
+                light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\white.png"));
                 light.AddComponent(new Velocity{Value = new Vector3{X = -4.5f, Y = 6f}});
             }
             
             {
                 var light = world.CreateEntity();
                 light.AddComponent(new Light{Color = new Color(1, 1f, 1f)});
-                light.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0), Scale = new Vector3(0.1f)});
+                light.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0), Scale = new Vector3(0.3f)});
                 light.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
-                light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\blue.png"));
+                light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\white.png"));
                 light.AddComponent(new Velocity{Value = new Vector3{X = 2.5f, Y = 3f}});
             }
             
             {
                 var light = world.CreateEntity();
                 light.AddComponent(new Light{Color = new Color(1, 1f, 1f)});
-                light.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0), Scale = new Vector3(0.1f)});
+                light.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0), Scale = new Vector3(0.3f)});
                 light.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
-                light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\blue.png"));
-                light.AddComponent(new Velocity{Value = new Vector3{X = 3.5f, Y = -8f}});
+                light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\white.png"));
+                light.AddComponent(new Velocity{Value = new Vector3{X = 3.5f, Y = -8f, Z = 3f}});
+            }
+            {
+                var light = world.CreateEntity();
+                light.AddComponent(new Light { Color = new Color(1, 1f, 1f) });
+                light.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0), Scale = new Vector3(0.3f) });
+                light.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
+                light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\white.png"));
+                light.AddComponent(new Velocity { Value = new Vector3 { X = -3.5f, Y = -3f, Z = 5f } });
             }
             var engine = _container.GetInstance<GameEngine>();
             
@@ -212,6 +233,7 @@ namespace Titan
             var count = 300;
             _logger.Debug("Start main loop");
             
+            //world.WriteToStream();
             GetInstance<IGameLoop>()
                 .Run(() =>
                 {
@@ -251,8 +273,6 @@ namespace Titan
         private (IWorld world, ISystemsRunner systemsRummer) CreateWorld(SceneConfiguration configuration)
         {
 
-            var t = typeof(Resource<string, ITexture2D>).AssemblyQualifiedName;
-            var s = typeof(string);
             var builder = new WorldBuilder(maxEntities: configuration.MaxEntities, defaultComponentPoolSize: configuration.ComponentPoolDefaultSize);
             foreach (var component in configuration.Components)
             {

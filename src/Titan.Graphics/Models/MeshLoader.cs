@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Numerics;
 using Titan.Core.Assets;
 using Titan.D3D11;
 
@@ -17,12 +19,17 @@ namespace Titan.Graphics.Models
 
         public IMesh Load(string filename)
         {
+
+            var vertices = new HashSet<(Vector3, Vector2, Vector3)>();
+            var vertices1 = new HashSet<(Vector3, Vector2)>();
+
             var model = _assetLoader.LoadModel(filename);
 
             var numberOfVertices = model.Faces.Length * 3;
             var vertexData = new TexturedVertex[numberOfVertices];
             var indices = new short[model.Faces.Length * 3];
             
+
             var vertexCount = 0;
             for (var i = 0; i < model.Faces.Length; ++i)
             {
@@ -48,8 +55,13 @@ namespace Titan.Graphics.Models
                     {
                         vertex.Texture = model.Textures[element.Texture];
                     }
+
+                    vertices.Add((vertex.Position, vertex.Texture, vertex.Normals));
+                    vertices1.Add((vertex.Position, vertex.Texture));
                 }
             }
+            Console.WriteLine("{0} unique vertices(v3, v2, v3) out of {1}", vertices.Count, numberOfVertices);
+            Console.WriteLine("{0} unique vertices(v3, v2) out of {1}", vertices1.Count, numberOfVertices);
 
             //var vertexIndex = 0;
             //for (var i = 0; i < indices.Length; i += 6)
