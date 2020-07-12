@@ -28,7 +28,7 @@ static const float4 DiffuseLightColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
 static const float3 DiffuseLightColor3 = float3(1.0f, 1.0f, 1.0f);
 static const float3 AmbientLightColor3 = float3(0.2f, 0.2f, 0.2f);
 
-static const float intensity = 1.0f;
+static const float intensity = 2.0f;
 float4 main(PS_INPUT input) : SV_TARGET
 {
     //return float4(Positions[0], 1.0f);
@@ -40,7 +40,7 @@ float4 main(PS_INPUT input) : SV_TARGET
         float distance = length(lightDirection);
         
         float diffuseLightPercentage = saturate(dot(input.Normal, normalize(lightDirection.xyz)));
-        float3 diffuseLight = saturate(DiffuseLightColor3 * diffuseLightPercentage);
+        float3 diffuseLight = saturate(DiffuseLightColor3 * diffuseLightPercentage) * intensity;
         totalLight += diffuseLight * intensity / distance;;
     }
         
