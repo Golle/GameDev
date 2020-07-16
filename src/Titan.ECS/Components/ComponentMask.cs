@@ -17,7 +17,7 @@ namespace Titan.ECS.Components
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Contains(in ComponentMask mask) => (mask.Components & Components) == mask.Components;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsSupsetOf(in ComponentMask mask) => (mask.Components & Components) == Components;
+        public bool IsSubsetOf(in ComponentMask mask) => (mask.Components & Components) == Components;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -55,7 +55,7 @@ namespace Titan.ECS
         private void ComponentRemoved<T>(in ComponentRemovedMessage<T> message) where T : struct
         {
             // this will be triggered every time a component is removed (in the with mask), but the entity might not exist in the filter.
-            if (!_withMask.IsSupsetOf(message.Components))
+            if (!_withMask.IsSubsetOf(message.Components))
             {
                 RemoveEntity(message.EntityId);
             }
@@ -63,7 +63,7 @@ namespace Titan.ECS
 
         private void ComponentAdded<T>(in ComponentAddedMessage<T> message) where T : struct
         {
-            if (_withMask.IsSupsetOf(message.Components))
+            if (_withMask.IsSubsetOf(message.Components))
             {
                 AddEntity(message.EntityId);
             }

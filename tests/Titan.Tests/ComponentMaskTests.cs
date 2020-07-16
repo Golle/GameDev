@@ -62,7 +62,7 @@ namespace Titan.Tests
         {
             var mask = new ComponentMask(0b_01);
             
-            var result = mask.IsSupsetOf(new ComponentMask(0b_10));
+            var result = mask.IsSubsetOf(new ComponentMask(0b_10));
 
             Assert.That(result, Is.False);
         }
@@ -72,7 +72,7 @@ namespace Titan.Tests
         {
             var mask = new ComponentMask(0b_1);
             
-            var result = mask.IsSupsetOf(new ComponentMask(0b_1));
+            var result = mask.IsSubsetOf(new ComponentMask(0b_1));
 
             Assert.That(result, Is.True);
         }
@@ -82,7 +82,7 @@ namespace Titan.Tests
         {
             var mask = new ComponentMask(0b_011);
             
-            var result = mask.IsSupsetOf(new ComponentMask(0b_100));
+            var result = mask.IsSubsetOf(new ComponentMask(0b_100));
 
             Assert.That(result, Is.False);
         }
@@ -92,7 +92,7 @@ namespace Titan.Tests
         {
             var mask = new ComponentMask(0b_001);
             
-            var result = mask.IsSupsetOf(new ComponentMask(0b_111));
+            var result = mask.IsSubsetOf(new ComponentMask(0b_111));
 
             Assert.That(result, Is.True);
         }
@@ -102,7 +102,7 @@ namespace Titan.Tests
         {
             var mask = new ComponentMask(0b_011);
             
-            var result = mask.IsSupsetOf(new ComponentMask(0b_111));
+            var result = mask.IsSubsetOf(new ComponentMask(0b_111));
 
             Assert.That(result, Is.True);
         }

@@ -5,11 +5,11 @@ namespace Titan.Windows.Input
 {
     public class Mouse : IMouse
     {
-        public Point Position => _position;
-        private Point _position;
+        public Point Position { get; private set; }
+        public Point DeltaMovement { get; private set; }
+        public Point LastPosition { get; private set; }
         public bool LeftButtonDown { get; private set; }
         public bool RightButtonDown { get; private set; }
-
         
         public Mouse(IEventManager eventManager)
         {
@@ -23,42 +23,37 @@ namespace Titan.Windows.Input
         private void OnRightButtonReleased(in MouseRightButtonReleasedEvent @event)
         {
             RightButtonDown = false;
-            _position.X = @event.X;
-            _position.Y = @event.Y;
+            Position = new Point(@event.X, @event.Y);
         }
 
         private void OnRightButtonPressed(in MouseRightButtonPressedEvent @event)
         {
             RightButtonDown = true;
-            _position.X = @event.X;
-            _position.Y = @event.Y;
+            Position = new Point(@event.X, @event.Y);
         }
 
         private void OnLeftButtonReleased(in MouseLeftButtonReleasedEvent @event)
         {
             LeftButtonDown = false;
-            _position.X = @event.X;
-            _position.Y = @event.Y;
+            Position = new Point(@event.X, @event.Y);
         }
 
         private void OnLeftButtonPressed(in MouseLeftButtonPressedEvent @event)
         {
             LeftButtonDown = true;
-            _position.X = @event.X;
-            _position.Y = @event.Y;
+            Position = new Point(@event.X, @event.Y);
         }
 
         private void OnMouseMoved(in MouseMovedEvent @event)
         {
-            _position.X = @event.X;
-            _position.Y = @event.Y;
+            Position = new Point(@event.X, @event.Y);
         }
 
 
         public void Update()
         {
-
-            // noop at the moment
+            DeltaMovement = LastPosition - Position;
+            LastPosition = Position;
         }
     }
 }

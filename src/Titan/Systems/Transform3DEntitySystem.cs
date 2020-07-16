@@ -32,11 +32,11 @@ namespace Titan.Systems
             if (_relationship.TryGetParent(entityId, out var parentId) && _transform.Has(parentId))
             {
                 // TODO: add support for adding parent pos etc
-                transform.WorldTransform = Matrix4x4.Transpose(transform.ModelTransform);
+                transform.WorldTransform = transform.ModelTransform;
             }
             else
             {
-                transform.WorldTransform = Matrix4x4.Transpose(transform.ModelTransform);
+                transform.WorldTransform = transform.ModelTransform;
             }
         }
     }

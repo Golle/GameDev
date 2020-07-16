@@ -7,12 +7,10 @@ using System.Runtime.InteropServices;
 using Titan.D3D11;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
-using Titan.Graphics.Camera;
 using Titan.Graphics.Layout;
 using Titan.Graphics.Models;
 using Titan.Graphics.Shaders;
 using Titan.Graphics.Textures;
-using Titan.Windows.Input;
 
 namespace Titan.Graphics.Renderer
 {
@@ -81,23 +79,20 @@ namespace Titan.Graphics.Renderer
         public const uint PerObjectSlot = 1;
 
         private readonly IDevice _device;
-        private readonly IInputManager _inputManager;
         private readonly IConstantBuffer<PerFrameContantBuffer> _perFrameConstantBuffer;
         private readonly IConstantBuffer<LightsConstantBuffer> _lightsConstantBuffer;
         private readonly IConstantBuffer<PerObjectContantBuffer> _perObjectConstantBuffer;
         private readonly IVertexShader _vertexShader;
         private readonly IPixelShader _pixelShader;
         private readonly IInputLayout _inputLayout;
-        private ICamera _camera;
 
         private readonly ISampler _sampler;
 
         private readonly List<(Vector3 position, Color color)> _lights = new List<(Vector3 position, Color color)>();
 
-        public Renderer3Dv2(IDevice device, IBlobReader blobReader, ICameraFactory cameraFactory, IInputManager inputManager)
+        public Renderer3Dv2(IDevice device, IBlobReader blobReader)
         {
             _device = device;
-            _inputManager = inputManager;
 
             using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/VertexShader.cso");
             _vertexShader = _device.CreateVertexShader(vertexShaderBlob);
@@ -108,21 +103,17 @@ namespace Titan.Graphics.Renderer
            _perFrameConstantBuffer = device.CreateConstantBuffer<PerFrameContantBuffer>();
            _lightsConstantBuffer = device.CreateConstantBuffer<LightsConstantBuffer>();
            _perObjectConstantBuffer = device.CreateConstantBuffer<PerObjectContantBuffer>();
-
-            _camera = cameraFactory.CreatePerspectiveCamera();
-
             _sampler = device.CreateSampler();
         }
 
-        //private float _rotationX = 0f;
-        //private float _rotationZ = 0f;
-        private float _rotationY = 0f;
+        public void SetCamera(in Matrix4x4 viewProjection, in Matrix4x4 view)
+        {
+            _perFrameConstantBuffer.Update(new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
+            _perFrameConstantBuffer.BindToVertexShader(PerFrameSlot);
+        }
 
         public void Begin()
         {
-            _perFrameConstantBuffer.Update(new PerFrameContantBuffer {ViewProjection = _camera.ViewProjection, View = _camera.View});
-            _perFrameConstantBuffer.BindToVertexShader(PerFrameSlot);
-
             LightsConstantBuffer lights;
             lights.NumberOfLights = Math.Min((uint)_lights.Count, LightsConstantBuffer.MaxLights);
             for (var i = 0u; i < lights.NumberOfLights; ++i)
@@ -145,39 +136,8 @@ namespace Titan.Graphics.Renderer
         private ITexture2D _lastTexture = null;
         public void Render(IMesh mesh, in Matrix4x4 worldMatrix, ITexture2D texture)
         {
-            #region TestCode
-
-            if (_inputManager.Keyboard.IsKeyDown(KeyCode.W))
-            {
-                _camera.Move(new Vector3(0, 0, -0.02f));
-            }
-            if (_inputManager.Keyboard.IsKeyDown(KeyCode.S))
-            {
-                _camera.Move(new Vector3(0, 0, 0.02f));
-            }
-            if (_inputManager.Keyboard.IsKeyDown(KeyCode.A))
-            {
-                _camera.Move(new Vector3(0.02f, 0,0 ));
-            }
-            if (_inputManager.Keyboard.IsKeyDown(KeyCode.D))
-            {
-                _camera.Move(new Vector3(-0.02f, 0, 0));
-            }
-
-            if (_inputManager.Keyboard.IsKeyDown(KeyCode.E))
-            {
-                _camera.RotateY(_rotationY -= 0.02f);
-            }
-            if (_inputManager.Keyboard.IsKeyDown(KeyCode.Q))
-            {
-                _camera.RotateY(_rotationY += 0.02f);
-            }
-            #endregion
-
-            _perObjectConstantBuffer.Update(new PerObjectContantBuffer {World = worldMatrix});
+            _perObjectConstantBuffer.Update(new PerObjectContantBuffer {World = Matrix4x4.Transpose(worldMatrix)});
             _perObjectConstantBuffer.BindToVertexShader(PerObjectSlot);
-            
-
             
             texture.Bind();
             //mesh.IndexBuffer.Bind();
@@ -196,7 +156,6 @@ namespace Titan.Graphics.Renderer
 
             //_perObjectConstantBuffer.BindToPixelShader();
             
-
             _device.Draw(mesh.VertexBuffer.NumberOfVertices, 0);
             //_device.DrawIndexed(mesh.IndexBuffer.NumberOfIndices, 0, 0);
 

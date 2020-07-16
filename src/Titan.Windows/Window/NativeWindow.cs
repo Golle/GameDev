@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Titan.Core.EventSystem;
 using Titan.Windows.Input;
@@ -157,11 +158,13 @@ namespace Titan.Windows.Window
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static (int x, int y) GetMouseCoordinates(int lParam)
         {
             return (lParam & 0xffff, (lParam >> 16) & 0xffff);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (int low, int high) Split(int lParam)
         {
             return (lParam & 0xffff, (lParam >> 16) & 0xffff);
