@@ -158,9 +158,12 @@ namespace Titan
                 var player = world.CreateEntity();
                 player.AddComponent(new Transform3D{Rotation = Quaternion.Identity});
                 player.AddComponent(new Player());
+                
+                
                 var camera = world.CreateEntity();
                 camera.AddComponent(new Camera { Up = Vector3.UnitY, Forward = Vector3.UnitZ, Width = 1f, Height = display.Window.Height / (float)display.Window.Width, NearPlane = 0.5f, FarPlane = 1000f });
-                camera.AddComponent(new Transform3D{Rotation = Quaternion.Identity});
+                camera.AddComponent(new Transform3D());
+                camera.AddComponent(new Light { Color = new Color(1, 1f, 1f) });
                 player.Attach(camera);
             }
 
@@ -172,7 +175,7 @@ namespace Titan
             }
 
 
-            for (var i = 0; i < 100; ++i)
+            for (var i = 0; i < 2000; ++i)
             {
                 var sphere = world.CreateEntity();
                 const float distaneConstant = 100f;
@@ -232,14 +235,14 @@ namespace Titan
                 light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\white.png"));
                 light.AddComponent(new Velocity{Value = new Vector3{X = 3.5f, Y = -8f, Z = 3f}});
             }
-            {
-                var light = world.CreateEntity();
-                light.AddComponent(new Light { Color = new Color(1, 1f, 1f) });
-                light.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0), Scale = new Vector3(0.3f) });
-                light.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
-                light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\white.png"));
-                light.AddComponent(new Velocity { Value = new Vector3 { X = -3.5f, Y = -3f, Z = 5f } });
-            }
+            //{
+            //    var light = world.CreateEntity();
+            //    light.AddComponent(new Light { Color = new Color(1, 1f, 1f) });
+            //    light.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0), Scale = new Vector3(0.3f) });
+            //    light.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
+            //    light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\white.png"));
+            //    light.AddComponent(new Velocity { Value = new Vector3 { X = -3.5f, Y = -3f, Z = 5f } });
+            //}
             var engine = _container.GetInstance<GameEngine>();
             
             OnStart();
@@ -247,32 +250,8 @@ namespace Titan
             _logger.Debug("Start main loop");
             
             //world.WriteToStream();
-            GetInstance<IGameLoop>()
-                .Run(() =>
-                {
-                    var execute = engine.Execute();
 
-                    //if (count-- == 0)
-                    //{
-                    //    parentEntity.RemoveComponent<Transform2D>();
-                    //}
-
-                    //if (count == -300)
-                    //{
-                    //    parentEntity.AddComponent(new Transform2D {Position = new Vector2(1920 / 2f, 1080 / 2f)});
-
-                    //}
-
-                    //if (count == -300)
-                    //{
-                    //    parentEntity.Destroy();
-                    //    entity1.Destroy();
-                    //}
-                
-
-                    return execute;
-                });
-
+            GetInstance<IGameLoop>().Run(engine.Execute);
 
             //_world.Destroy();
             _logger.Debug("Main loop ended");

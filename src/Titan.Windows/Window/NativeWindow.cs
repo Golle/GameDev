@@ -1,7 +1,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 using Titan.Core.EventSystem;
+using Titan.Core.Math;
 using Titan.Windows.Input;
 using Titan.Windows.Win32;
 using Titan.Windows.Window.Events;
@@ -11,25 +13,28 @@ namespace Titan.Windows.Window
     internal class NativeWindow : IWindow
     {
         public IntPtr Handle { get; internal set; }
-        public int Width { get; private set; }
-        public int Height { get; private set; }
+        public int Width => _windowSize.Width;
+        public int Height => _windowSize.Height;
         public bool Windowed => true; // This will change later
-        
         public IntPtr WindowProcedureFunctionPointer { get; }
 
+        private Size _windowSize;
+        private Point _windowCenter;
         private readonly IEventManager _eventManager;
-
-        private POINT _mousePosition;
+        private Point _mousePosition;
 
         // Create a delegate that have the same lifetime as the native window to prevent the GC to move it
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly User32.WndProcDelegate _windowProcedureDelegate;
         private GCHandle _windowsProcedureHandle;
+        private bool _cursorVisible = true;
+        private Point _hideCursorPosition;
+
         public NativeWindow(int width, int height, IEventManager eventManager)
         {
             _eventManager = eventManager;
-            Width = width;
-            Height = height;
+            _windowSize = new Size(width, height);
+            _windowCenter = new Point(width/2, height/2);
             _windowProcedureDelegate = WindowProcedure;
             WindowProcedureFunctionPointer = Marshal.GetFunctionPointerForDelegate(_windowProcedureDelegate);
             _windowsProcedureHandle = GCHandle.Alloc(WindowProcedureFunctionPointer, GCHandleType.Pinned);
@@ -71,16 +76,53 @@ namespace Titan.Windows.Window
             {
                 return;
             }
-
-            if (!User32.ScreenToClient(Handle, ref point))
+            
+            var mouseMoved = false;
+            if (_cursorVisible)
             {
-                return;
+                if (!User32.ScreenToClient(Handle, ref point))
+                {
+                    return;
+                }
+                if (_mousePosition.X != point.X || _mousePosition.Y != point.Y)
+                {
+                    _mousePosition = point;
+                    mouseMoved = true;
+                }
+            }
+            else
+            {
+                var delta = point - _windowCenter;
+                if (delta.X != 0 || delta.Y != 0)
+                {
+                    _mousePosition += delta;
+                    mouseMoved = true;
+                }
+                User32.SetCursorPos(_windowCenter.X, _windowCenter.Y);
             }
 
-            if (_mousePosition.X != point.X || _mousePosition.Y != point.Y)
+            if (mouseMoved)
             {
-                _mousePosition = point;
                 _eventManager.PublishImmediate(new MouseMovedEvent(_mousePosition.X, _mousePosition.Y));
+            }
+        }
+
+
+        public void ShowCursor(bool show)
+        {
+            _cursorVisible = show;
+            User32.ShowCursor(show);
+            if (show)
+            {
+                User32.SetCursorPos(_hideCursorPosition.X, _hideCursorPosition.Y);
+            }
+            else
+            {
+                if (User32.GetCursorPos(out var pos))
+                {
+                    _hideCursorPosition = pos;
+                }
+                User32.SetCursorPos(_windowCenter.X, _windowCenter.Y);
             }
         }
 
@@ -107,9 +149,8 @@ namespace Titan.Windows.Window
                     _eventManager.Publish(new CharacterTypedEvent((char)wParam));
                     break;
                 case WindowsMessage.WM_SIZE:
-                    var (low, high) = Split((int)lParam);
-                    Height = high;
-                    Width = low;
+                    _windowSize = Split((int)lParam);
+                    _windowCenter = new Point(_windowSize.Width/2, _windowSize.Height/2);
                     break;
                 case WindowsMessage.WM_EXITSIZEMOVE:
                     _eventManager.Publish(new WindowResizeEvent(Width, Height));
@@ -121,16 +162,16 @@ namespace Titan.Windows.Window
                 //    _eventManager.Publish(new MouseMovedEvent(GetMouseCoordinates((int)lParam)));
                 //    break;
                 case WindowsMessage.WM_LBUTTONDOWN:
-                    _eventManager.Publish(new MouseLeftButtonPressedEvent(GetMouseCoordinates((int)lParam)));
+                    _eventManager.Publish(new MouseLeftButtonPressedEvent());
                     break;
                 case WindowsMessage.WM_LBUTTONUP:
-                    _eventManager.Publish(new MouseLeftButtonReleasedEvent(GetMouseCoordinates((int)lParam)));
+                    _eventManager.Publish(new MouseLeftButtonReleasedEvent());
                     break;
                 case WindowsMessage.WM_RBUTTONDOWN:
-                    _eventManager.Publish(new MouseRightButtonPressedEvent(GetMouseCoordinates((int)lParam)));
+                    _eventManager.Publish(new MouseRightButtonPressedEvent());
                     break;
                 case WindowsMessage.WM_RBUTTONUP:
-                    _eventManager.Publish(new MouseRightButtonReleasedEvent(GetMouseCoordinates((int)lParam)));
+                    _eventManager.Publish(new MouseRightButtonReleasedEvent());
                     break;
 
                 // Add support to track mouse outside of window
@@ -158,16 +199,16 @@ namespace Titan.Windows.Window
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static (int x, int y) GetMouseCoordinates(int lParam)
-        {
-            return (lParam & 0xffff, (lParam >> 16) & 0xffff);
-        }
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //private (int x, int y) GetMouseCoordinates(int lParam)
+        //{
+        //    return (lParam & 0xffff, (lParam >> 16) & 0xffff);
+        //}
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static (int low, int high) Split(int lParam)
+        public static Size Split(int lParam)
         {
-            return (lParam & 0xffff, (lParam >> 16) & 0xffff);
+            return new Size(lParam & 0xffff, (lParam >> 16) & 0xffff);
         }
 
         public void Dispose()

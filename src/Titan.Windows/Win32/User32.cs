@@ -86,14 +86,26 @@ namespace Titan.Windows.Win32
         [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetCursorPos(
-            [Out] out POINT lpPoint
+            [Out] out Point lpPoint
+        );
+        
+        [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetCursorPos(
+            [In] int x,
+            [In] int y
+        );
+
+        [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern int ShowCursor(
+            [In, MarshalAs(UnmanagedType.Bool)] bool show
         );
 
         [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool ScreenToClient(
             [In] IntPtr hWnd,
-            ref POINT lpPoint
+            ref Point lpPoint
         );
 
         [DllImport(User32Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]

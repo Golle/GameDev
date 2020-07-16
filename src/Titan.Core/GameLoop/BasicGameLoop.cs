@@ -39,9 +39,6 @@ namespace Titan.Core.GameLoop
                 }
 
                 _eventManager.PublishImmediate(new UpdateEvent(deltaTicks / (float)frequency, deltaTicks));
-
-                _eventManager.Update();
-
                 lastTick = currentTick;
             }
         }

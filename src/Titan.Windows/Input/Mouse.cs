@@ -1,4 +1,5 @@
 using Titan.Core.EventSystem;
+using Titan.Windows.Win32;
 using Titan.Windows.Window.Events;
 
 namespace Titan.Windows.Input
@@ -23,32 +24,27 @@ namespace Titan.Windows.Input
         private void OnRightButtonReleased(in MouseRightButtonReleasedEvent @event)
         {
             RightButtonDown = false;
-            Position = new Point(@event.X, @event.Y);
         }
 
         private void OnRightButtonPressed(in MouseRightButtonPressedEvent @event)
         {
             RightButtonDown = true;
-            Position = new Point(@event.X, @event.Y);
         }
 
         private void OnLeftButtonReleased(in MouseLeftButtonReleasedEvent @event)
         {
             LeftButtonDown = false;
-            Position = new Point(@event.X, @event.Y);
         }
 
         private void OnLeftButtonPressed(in MouseLeftButtonPressedEvent @event)
         {
             LeftButtonDown = true;
-            Position = new Point(@event.X, @event.Y);
         }
 
         private void OnMouseMoved(in MouseMovedEvent @event)
         {
             Position = new Point(@event.X, @event.Y);
         }
-
 
         public void Update()
         {

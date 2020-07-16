@@ -10,6 +10,7 @@ namespace Titan.Windows.Window
 
         bool Windowed { get; }
         void SetTitle(string title);
+        void ShowCursor(bool show);
         void HideWindow();
         void ShowWindow();
         bool Update();

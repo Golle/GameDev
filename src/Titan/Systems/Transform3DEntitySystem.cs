@@ -27,12 +27,11 @@ namespace Titan.Systems
                 Matrix4x4.CreateScale(transform.Scale) *
                 Matrix4x4.CreateFromQuaternion(transform.Rotation) *
                 Matrix4x4.CreateTranslation(transform.Position)
-                 ;
+                ;
 
             if (_relationship.TryGetParent(entityId, out var parentId) && _transform.Has(parentId))
             {
-                // TODO: add support for adding parent pos etc
-                transform.WorldTransform = transform.ModelTransform;
+                transform.WorldTransform = transform.ModelTransform * _transform[parentId].WorldTransform;
             }
             else
             {

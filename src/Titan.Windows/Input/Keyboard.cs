@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Titan.Core.EventSystem;
 using Titan.Windows.Window.Events;
@@ -71,10 +72,7 @@ namespace Titan.Windows.Input
         internal void Update()
         {
             _charQueue.Clear();
-            for (var i = 0; i < _previousState.Length; ++i)
-            {
-                _previousState[i] = false;
-            }
+            Array.Fill(_previousState, false);
         }
     }
 }

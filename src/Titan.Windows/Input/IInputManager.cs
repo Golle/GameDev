@@ -4,5 +4,6 @@ namespace Titan.Windows.Input
     {
         IKeyboard Keyboard { get; }
         IMouse Mouse { get; }
+        void Update();
     }
 }

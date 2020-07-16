@@ -11,7 +11,7 @@ namespace Titan.Windows.Win32
         internal IntPtr WParam;
         internal IntPtr LParam;
         internal ulong Time;
-        internal POINT Point;
+        internal Point Point;
         internal ulong LPrivate;
     }
 }

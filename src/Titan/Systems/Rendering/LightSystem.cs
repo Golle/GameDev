@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 using Titan.Components;
 using Titan.ECS;
 using Titan.ECS.Components;
@@ -27,7 +28,7 @@ namespace Titan.Systems.Rendering
             ref var light = ref _light[entityId];
             ref var transform = ref _transform[entityId];
 
-            _renderer.SubmitLight(light.Color, transform.Position);
+            _renderer.SubmitLight(light.Color, Vector3.Transform(Vector3.Zero, transform.WorldTransform));
         }
     }
 }
