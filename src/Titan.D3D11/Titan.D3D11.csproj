@@ -34,6 +34,12 @@
     <Content Include="..\Titan.D3D11.Bindings\bin\x64\$(Configuration)\PixelShader2D.cso" Link="Shaders\PixelShader2D.cso">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Titan.D3D11.Bindings\bin\x64\$(Configuration)\LinePixelShader.cso" Link="Shaders\LinePixelShader.cso">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Titan.D3D11.Bindings\bin\x64\$(Configuration)\LineVertexShader.cso" Link="Shaders\LineVertexShader.cso">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Titan.Windows\Titan.Windows.csproj" />

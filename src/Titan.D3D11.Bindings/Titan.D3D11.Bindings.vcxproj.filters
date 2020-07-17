@@ -39,5 +39,11 @@
     <FxCompile Include="VertexShader2D.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="LinePixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="LineVertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
