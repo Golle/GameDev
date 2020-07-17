@@ -256,43 +256,29 @@ namespace Titan.Graphics.Renderer
 
 
             _indices[_numberOfIndices++] = offset;
-            _indices[_numberOfIndices++] = (short) (offset + 1);
+            _indices[_numberOfIndices++] = (short)(offset + 1);
             _indices[_numberOfIndices++] = offset;
             _indices[_numberOfIndices++] = (short)(offset + 2);
             _indices[_numberOfIndices++] = offset;
             _indices[_numberOfIndices++] = (short)(offset + 3);
-
             _indices[_numberOfIndices++] = (short)(offset + 4);
             _indices[_numberOfIndices++] = (short)(offset + 5);
             _indices[_numberOfIndices++] = (short)(offset + 4);
             _indices[_numberOfIndices++] = (short)(offset + 6);
             _indices[_numberOfIndices++] = (short)(offset + 4);
             _indices[_numberOfIndices++] = (short)(offset + 7);
-
             _indices[_numberOfIndices++] = (short)(offset + 5);
             _indices[_numberOfIndices++] = (short)(offset + 2);
             _indices[_numberOfIndices++] = (short)(offset + 5);
             _indices[_numberOfIndices++] = (short)(offset + 3);
-            
             _indices[_numberOfIndices++] = (short)(offset + 7);
             _indices[_numberOfIndices++] = (short)(offset + 2);
             _indices[_numberOfIndices++] = (short)(offset + 7);
             _indices[_numberOfIndices++] = (short)(offset + 1);
-            
             _indices[_numberOfIndices++] = (short)(offset + 6);
             _indices[_numberOfIndices++] = (short)(offset + 3);
             _indices[_numberOfIndices++] = (short)(offset + 6);
             _indices[_numberOfIndices++] = (short)(offset + 1);
-
-
-
-            //_indices[_numberOfIndices++] = (ushort)(offset + 2);
-            //_indices[_numberOfIndices++] = (ushort)(offset + 5);
-            //_indices[_numberOfIndices++] = offset;
-            //_indices[_numberOfIndices++] = (ushort)(offset + 6);
-            //_indices[_numberOfIndices++] = offset;
-            //_indices[_numberOfIndices++] = (ushort)(offset + 7);
-
         }
 
         public void SetCamera(in Matrix4x4 viewProjection, in Matrix4x4 view)
