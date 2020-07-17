@@ -37,7 +37,7 @@ namespace Titan.Systems
                 {
                     velocity.Z *= -1f;
                 }
-                transform.Position += velocity * deltaTime * 5f;
+                transform.Position += velocity * deltaTime * 5f * 0.1f;
             }
         }
     }

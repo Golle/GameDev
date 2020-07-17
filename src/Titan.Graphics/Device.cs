@@ -19,7 +19,7 @@ namespace Titan.Graphics
 
         private readonly Color _clearColor = new Color{Blue = 0.6f, Alpha = 1f};
 
-        private readonly bool _vSync = true;
+        private readonly bool _vSync = false;
 
         public Device(ID3D11Device device, ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencilView)
         {
@@ -224,13 +224,15 @@ namespace Titan.Graphics
             return new BlendState(_device.Context, blendState);
         }
 
+        public void SetPrimitiveTopology(PrimitiveTopology topology)
+        {
+            _device.Context.SetPrimitiveTopology((D3D11PrimitiveTopology)topology);
+        }
+
         public void BeginRender()
         {
             _device.Context.ClearRenderTargetView(_renderTarget, _clearColor);
             _device.Context.ClearDepthStencilView(_depthStencilView, D3D11ClearFlag.Depth, 1f, 0);
-            
-            // TODO: this is tempory
-            _device.Context.SetPrimitiveTopology(D3D11PrimitiveTopology.D3D11PrimitiveTopologyTrianglelist);
         }
 
         public void EndRender()

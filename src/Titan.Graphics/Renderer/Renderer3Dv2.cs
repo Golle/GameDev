@@ -98,11 +98,11 @@ namespace Titan.Graphics.Renderer
             _vertexShader = _device.CreateVertexShader(vertexShaderBlob);
             using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/PixelShader.cso");
             _pixelShader = _device.CreatePixelShader(pixelShaderBlob);
-     
-           _inputLayout = device.CreateInputLayout(new VertexLayout(4).Append("Position", VertexLayoutTypes.Position3D).Append("Normal", VertexLayoutTypes.Position3D).Append("Texture", VertexLayoutTypes.Texture2D).Append("Color", VertexLayoutTypes.Float4Color), vertexShaderBlob);
-           _perFrameConstantBuffer = device.CreateConstantBuffer<PerFrameContantBuffer>();
-           _lightsConstantBuffer = device.CreateConstantBuffer<LightsConstantBuffer>();
-           _perObjectConstantBuffer = device.CreateConstantBuffer<PerObjectContantBuffer>();
+
+            _inputLayout = device.CreateInputLayout(new VertexLayout(4).Append("Position", VertexLayoutTypes.Position3D).Append("Normal", VertexLayoutTypes.Position3D).Append("Texture", VertexLayoutTypes.Texture2D).Append("Color", VertexLayoutTypes.Float4Color), vertexShaderBlob);
+            _perFrameConstantBuffer = device.CreateConstantBuffer<PerFrameContantBuffer>();
+            _lightsConstantBuffer = device.CreateConstantBuffer<LightsConstantBuffer>();
+            _perObjectConstantBuffer = device.CreateConstantBuffer<PerObjectContantBuffer>();
             _sampler = device.CreateSampler();
         }
 
@@ -129,6 +129,7 @@ namespace Titan.Graphics.Renderer
             _inputLayout.Bind();
             _vertexShader.Bind();
             _pixelShader.Bind();
+            //_device.BeginRender();
         }
 
 
@@ -136,6 +137,7 @@ namespace Titan.Graphics.Renderer
         private ITexture2D _lastTexture = null;
         public void Render(IMesh mesh, in Matrix4x4 worldMatrix, ITexture2D texture)
         {
+            
             _perObjectConstantBuffer.Update(new PerObjectContantBuffer {World = Matrix4x4.Transpose(worldMatrix)});
             _perObjectConstantBuffer.BindToVertexShader(PerObjectSlot);
             
@@ -155,7 +157,7 @@ namespace Titan.Graphics.Renderer
             }
 
             //_perObjectConstantBuffer.BindToPixelShader();
-            
+
             _device.Draw(mesh.VertexBuffer.NumberOfVertices, 0);
             //_device.DrawIndexed(mesh.IndexBuffer.NumberOfIndices, 0, 0);
 
@@ -186,6 +188,147 @@ namespace Titan.Graphics.Renderer
         {
             _lights.Add((position, color));
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetPrimitiveTopology(PrimitiveTopology topology) => _device.SetPrimitiveTopology(topology);
     }
 
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct LineVertex
+    {
+        public Vector3 Position;
+        public Color Color;
+
+        public LineVertex(float x, float y, float z, in Color color)
+        {
+            Position = new Vector3(x, y, z);
+            Color = color;
+        }
+    }
+
+    public class RendererDebug3Dv3 : IDisposable
+    {
+        private readonly IDevice _device;
+
+        private readonly IConstantBuffer<PerObjectContantBuffer> _perObjectConstantBuffer;
+        private readonly IConstantBuffer<PerFrameContantBuffer> _perFrameConstantBuffer;
+        private readonly IInputLayout _inputLayout;
+        private readonly IVertexShader _vertexShader;
+        private readonly IPixelShader _pixelShader;
+        private readonly IIndexBuffer _indexBuffer;
+        private readonly IVertexBuffer<LineVertex> _vertexBuffer;
+
+
+        private readonly LineVertex[] _vertices = new LineVertex[60000];
+        private readonly short[] _indices = new short[10000];
+        private int _numberOfVertices;
+        private int _numberOfIndices;
+
+        public RendererDebug3Dv3(IDevice device, IBlobReader blobReader)
+        {
+            _device = device;
+            using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/LineVertexShader.cso");
+            _vertexShader = _device.CreateVertexShader(vertexShaderBlob);
+            using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/LinePixelShader.cso");
+            _pixelShader = _device.CreatePixelShader(pixelShaderBlob);
+
+            _inputLayout = device.CreateInputLayout(new VertexLayout(2).Append("Position", VertexLayoutTypes.Position3D).Append("Color", VertexLayoutTypes.Float4Color), vertexShaderBlob);
+            _perFrameConstantBuffer = device.CreateConstantBuffer<PerFrameContantBuffer>();
+            _perObjectConstantBuffer = device.CreateConstantBuffer<PerObjectContantBuffer>();
+
+            _indexBuffer = _device.CreateIndexBuffer(10000);
+            _vertexBuffer = _device.CreateVertexBuffer<LineVertex>(60000);
+        }
+
+        public void DrawBox(in Vector3 min, in Vector3 max, in Color color)
+        {
+            var offset = (short)_numberOfVertices;
+
+            _vertices[_numberOfVertices++] = new LineVertex(min.X, min.Y, min.Z, color);
+            _vertices[_numberOfVertices++] = new LineVertex(max.X, min.Y, min.Z, color);
+            _vertices[_numberOfVertices++] = new LineVertex(min.X, max.Y, min.Z, color);
+            _vertices[_numberOfVertices++] = new LineVertex(min.X, min.Y, max.Z, color);
+            _vertices[_numberOfVertices++] = new LineVertex(max.X, max.Y, max.Z, color);
+            _vertices[_numberOfVertices++] = new LineVertex(min.X, max.Y, max.Z, color);
+            _vertices[_numberOfVertices++] = new LineVertex(max.X, min.Y, max.Z, color);
+            _vertices[_numberOfVertices++] = new LineVertex(max.X, max.Y, min.Z, color);
+
+
+            _indices[_numberOfIndices++] = offset;
+            _indices[_numberOfIndices++] = (short) (offset + 1);
+            _indices[_numberOfIndices++] = offset;
+            _indices[_numberOfIndices++] = (short)(offset + 2);
+            _indices[_numberOfIndices++] = offset;
+            _indices[_numberOfIndices++] = (short)(offset + 3);
+
+            _indices[_numberOfIndices++] = (short)(offset + 4);
+            _indices[_numberOfIndices++] = (short)(offset + 5);
+            _indices[_numberOfIndices++] = (short)(offset + 4);
+            _indices[_numberOfIndices++] = (short)(offset + 6);
+            _indices[_numberOfIndices++] = (short)(offset + 4);
+            _indices[_numberOfIndices++] = (short)(offset + 7);
+
+            _indices[_numberOfIndices++] = (short)(offset + 5);
+            _indices[_numberOfIndices++] = (short)(offset + 2);
+            _indices[_numberOfIndices++] = (short)(offset + 5);
+            _indices[_numberOfIndices++] = (short)(offset + 3);
+            
+            _indices[_numberOfIndices++] = (short)(offset + 7);
+            _indices[_numberOfIndices++] = (short)(offset + 2);
+            _indices[_numberOfIndices++] = (short)(offset + 7);
+            _indices[_numberOfIndices++] = (short)(offset + 1);
+            
+            _indices[_numberOfIndices++] = (short)(offset + 6);
+            _indices[_numberOfIndices++] = (short)(offset + 3);
+            _indices[_numberOfIndices++] = (short)(offset + 6);
+            _indices[_numberOfIndices++] = (short)(offset + 1);
+
+
+
+            //_indices[_numberOfIndices++] = (ushort)(offset + 2);
+            //_indices[_numberOfIndices++] = (ushort)(offset + 5);
+            //_indices[_numberOfIndices++] = offset;
+            //_indices[_numberOfIndices++] = (ushort)(offset + 6);
+            //_indices[_numberOfIndices++] = offset;
+            //_indices[_numberOfIndices++] = (ushort)(offset + 7);
+
+        }
+
+        public void SetCamera(in Matrix4x4 viewProjection, in Matrix4x4 view)
+        {
+            _perFrameConstantBuffer.Update(new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
+            _perFrameConstantBuffer.BindToVertexShader(0);
+        }
+
+        public void Render()
+        {
+            _device.SetPrimitiveTopology(PrimitiveTopology.LineList);
+
+            _vertexBuffer.SetData(_vertices, _numberOfVertices);
+            _indexBuffer.SetData(_indices, _numberOfIndices);
+
+            _inputLayout.Bind();
+            _vertexShader.Bind();
+            _pixelShader.Bind();
+            _vertexBuffer.Bind();
+            _indexBuffer.Bind();
+
+            _device.DrawIndexed((uint) _numberOfIndices, 0, 0);
+            
+            _numberOfIndices = 0;
+            _numberOfVertices = 0;
+        }
+
+        public void Dispose()
+        {
+            _perObjectConstantBuffer.Dispose();
+            _perFrameConstantBuffer.Dispose();
+            _inputLayout.Dispose();
+            _vertexShader.Dispose();
+            _pixelShader.Dispose();
+            _indexBuffer.Dispose();
+            _vertexBuffer.Dispose();
+        }
+    }
 }

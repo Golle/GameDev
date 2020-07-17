@@ -52,7 +52,8 @@ namespace Titan.Graphics
             texture2DDesc.MipLevels = 1u;
             texture2DDesc.ArraySize = 1u;
             texture2DDesc.Format = DxgiFormat.D32Float;
-            texture2DDesc.SampleDesc.Count = 1u;
+            //texture2DDesc.SampleDesc.Count = 4u;  // AA
+            texture2DDesc.SampleDesc.Count = 1;
             texture2DDesc.SampleDesc.Quality = 0;
             texture2DDesc.Usage = D3D11Usage.Default;
             texture2DDesc.BindFlags = D3D11BindFlag.DepthStencil;
@@ -61,6 +62,7 @@ namespace Titan.Graphics
             D3D11DepthStencilViewDesc viewDesc = default;
             viewDesc.Format = DxgiFormat.D32Float;
             viewDesc.ViewDimension = D3D11DsvDimension.Texture2D;
+            //viewDesc.ViewDimension = D3D11DsvDimension.Texture2Dms; // AA
             viewDesc.Texture2D.MipSlice = 0u;
             var depthStencilView = d3D11Device.CreateDepthStencilView(depthStencil, viewDesc);
 

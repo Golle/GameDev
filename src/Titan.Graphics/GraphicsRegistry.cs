@@ -23,6 +23,7 @@ namespace Titan.Graphics
                 .Register<ICameraFactory, CameraFactory>()
                 .Register<ISpriteBatchRenderer, SpriteBatchRenderer>()
                 .Register<Renderer3Dv2>()
+                .Register<RendererDebug3Dv3>()
                 
                 .Register<IMeshLoader, MeshLoader>()
                 .Register<ITextureLoader, TextureLoader>()

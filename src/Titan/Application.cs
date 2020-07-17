@@ -1,4 +1,5 @@
 using System;
+using System.Net.WebSockets;
 using System.Numerics;
 using Titan.Components;
 using Titan.Configuration;
@@ -18,6 +19,7 @@ using Titan.Graphics.Models;
 using Titan.Graphics.Textures;
 using Titan.Scenes;
 using Titan.Systems;
+using Titan.Systems.Debugging;
 using Titan.Systems.Rendering;
 using Titan.Windows;
 using Titan.Windows.Window;
@@ -159,7 +161,6 @@ namespace Titan
                 player.AddComponent(new Transform3D{Rotation = Quaternion.Identity});
                 player.AddComponent(new Player());
                 
-                
                 var camera = world.CreateEntity();
                 camera.AddComponent(new Camera { Up = Vector3.UnitY, Forward = Vector3.UnitZ, Width = 1f, Height = display.Window.Height / (float)display.Window.Width, NearPlane = 0.5f, FarPlane = 1000f });
                 camera.AddComponent(new Transform3D());
@@ -175,25 +176,23 @@ namespace Titan
             }
 
 
-            for (var i = 0; i < 2000; ++i)
+            for (var i = 0; i < 100; ++i)
             {
                 var sphere = world.CreateEntity();
                 const float distaneConstant = 100f;
                 sphere.AddComponent(new Transform3D { Position = new Vector3(random.Next(-10000, 10000)/distaneConstant, random.Next(-10000, 10000) / distaneConstant, random.Next(-10000, 10000) / distaneConstant), Scale = new Vector3(random.Next(100, 300)/100f) });
                 sphere.AddComponent(new Velocity{Value = new Vector3(random.Next(-10000, 10000) / 1000f, random.Next(-10000, 10000) / 1000f ,random.Next(-10000, 10000) / 1000f)});
-                //switch (random.Next(10) % 3)
-                //{
-                //    case 0: sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere1.obj")); break;
-                //    case 1: sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj")); break;
-                //    case 2: sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\cube.obj")); break;
-                //}
-                sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere1.obj"));
+                switch (random.Next(10) % 3)
+                {
+                    case 0: sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere1.obj")); break;
+                    case 1: sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj")); break;
+                    case 2: sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\cube.obj")); break;
+                }
 
                 sphere.AddComponent(random.Next(10) % 2 == 0
                     ? new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\blue.png")
                     : new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\red.png"));
             }
-
 
             {
                 var sphere = world.CreateEntity();
@@ -307,12 +306,14 @@ namespace Titan
                 .WithSystem<MovementSystem2D>()
                 .WithSystem<Transform2DEntitySystem>()
                 .WithSystem<Model3DRenderSystem>()
+                .WithSystem<BoundingBoxSystem>()
                 .WithSystem<Transform3DEntitySystem>()
                 .WithSystem<MovementSystem3D>()
                 .WithSystem<LightSystem>()
                 .WithSystem<SpriteRenderSystem>()
                 .WithSystem<UIRenderSystem>()
                 .WithSystem<Camera3DSystem>()
+                
                 .Build();
 
                 //.WithSystem<MovementSystem2D>();

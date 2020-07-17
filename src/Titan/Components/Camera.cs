@@ -38,16 +38,18 @@ namespace Titan.Components
     internal class Camera3DSystem : EntitySystem
     {
         private readonly Renderer3Dv2 _renderer;
+        private readonly RendererDebug3Dv3 _rendererDebug;
         private readonly IComponentMap<Transform3D> _transform;
         private readonly IComponentMap<Camera> _camera;
         private readonly IRelationship _relationShip;
 
         private static readonly Vector3 DefaultForward = new Vector3(0,0,1);
         private static readonly Vector3 DefaultUp = new Vector3(0,1,0);
-        public Camera3DSystem(IWorld world, Renderer3Dv2 renderer) 
+        public Camera3DSystem(IWorld world, Renderer3Dv2 renderer, RendererDebug3Dv3 rendererDebug) 
             : base(world, world.EntityFilter().With<Camera>().With<Transform3D>())
         {
             _renderer = renderer;
+            _rendererDebug = rendererDebug;
             _camera = Map<Camera>();
             _transform = Map<Transform3D>();
             _relationShip = Relationship();
@@ -77,6 +79,7 @@ namespace Titan.Components
             camera.ViewProjectionMatrix = camera.ViewMatrix * camera.ProjectionMatrix;
 
             _renderer.SetCamera(camera.ViewProjectionMatrix, camera.ViewMatrix);
+            _rendererDebug.SetCamera(camera.ViewProjectionMatrix, camera.ViewMatrix);
         }
     }
 }

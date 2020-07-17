@@ -19,7 +19,8 @@ namespace Titan.D3D11.Device
             desc.BufferDesc.RefreshRate.Denominator = arguments.RefreshRate;
             desc.BufferDesc.Scaling = DxgiModeScaling.Unspecified;
             desc.BufferDesc.ScanlineOrdering = DxgiModeScanlineOrder.Unspecified;
-            
+
+            //desc.SampleDesc.Count = 4;  // AA
             desc.SampleDesc.Count = 1;
             desc.SampleDesc.Quality = 0;
             

@@ -19,12 +19,14 @@ namespace Titan.Graphics.Models
 
         public IMesh Load(string filename)
         {
+            var min = Vector3.Zero;
+            var max = Vector3.Zero;
 
             var vertices = new HashSet<(Vector3, Vector2, Vector3)>();
             var vertices1 = new HashSet<(Vector3, Vector2)>();
 
             var model = _assetLoader.LoadModel(filename);
-
+            
             var numberOfVertices = model.Faces.Length * 3;
             var vertexData = new TexturedVertex[numberOfVertices];
             var indices = new short[model.Faces.Length * 3];
@@ -44,6 +46,7 @@ namespace Titan.Graphics.Models
                     if (element.Vertex != -1)
                     {
                         vertex.Position = model.Vertices[element.Vertex];
+                        UpdateBoundingBox(vertex.Position, ref min, ref max);
                     }
 
                     if (element.Normal != -1)
@@ -62,6 +65,7 @@ namespace Titan.Graphics.Models
             }
             Console.WriteLine("{0} unique vertices(v3, v2, v3) out of {1}", vertices.Count, numberOfVertices);
             Console.WriteLine("{0} unique vertices(v3, v2) out of {1}", vertices1.Count, numberOfVertices);
+            Console.WriteLine("Min: {0}  Max: {1}", min, max);
 
             //var vertexIndex = 0;
             //for (var i = 0; i < indices.Length; i += 6)
@@ -77,7 +81,18 @@ namespace Titan.Graphics.Models
             //vertexData = Model;
             //indices = Indices;
 
-            return new Mesh(_device.CreateVertexBuffer(vertexData), _device.CreateIndexBuffer(indices));
+            return new Mesh(_device.CreateVertexBuffer(vertexData), _device.CreateIndexBuffer(indices), min, max);
+        }
+
+        private static void UpdateBoundingBox(in Vector3 position, ref Vector3 min, ref Vector3 max)
+        {
+            min.X = Math.Min(position.X, min.X);
+            min.Y = Math.Min(position.Y, min.Y);
+            min.Z = Math.Min(position.Z, min.Z);
+
+            max.X = Math.Max(position.X, max.X);
+            max.Y = Math.Max(position.Y, max.Y);
+            max.Z = Math.Max(position.Z, max.Z);
         }
     }
 }

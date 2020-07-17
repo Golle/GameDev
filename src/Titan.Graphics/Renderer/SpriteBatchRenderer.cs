@@ -137,6 +137,7 @@ namespace Titan.Graphics.Renderer
             
             if (_numberOfIndices > 0u)
             {
+                _device.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
                 _cameraBuffer.BindToVertexShader();
                 _buffer.Bind();
                 _indices.Bind();
