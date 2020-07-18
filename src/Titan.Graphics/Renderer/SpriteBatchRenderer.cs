@@ -21,7 +21,7 @@ namespace Titan.Graphics.Renderer
         {
             public Vector2 Position;
             public Vector2 TextureCoordinates;
-            //public Color Color;
+            public Color Color;
         }
 
         private readonly IDevice _device;
@@ -61,7 +61,7 @@ namespace Titan.Graphics.Renderer
             using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/PixelShader2D.cso");
             _pixelShader = device.CreatePixelShader(pixelShaderBlob);
 
-            _inputLayout = device.CreateInputLayout(new VertexLayout(2).Append("Position", VertexLayoutTypes.Position2D).Append("Textures", VertexLayoutTypes.Texture2D), vertexShaderBlob);
+            _inputLayout = device.CreateInputLayout(new VertexLayout(3).Append("Position", VertexLayoutTypes.Position2D).Append("Textures", VertexLayoutTypes.Texture2D).Append("Color", VertexLayoutTypes.Float4Color), vertexShaderBlob);
             //_inputLayout = device.CreateInputLayout(new VertexLayout(2).Append("Position", VertexLayoutTypes.Position2D).Append("Color", VertexLayoutTypes.Float4Color), vertexShaderBlob);
 
         }
@@ -83,29 +83,35 @@ namespace Titan.Graphics.Renderer
             return indices;
         }
 
-        public void Push(ITexture2D texture2D, in Vector2 position, in Vector2 size, in Color color)
+        public void Push(ITexture2D texture2D, in TextureCoordinates textureCoordinates, in Vector2 position, in Vector2 size, in Color color)
         {
             var textureIndex = GetTextureIndex(texture2D);
 
-
             var index = _numberOfVertices;
 
-            _vertices[index].Position = position;
-            _vertices[index++].TextureCoordinates = Vector2.Zero;
+            var topLeft = textureCoordinates.TopLeft;
+            var bottomRight = textureCoordinates.BottomRight;
 
-            //_vertices[index++].Color = color;
+            
+            _vertices[index].Position = position;
+            _vertices[index].Color = color;
+            _vertices[index++].TextureCoordinates = topLeft;
+            
 
             _vertices[index].Position = new Vector2(position.X + size.X, position.Y);
-            _vertices[index++].TextureCoordinates = new Vector2(1f, 0f);
+            _vertices[index].Color = color;
+            _vertices[index++].TextureCoordinates = new Vector2(bottomRight.X, topLeft.Y);
 
             //_vertices[index++].Color = color;
 
             _vertices[index].Position = new Vector2(position.X + size.X, position.Y + size.Y);
-            _vertices[index++].TextureCoordinates = Vector2.One;
+            _vertices[index].Color = color;
+            _vertices[index++].TextureCoordinates = bottomRight;
             //_vertices[index++].Color = color;
 
             _vertices[index].Position = new Vector2(position.X, position.Y + size.Y);
-            _vertices[index].TextureCoordinates = new Vector2(0f, 1f); ;
+            _vertices[index].Color = color;
+            _vertices[index].TextureCoordinates = new Vector2(topLeft.X, bottomRight.Y);
 
             //_vertices[index].Color = color;
 

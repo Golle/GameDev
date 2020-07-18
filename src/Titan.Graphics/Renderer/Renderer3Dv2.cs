@@ -219,9 +219,11 @@ namespace Titan.Graphics.Renderer
         private readonly IIndexBuffer _indexBuffer;
         private readonly IVertexBuffer<LineVertex> _vertexBuffer;
 
+        private const int MaxBoxes = 8000;
 
-        private readonly LineVertex[] _vertices = new LineVertex[60000];
-        private readonly short[] _indices = new short[10000];
+
+        private readonly LineVertex[] _vertices = new LineVertex[8 * MaxBoxes];
+        private readonly short[] _indices = new short[24 * MaxBoxes];
         private int _numberOfVertices;
         private int _numberOfIndices;
 
@@ -237,8 +239,8 @@ namespace Titan.Graphics.Renderer
             _perFrameConstantBuffer = device.CreateConstantBuffer<PerFrameContantBuffer>();
             _perObjectConstantBuffer = device.CreateConstantBuffer<PerObjectContantBuffer>();
 
-            _indexBuffer = _device.CreateIndexBuffer(10000);
-            _vertexBuffer = _device.CreateVertexBuffer<LineVertex>(60000);
+            _indexBuffer = _device.CreateIndexBuffer((uint) _indices.Length);
+            _vertexBuffer = _device.CreateVertexBuffer<LineVertex>((uint) _vertices.Length);
         }
 
         public void DrawBox(in Vector3 min, in Vector3 max, in Color color)

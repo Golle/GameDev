@@ -112,9 +112,10 @@ namespace Titan
             var random = new Random();
         
             var entity1 = world.CreateEntity();
-            entity1.AddComponent(new TransformRect { Position = new Vector3(1920-200, 1080-200, 0), Size = new Size(200) });
-            entity1.AddComponent(new Sprite { TextureCoordinates = TextureCoordinates.Default, Color = new Color(1, 1, 1) });
-            entity1.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\link.png"));
+            entity1.AddComponent(new TransformRect { Position = new Vector3(1920/2f, 1080 / 2f, 0), Size = new Size(200, 100) });
+            //entity1.AddComponent(new Sprite { TextureCoordinates = new TextureCoordinates(new Vector2(0f, 1f), new Vector2(1f/1f, 1f - 1f/32f)), Color = new Color(1, 1, 1) });
+            entity1.AddComponent(new Sprite { TextureCoordinates = new TextureCoordinates { BottomRight = new Vector2(1f/8f, 1), TopLeft = new Vector2(0, 1f-1f/16f) }, Color = new Color(1, 1, 1) });
+            entity1.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\ui_spritesheet.png"));
 
             //entity1.AddComponent(new Resource<(string, VertexLayout), (IVertexShader, IInputLayout)>(("Shaders/VertexShader.cso", ColoredVertex.VertexLayout)));
             //entity1.AddComponent(new Resource<string, IPixelShader>("Shaders/PixelShader.cso"));
@@ -176,7 +177,7 @@ namespace Titan
             }
 
 
-            for (var i = 0; i < 100; ++i)
+            for (var i = 0; i < 600; ++i)
             {
                 var sphere = world.CreateEntity();
                 const float distaneConstant = 100f;
@@ -245,7 +246,6 @@ namespace Titan
             var engine = _container.GetInstance<GameEngine>();
             
             OnStart();
-            var count = 300;
             _logger.Debug("Start main loop");
             
             //world.WriteToStream();
@@ -304,16 +304,19 @@ namespace Titan
 
             var systemsRunner = ConfigureSystems(new SystemsRunnerBuilder(world, _container.CreateChildContainer()))
                 .WithSystem<MovementSystem2D>()
+                .WithSystem<MovementSystem3D>()
                 .WithSystem<Transform2DEntitySystem>()
+                .WithSystem<Transform3DEntitySystem>()
+
+                .WithSystem<Camera3DSystem>()
+                .WithSystem<LightSystem>()
                 .WithSystem<Model3DRenderSystem>()
                 .WithSystem<BoundingBoxSystem>()
-                .WithSystem<Transform3DEntitySystem>()
-                .WithSystem<MovementSystem3D>()
-                .WithSystem<LightSystem>()
-                .WithSystem<SpriteRenderSystem>()
-                .WithSystem<UIRenderSystem>()
-                .WithSystem<Camera3DSystem>()
                 
+                .WithSystem<SpriteRenderSystem>()
+                
+                
+                .WithSystem<UIRenderSystem>()
                 .Build();
 
                 //.WithSystem<MovementSystem2D>();

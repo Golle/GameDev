@@ -61,6 +61,10 @@
             {
                 "name": "Titan.Components.Player",
                 "size": 1
+            },
+            {
+                "name": "Titan.Components.UI.Button",
+                "size": 100
             }
         ]
     }
