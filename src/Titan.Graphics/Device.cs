@@ -197,10 +197,10 @@ namespace Titan.Graphics
             return new Texture2D(_device.Context, texture, textureView, width, height);
         }
 
-        public ISampler CreateSampler()
+        public ISampler CreateSampler(bool point = false)
         {
             D3D11SamplerDesc desc = default;
-            desc.Filter = D3D11Filter.MinMagMipLinear;
+            desc.Filter = point ? D3D11Filter.MaximumMinMagMipPoint : D3D11Filter.MinMagMipLinear;
             desc.AddressU = D3D11TextureAddressMode.Wrap;
             desc.AddressV = D3D11TextureAddressMode.Wrap;
             desc.AddressW = D3D11TextureAddressMode.Wrap;

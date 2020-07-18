@@ -19,7 +19,7 @@ namespace Titan.Graphics
         IPixelShader CreatePixelShader(IBlob pixelShaderBlob);
         IInputLayout CreateInputLayout(VertexLayout vertexLayout, IBlob vertexShaderBlob);
         ITexture2D CreateTexture2D(uint width, uint height, in byte[] pixels);
-        ISampler CreateSampler();
+        ISampler CreateSampler(bool point = false);
         IBlendState CreateBlendState();
         void SetPrimitiveTopology(PrimitiveTopology topology);
         void BeginRender();

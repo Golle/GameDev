@@ -53,7 +53,7 @@ namespace Titan.Graphics.Renderer
 
             _buffer = device.CreateVertexBuffer<Vertex2D>(MaxVertices);
             _indices = device.CreateIndexBuffer(CreateIndices());
-            _sampler = device.CreateSampler();
+            _sampler = device.CreateSampler(true);
             _blendState = device.CreateBlendState();
             _cameraBuffer = device.CreateConstantBuffer(new Camera {Transform = _camera.ViewProjection});
             using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/VertexShader2D.cso");
