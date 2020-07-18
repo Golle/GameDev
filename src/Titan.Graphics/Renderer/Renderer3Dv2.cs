@@ -47,9 +47,9 @@ namespace Titan.Graphics.Renderer
             var parameter = index * 4;
             unsafe
             {
-                LightColors[parameter] = color.Red;
-                LightColors[parameter + 1] = color.Green;
-                LightColors[parameter + 2] = color.Blue;
+                LightColors[parameter] = color.R;
+                LightColors[parameter + 1] = color.G;
+                LightColors[parameter + 2] = color.B;
                 //LightColors[parameter + 4] = color.Alpha;
             }
         }

@@ -50,7 +50,7 @@ namespace Titan.Systems.Debugging
             ref var transform = ref _transform[entityId];
             ref var model = ref _model[entityId];
             
-            _renderer.DrawBox(Vector3.Transform(model.Mesh.Min, transform.WorldTransform), Vector3.Transform(model.Mesh.Max, transform.WorldTransform), new Color{Alpha = 1f, Blue = 1f, Green = 1f, Red = 0});
+            _renderer.DrawBox(Vector3.Transform(model.Mesh.Min, transform.WorldTransform), Vector3.Transform(model.Mesh.Max, transform.WorldTransform), new Color{A = 1f, B = 1f, G = 1f, R = 0});
         }
     }
 }

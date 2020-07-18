@@ -17,7 +17,7 @@ namespace Titan.Graphics
         private readonly ID3D11RenderTargetView _renderTarget;
         private readonly ID3D11DepthStencilView _depthStencilView;
 
-        private readonly Color _clearColor = new Color{Blue = 0.6f, Alpha = 1f};
+        private readonly Color _clearColor = new Color{B = 0.6f, A = 1f};
 
         private readonly bool _vSync = false;
 

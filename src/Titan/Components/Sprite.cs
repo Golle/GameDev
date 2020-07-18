@@ -5,7 +5,7 @@ using Titan.Graphics.Textures;
 namespace Titan.Components
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct Sprite
+    public struct Sprite
     {
         public TextureCoordinates TextureCoordinates;
 

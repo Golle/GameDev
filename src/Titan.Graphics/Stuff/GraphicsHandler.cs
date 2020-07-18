@@ -289,18 +289,18 @@ namespace Titan.Graphics.Stuff
                 return false;
             }
             
-            var color = new Color { Alpha = 1f };
+            var color = new Color { A = 1f };
             if (_inputManager.Keyboard.IsKeyDown(KeyCode.A))
             {
-                color.Red = 1f;
+                color.R = 1f;
             }
             if (_inputManager.Keyboard.IsKeyDown(KeyCode.S))
             {
-                color.Green = 1f;
+                color.G = 1f;
             }
             if (_inputManager.Keyboard.IsKeyDown(KeyCode.D))
             {
-                color.Blue = 1f;
+                color.B = 1f;
             }
             while (_inputManager.Keyboard.TryGetChar(out var character))
             {
