@@ -1,12 +1,11 @@
 using System.Numerics;
 using Titan.Components;
-using Titan.D3D11;
 using Titan.ECS;
 using Titan.ECS.Components;
 using Titan.ECS.Systems;
 using Titan.Graphics.Renderer;
 
-namespace Titan.Systems.Rendering
+namespace Titan.Systems.UI
 {
     internal class UIRenderSystem : EntitySystem
     {
@@ -16,7 +15,7 @@ namespace Titan.Systems.Rendering
         private readonly IComponentMap<Texture2D> _texture;
 
         public UIRenderSystem(IWorld world, ISpriteBatchRenderer spriteBatchRenderer) 
-            : base( world, world.EntityFilter().With<TransformRect>()/*.With<Sprite>()*/.With<Texture2D>())
+            : base( world, world.EntityFilter().With<TransformRect>().With<Sprite>().With<Texture2D>())
         {
             _spriteBatchRenderer = spriteBatchRenderer;
             _transform = Map<TransformRect>();
@@ -24,21 +23,28 @@ namespace Titan.Systems.Rendering
             _texture = Map<Texture2D>();
         }
 
+        private bool _render = true;
         protected override void OnUpdate(float deltaTime, uint entityId)
         {
-            ref var rect = ref _transform[entityId];
-            ref var sprite = ref _sprite[entityId];
-            ref var texture = ref _texture[entityId];
-
+            //if (!_render)
+            {
 
             
-            _spriteBatchRenderer.Push(texture.Texture, sprite.TextureCoordinates, new Vector2(rect.Position.X, rect.Position.Y), new Vector2(rect.Size.Width, rect.Size.Height), sprite.Color);
+                ref var rect = ref _transform[entityId];
+                ref var sprite = ref _sprite[entityId];
+                ref var texture = ref _texture[entityId];
+
+                _spriteBatchRenderer.Push(texture.Texture, sprite.TextureCoordinates, new Vector2(rect.WorldPosition.X, rect.WorldPosition.Y), new Vector2(rect.Size.Width, rect.Size.Height), sprite.Color);
+                
+            }
+            _render = !_render;
         }
 
         protected override void OnPostUpdate()
         {
             _spriteBatchRenderer.Flush();
             _spriteBatchRenderer.Render();
+            _render = true;
         }
     }
 }

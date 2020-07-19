@@ -21,6 +21,7 @@ using Titan.Scenes;
 using Titan.Systems;
 using Titan.Systems.Debugging;
 using Titan.Systems.Rendering;
+using Titan.Systems.UI;
 using Titan.Windows;
 using Titan.Windows.Window;
 
@@ -156,17 +157,20 @@ namespace Titan
             var world = builder.Build();
 
             var systemsRunner = ConfigureSystems(new SystemsRunnerBuilder(world, _container.CreateChildContainer()))
+                .WithSystem<UIButtonSystem>()
+
                 .WithSystem<MovementSystem2D>()
                 .WithSystem<MovementSystem3D>()
                 .WithSystem<Transform2DEntitySystem>()
                 .WithSystem<Transform3DEntitySystem>()
+                .WithSystem<TransformRectSystem>()
 
                 .WithSystem<Camera3DSystem>()
                 .WithSystem<LightSystem>()
                 .WithSystem<Model3DRenderSystem>()
                 .WithSystem<BoundingBoxSystem>()
                 
-                .WithSystem<SpriteRenderSystem>()
+                //.WithSystem<SpriteRenderSystem>()
                 
                 
                 .WithSystem<UIRenderSystem>()

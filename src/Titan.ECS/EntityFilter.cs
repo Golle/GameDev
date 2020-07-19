@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Titan.ECS.Components;
@@ -32,7 +33,6 @@ namespace Titan.ECS
             _withMask |= ComponentId<T>.Id;
             _subscriptions.Add(_publisher.Subscribe<ComponentAddedMessage<T>>(ComponentAdded));
             _subscriptions.Add(_publisher.Subscribe<ComponentRemovedMessage<T>>(ComponentRemoved));
-            
             return this;
         }
 

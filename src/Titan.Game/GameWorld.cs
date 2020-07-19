@@ -49,22 +49,34 @@ namespace Titan.Game
 
             // set up the UI
             {
-                var mainEntity = world.CreateEntity();
-                mainEntity.AddComponent(new TransformRect { Position = Vector3.Zero, Size = new Size(_window.Width, _window.Height) });
+                var center = world.CreateEntity();
+                center.AddComponent(new TransformRect { AnchorPoint = AnchorPoint.Center, Offset = Vector3.UnitY*100, Size = new Size(140, 70) });
+                center.AddComponent(new Sprite { TextureCoordinates = ButtonCoordinates, Color = Color.Green });
+                center.AddComponent(new Resource<string, ITexture2D>(SpriteSheet));
+                
+                var bottom = world.CreateEntity();
+                bottom.AddComponent(new TransformRect { AnchorPoint = AnchorPoint.Bottom, Offset = Vector3.Zero, Size = new Size(140, 70) });
+                bottom.AddComponent(new Sprite { TextureCoordinates = ButtonCoordinates, Color = Color.Red });
+                bottom.AddComponent(new Resource<string, ITexture2D>(SpriteSheet));
 
-                var topLeftButton = world.CreateEntity();
-                topLeftButton.AddComponent(new TransformRect { Position = Vector3.Zero, Size = new Size(140, 70) });
-                topLeftButton.AddComponent(new Sprite { TextureCoordinates = ButtonCoordinates, Color = Color.White });
-                topLeftButton.AddComponent(new Resource<string, ITexture2D>(SpriteSheet));
+                //mainEntity.Attach(topLeftButton);
 
-                mainEntity.Attach(topLeftButton);
+                //var bottomRight = world.CreateEntity();
+                //bottomRight.AddComponent(new TransformRect { AnchorPoint = AnchorPoint.TopRight, Offset = new Vector3(-10, -10, 0), Size = new Size(140, 70) });
+                //bottomRight.AddComponent(new Sprite { TextureCoordinates = ButtonCoordinates, Color = Color.Blue });
+                //bottomRight.AddComponent(new Resource<string, ITexture2D>(SpriteSheet));
 
-                var bottomRight = world.CreateEntity();
-                bottomRight.AddComponent(new TransformRect { Position = new Vector3(_window.Width - 140, _window.Height - 70, 0), Size = new Size(140, 70) });
-                bottomRight.AddComponent(new Sprite { TextureCoordinates = ButtonCoordinates, Color = Color.White });
-                bottomRight.AddComponent(new Resource<string, ITexture2D>(SpriteSheet));
+                //mainEntity.Attach(bottomRight);
 
-                mainEntity.Attach(bottomRight);
+                //var right = world.CreateEntity();
+                //right.AddComponent(new TransformRect { AnchorPoint = AnchorPoint.Right, Offset = new Vector3(-100, 0, 0), Size = new Size(140, 70) });
+                //right.AddComponent(new Sprite { TextureCoordinates = ButtonCoordinates, Color = Color.Green });
+                //right.AddComponent(new Resource<string, ITexture2D>(SpriteSheet));
+                //mainEntity.Attach(right);
+
+
+
+                //mainEntity.Attach(center);
             }
 
 
