@@ -19,6 +19,10 @@
             {
                 "identifier": "System.String",
                 "type": "Titan.Graphics.Models.IMesh, Titan.Graphics"
+            },
+            {
+                "identifier":"System.String",
+                "type":"Titan.Graphics.Fonts.IFont, Titan.Graphics"
             }
         ],
         "components": [
@@ -47,7 +51,7 @@
                 "size": 10000
             },
             {
-                "name": "Titan.Components.TransformRect",
+                "name": "Titan.Components.TransformRectComponent",
                 "size": 10000
             },
             {
@@ -64,6 +68,14 @@
             },
             {
                 "name": "Titan.Components.UI.Button",
+                "size": 100
+            },
+            {
+                "name": "Titan.Components.UI.UITextComponent",
+                "size": 100
+            },
+            {
+                "name": "Titan.Components.FontComponent",
                 "size": 100
             }
         ]

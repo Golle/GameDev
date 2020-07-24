@@ -13,15 +13,15 @@ namespace Titan.Systems.UI
     {
         private readonly IInputManager _inputManager;
         private readonly IComponentMap<Button> _button;
-        private readonly IComponentMap<TransformRect> _transform;
+        private readonly IComponentMap<TransformRectComponent> _transform;
         
         private Point _position;
         private Point _lastPosition;
 
-        public UIButtonSystem(IWorld world, IInputManager inputManager) : base(world, world.EntityFilter().With<Button>().With<TransformRect>())
+        public UIButtonSystem(IWorld world, IInputManager inputManager) : base(world, world.EntityFilter().With<Button>().With<TransformRectComponent>())
         {
             _inputManager = inputManager;
-            _transform = Map<TransformRect>();
+            _transform = Map<TransformRectComponent>();
             _button = Map<Button>();
         }
 

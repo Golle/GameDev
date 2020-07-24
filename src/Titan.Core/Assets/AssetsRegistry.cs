@@ -1,3 +1,4 @@
+using Titan.Core.Assets.Fonts;
 using Titan.Core.Assets.Images;
 using Titan.Core.Assets.WavefrontObj;
 using Titan.Core.Assets.WavefrontObj.Parsers;
@@ -14,6 +15,8 @@ namespace Titan.Core.Assets
                 
                 .Register<IAssetLoader, AssetLoader>()
                 .Register<IImageLoader, ImageLoader>()
+
+                .Register<IFontAssetLoader, FontAssetLoader>()
 
                 .Register<IObjLoader, ObjLoader>()
                 .Register<ITextureParser, TextureParser>()

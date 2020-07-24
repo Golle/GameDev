@@ -13,14 +13,14 @@ namespace Titan.Systems.UI
     internal class TransformRectSystem : EntitySystem
     {
         private readonly IWindow _window;
-        private readonly IComponentMap<TransformRect> _transform;
+        private readonly IComponentMap<TransformRectComponent> _transform;
         private readonly IRelationship _relationship;
         private BoundingBox2D _windowBoundingBox;
 
-        public TransformRectSystem(IWorld world, IWindow window) : base(world, world.EntityFilter().With<TransformRect>())
+        public TransformRectSystem(IWorld world, IWindow window) : base(world, world.EntityFilter().With<TransformRectComponent>())
         {
             _window = window;
-            _transform = Map<TransformRect>();
+            _transform = Map<TransformRectComponent>();
             _relationship = Relationship();
         }
 
@@ -48,7 +48,7 @@ namespace Titan.Systems.UI
             transform.BoundingBox = new BoundingBox2D(new Vector2(worldPosition.X, worldPosition.Y), transform.Size);
         }
 
-        private static Vector3 CalculateWorldPosition(in TransformRect transform, in BoundingBox2D box)
+        private static Vector3 CalculateWorldPosition(in TransformRectComponent transform, in BoundingBox2D box)
         {
             var max = box.Max;
             var min = box.Min;

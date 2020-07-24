@@ -1,11 +1,13 @@
 using System;
 using System.Numerics;
 using Titan.Components;
+using Titan.Components.UI;
 using Titan.Core.Math;
 using Titan.D3D11;
 using Titan.ECS;
 using Titan.ECS.Runners;
 using Titan.ECS.Systems;
+using Titan.Graphics.Fonts;
 using Titan.Graphics.Models;
 using Titan.Graphics.Textures;
 using Titan.Windows.Window;
@@ -15,6 +17,7 @@ namespace Titan.Game
     internal class GameWorld : IWorldBuilder
     {
         private const string SpriteSheet = @"F:\Git\GameDev\resources\ui_spritesheet.png";
+        private const string FontFilename = @"F:\Git\GameDev\resources\fonts\menlo_bold.meta";
         private static readonly TextureCoordinates ButtonCoordinates = new TextureCoordinates { BottomRight = new Vector2(1f / 8f, 1), TopLeft = new Vector2(0, 1f - 1f / 16f) };
 
         private readonly IWindow _window;
@@ -50,14 +53,20 @@ namespace Titan.Game
             // set up the UI
             {
                 var center = world.CreateEntity();
-                center.AddComponent(new TransformRect { AnchorPoint = AnchorPoint.Center, Offset = Vector3.UnitY*100, Size = new Size(140, 70) });
+                center.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Center, Offset = Vector3.UnitY*100, Size = new Size(140, 70) });
                 center.AddComponent(new Sprite { TextureCoordinates = ButtonCoordinates, Color = Color.Green });
                 center.AddComponent(new Resource<string, ITexture2D>(SpriteSheet));
                 
                 var bottom = world.CreateEntity();
-                bottom.AddComponent(new TransformRect { AnchorPoint = AnchorPoint.Bottom, Offset = Vector3.Zero, Size = new Size(140, 70) });
+                bottom.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Bottom, Offset = Vector3.Zero, Size = new Size(140, 70) });
                 bottom.AddComponent(new Sprite { TextureCoordinates = ButtonCoordinates, Color = Color.Red });
                 bottom.AddComponent(new Resource<string, ITexture2D>(SpriteSheet));
+
+
+                var text1 = world.CreateEntity();
+                text1.AddComponent(new UITextComponent("This is my text!1", Color.Green));
+                text1.AddComponent(new TransformRectComponent{AnchorPoint = AnchorPoint.Center, Offset = Vector3.UnitY*-200f, Size = new Size(300, 200)});
+                text1.AddComponent(new Resource<string, IFont>(FontFilename));
 
                 //mainEntity.Attach(topLeftButton);
 

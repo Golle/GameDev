@@ -7,7 +7,7 @@ using Titan.Core.Math;
 namespace Titan.Components
 {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct TransformRect
+    public struct TransformRectComponent
     {
         public Vector3 Offset;
         public Size Size;

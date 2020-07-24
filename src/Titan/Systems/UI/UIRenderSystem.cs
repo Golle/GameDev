@@ -10,15 +10,15 @@ namespace Titan.Systems.UI
     internal class UIRenderSystem : EntitySystem
     {
         private readonly ISpriteBatchRenderer _spriteBatchRenderer;
-        private readonly IComponentMap<TransformRect> _transform;
+        private readonly IComponentMap<TransformRectComponent> _transform;
         private readonly IComponentMap<Sprite> _sprite;
         private readonly IComponentMap<Texture2D> _texture;
 
         public UIRenderSystem(IWorld world, ISpriteBatchRenderer spriteBatchRenderer) 
-            : base( world, world.EntityFilter().With<TransformRect>().With<Sprite>().With<Texture2D>())
+            : base( world, world.EntityFilter().With<TransformRectComponent>().With<Sprite>().With<Texture2D>())
         {
             _spriteBatchRenderer = spriteBatchRenderer;
-            _transform = Map<TransformRect>();
+            _transform = Map<TransformRectComponent>();
             _sprite = Map<Sprite>();
             _texture = Map<Texture2D>();
         }

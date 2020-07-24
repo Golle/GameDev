@@ -1,22 +1,17 @@
 using System;
-using System.Net.WebSockets;
-using System.Numerics;
 using Titan.Components;
 using Titan.Configuration;
 using Titan.Core;
+using Titan.Core.Assets.Fonts;
 using Titan.Core.EventSystem;
 using Titan.Core.GameLoop;
 using Titan.Core.GameLoop.Events;
 using Titan.Core.Ioc;
 using Titan.Core.Logging;
-using Titan.Core.Math;
-using Titan.D3D11;
 using Titan.ECS;
 using Titan.ECS.Runners;
 using Titan.ECS.Systems;
 using Titan.Graphics;
-using Titan.Graphics.Models;
-using Titan.Graphics.Textures;
 using Titan.Scenes;
 using Titan.Systems;
 using Titan.Systems.Debugging;
@@ -97,6 +92,8 @@ namespace Titan
             var descriptor = GetInstance<ISceneParser>()
                 .Parse(@"F:\Git\GameDev\src\Titan.Game\Scenes\scene01.json");
 
+            var font = GetInstance<IFontAssetLoader>().LoadFromFile(@"F:\Git\GameDev\resources\fonts\menlo_bold.meta");
+
             var (world, systemsRummer) = CreateWorld(descriptor.Configuration);
 
             // Set the resource managers as a handler for the world
@@ -174,6 +171,7 @@ namespace Titan
                 
                 
                 .WithSystem<UIRenderSystem>()
+                .WithSystem<UITextRenderSystem>()
                 .Build();
 
             return (world, systemsRunner);

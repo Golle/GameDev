@@ -62,7 +62,6 @@ namespace Titan.Graphics.Renderer
             _pixelShader = device.CreatePixelShader(pixelShaderBlob);
 
             _inputLayout = device.CreateInputLayout(new VertexLayout(3).Append("Position", VertexLayoutTypes.Position2D).Append("Textures", VertexLayoutTypes.Texture2D).Append("Color", VertexLayoutTypes.Float4Color), vertexShaderBlob);
-            //_inputLayout = device.CreateInputLayout(new VertexLayout(2).Append("Position", VertexLayoutTypes.Position2D).Append("Color", VertexLayoutTypes.Float4Color), vertexShaderBlob);
 
         }
 
