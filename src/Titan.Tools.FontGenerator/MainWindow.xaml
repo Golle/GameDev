@@ -40,7 +40,7 @@
         </Grid>
         <StackPanel Grid.Row="1" Orientation="Horizontal" >
             <Border BorderThickness="1" BorderBrush="Black" Height="512" Width="512" Margin="10">
-                <Image Height="512" Width="512" d:Source="C:\temp\image_637313741377894554.png" Source="{Binding FontSheet}" />
+                <Image Height="512" Width="512" d:Source="C:\temp\image_637313741377894554.png" Source="{Binding FontSheet, IsAsync=True}" />
             </Border>
         </StackPanel>
 
