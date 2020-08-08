@@ -2,21 +2,10 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
+using Titan.Tools.FontGenerator.Angelfont;
 
 namespace Titan.Tools.FontGenerator
 {
-
-    public struct Padding
-    {
-        public int Top { get; set; }
-        public int Left { get; set; }
-        public int Right { get; set; }
-        public int Bottom { get; set; }
-
-        public int Horizontal => Right + Left;
-        public int Vertical => Top + Bottom;
-    }
-
     public struct SpriteSheetArguments
     {
         public int Width;

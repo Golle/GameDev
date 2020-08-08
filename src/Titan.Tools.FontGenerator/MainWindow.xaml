@@ -42,6 +42,7 @@
             <Border BorderThickness="1" BorderBrush="Black" Height="512" Width="512" Margin="10">
                 <Image Height="512" Width="512" d:Source="C:\temp\image_637313741377894554.png" Source="{Binding FontSheet, IsAsync=True}" />
             </Border>
+            <Button Click="Button_Click" >Export the damn thing</Button>
         </StackPanel>
 
     </Grid>
