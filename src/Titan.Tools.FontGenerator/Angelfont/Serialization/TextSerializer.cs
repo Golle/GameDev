@@ -8,8 +8,6 @@ namespace Titan.Tools.FontGenerator.Angelfont.Serialization
     {
         public async Task SerializeAsync(AngelfontDescription description, string path)
         {
-
-            char a = (char)120;
             var builder = new StringBuilder();
 
             var info = description.Info;

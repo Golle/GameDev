@@ -11,6 +11,18 @@ namespace Titan.Tools.FontGenerator
         public MainWindow()
         {
             InitializeComponent();
+
+            //var face = Fonts.SystemFontFamilies.First(f => f.Source.StartsWith("Segoe UI Light"))
+            //    .GetTypefaces()
+            //    .First();
+
+            //if(!face.TryGetGlyphTypeface(out var glyphTypeface)) throw new InvalidOperationException("Crap");
+
+            //glyphTypeface.
+
+
+            //new GlyphTypeface()
+
         }
 
         private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)

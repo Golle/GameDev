@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using Titan.Tools.FontGenerator.Angelfont;
+using Titan.Tools.FontGenerator.Models;
 
 namespace Titan.Tools.FontGenerator
 {
@@ -20,11 +21,11 @@ namespace Titan.Tools.FontGenerator
 
     public class FontSpriteSheetRenderer
     {
+        
         public void DrawText(Graphics graphics, in SpriteSheetArguments args, bool drawDebugSquares = false)
         {
             using var font = new Font(args.FontName, args.FontSize, args.FontStyle, GraphicsUnit.Pixel);
             var r = CreateMeasurements(graphics, font, args.FontStyle);
-
 
             graphics.TextRenderingHint = args.Rendering;
             using var brush = new SolidBrush(Color.Black);
