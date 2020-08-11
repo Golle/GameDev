@@ -1,3 +1,4 @@
+using Titan.Core.Assets.Angelfont;
 using Titan.Core.Assets.Fonts;
 using Titan.Core.Assets.Images;
 using Titan.Core.Assets.WavefrontObj;
@@ -23,6 +24,10 @@ namespace Titan.Core.Assets
                 .Register<IVertexParser, VertexParser>()
                 .Register<INormalParser, NormalParser>()
                 .Register<IFaceParser, FaceParser>()
+
+
+                .Register<IAngelfontLoader, AngelfontLoader>()
+                .Register<IAngelfontParser, AngelfontParser>()
                 ;
         }
     }

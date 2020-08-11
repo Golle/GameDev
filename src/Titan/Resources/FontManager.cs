@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Titan.Components;
 using Titan.Components.UI;
 using Titan.ECS.Entities;
@@ -18,7 +18,7 @@ namespace Titan.Resources
         protected override IFont Load(in string identifier)
         {
             var mesh = _fontLoader.Load(identifier);
-            Console.WriteLine($"Font: {identifier} loaded");
+            //Console.WriteLine($"Font: {identifier} loaded");
             return mesh;
         }
 

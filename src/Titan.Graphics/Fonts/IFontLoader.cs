@@ -27,7 +27,7 @@ namespace Titan.Graphics.Fonts
             var imageAsset = font.Sheet;
             var texture2D = _device.CreateTexture2D(imageAsset.Width, imageAsset.Height, imageAsset.Pixels);
 
-            Console.WriteLine($"[{imageAsset.Width}, {imageAsset.Height}]");
+            //Console.WriteLine($"[{imageAsset.Width}, {imageAsset.Height}]");
             var characterIndex = 0;
             var textureCoordinates = new Dictionary<char, TextureCoordinates>();
             for (var y = 0; y <= imageAsset.Height - font.Height; y += font.Height)
@@ -40,7 +40,7 @@ namespace Titan.Graphics.Fonts
                     }
 
                     
-                    Console.WriteLine($" Char: {font.Characters[characterIndex]}  [{x}, {y}] - [{x+font.Width}, {y+font.Height}]");
+                    //Console.WriteLine($" Char: {font.Characters[characterIndex]}  [{x}, {y}] - [{x+font.Width}, {y+font.Height}]");
                     characterIndex++;
                 }
             }

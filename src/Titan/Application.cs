@@ -2,6 +2,7 @@ using System;
 using Titan.Components;
 using Titan.Configuration;
 using Titan.Core;
+using Titan.Core.Assets.Angelfont;
 using Titan.Core.Assets.Fonts;
 using Titan.Core.EventSystem;
 using Titan.Core.GameLoop;
@@ -92,7 +93,8 @@ namespace Titan
             var descriptor = GetInstance<ISceneParser>()
                 .Parse(@"F:\Git\GameDev\src\Titan.Game\Scenes\scene01.json");
 
-            var font = GetInstance<IFontAssetLoader>().LoadFromFile(@"F:\Git\GameDev\resources\fonts\menlo_bold.meta");
+            //var font = GetInstance<IFontAssetLoader>().LoadFromFile(@"F:\Git\GameDev\resources\fonts\menlo_bold.meta");
+            var font = GetInstance<IAngelfontLoader>().LoadFromPath(@"F:\Git\GameDev\resources\fonts\segoe_ui_light.fnt");
 
             var (world, systemsRummer) = CreateWorld(descriptor.Configuration);
 
