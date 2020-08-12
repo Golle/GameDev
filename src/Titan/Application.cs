@@ -94,7 +94,7 @@ namespace Titan
                 .Parse(@"F:\Git\GameDev\src\Titan.Game\Scenes\scene01.json");
 
             //var font = GetInstance<IFontAssetLoader>().LoadFromFile(@"F:\Git\GameDev\resources\fonts\menlo_bold.meta");
-            var font = GetInstance<IAngelfontLoader>().LoadFromPath(@"F:\Git\GameDev\resources\fonts\segoe_ui_light.fnt");
+            //var font = GetInstance<IAngelfontLoader>().LoadFromPath(@"F:\Git\GameDev\resources\fonts\segoe_ui_light.fnt");
 
             var (world, systemsRummer) = CreateWorld(descriptor.Configuration);
 

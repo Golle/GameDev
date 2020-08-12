@@ -22,29 +22,20 @@ namespace Titan.Systems.UI
             _sprite = Map<Sprite>();
             _texture = Map<Texture2D>();
         }
-
-        private bool _render = true;
         protected override void OnUpdate(float deltaTime, uint entityId)
         {
-            //if (!_render)
-            {
+        
+            ref var rect = ref _transform[entityId];
+            ref var sprite = ref _sprite[entityId];
+            ref var texture = ref _texture[entityId];
 
-            
-                ref var rect = ref _transform[entityId];
-                ref var sprite = ref _sprite[entityId];
-                ref var texture = ref _texture[entityId];
-
-                _spriteBatchRenderer.Push(texture.Texture, sprite.TextureCoordinates, new Vector2(rect.WorldPosition.X, rect.WorldPosition.Y), new Vector2(rect.Size.Width, rect.Size.Height), sprite.Color);
-                
-            }
-            _render = !_render;
+            _spriteBatchRenderer.Push(texture.Texture, sprite.TextureCoordinates, new Vector2(rect.WorldPosition.X, rect.WorldPosition.Y), new Vector2(rect.Size.Width, rect.Size.Height), sprite.Color);
         }
 
         protected override void OnPostUpdate()
         {
             _spriteBatchRenderer.Flush();
             _spriteBatchRenderer.Render();
-            _render = true;
         }
     }
 }

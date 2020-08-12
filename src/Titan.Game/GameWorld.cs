@@ -17,8 +17,8 @@ namespace Titan.Game
     internal class GameWorld : IWorldBuilder
     {
         private const string SpriteSheet = @"F:\Git\GameDev\resources\ui_spritesheet.png";
-        private const string FontFilename = @"F:\Git\GameDev\resources\fonts\menlo_bold.meta";
-        private static readonly TextureCoordinates ButtonCoordinates = new TextureCoordinates { BottomRight = new Vector2(1f / 8f, 1), TopLeft = new Vector2(0, 1f - 1f / 16f) };
+        private const string FontFilename = @"F:\Git\GameDev\resources\fonts\segoe_ui_light.fnt";
+        private static readonly TextureCoordinates ButtonCoordinates = new TextureCoordinates { BottomRight = new Vector2(1f / 8f, 1 / 16f), TopLeft = new Vector2(0, 0) };
 
         private readonly IWindow _window;
 
@@ -63,10 +63,47 @@ namespace Titan.Game
                 bottom.AddComponent(new Resource<string, ITexture2D>(SpriteSheet));
 
 
-                var text1 = world.CreateEntity();
-                text1.AddComponent(new UITextComponent("This is my text!1", Color.Green));
-                text1.AddComponent(new TransformRectComponent{AnchorPoint = AnchorPoint.Center, Offset = Vector3.UnitY*-200f, Size = new Size(300, 200)});
-                text1.AddComponent(new Resource<string, IFont>(FontFilename));
+                //var text1 = world.CreateEntity();
+                //text1.AddComponent(new UITextComponent("A simple text", Color.Green));
+                //text1.AddComponent(new TransformRectComponent{AnchorPoint = AnchorPoint.Center, Offset = Vector3.UnitY*-200f, Size = new Size(300, 200)});
+                //text1.AddComponent(new Resource<string, IFont>(FontFilename));
+
+                var str1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                var str2 = "abcdefghijklmnopqrstuvwxyz";
+                var str3 = "1234567890 ";
+                var str4 = "\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*";
+                {
+                    var text2 = world.CreateEntity();
+                    text2.AddComponent(new UITextComponent(str1, Color.Red));
+                    text2.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Left, Offset = Vector3.UnitY * 300f, Size = new Size(300, 200) });
+                    text2.AddComponent(new Resource<string, IFont>(FontFilename));
+                }
+                {
+                    var text2 = world.CreateEntity();
+                    text2.AddComponent(new UITextComponent(str2, Color.Blue));
+                    text2.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Left, Offset = Vector3.UnitY * 100f, Size = new Size(300, 200) });
+                    text2.AddComponent(new Resource<string, IFont>(FontFilename));
+                }
+                {
+                    var text2 = world.CreateEntity();
+                    text2.AddComponent(new UITextComponent(str3, Color.Green));
+                    text2.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Left, Offset = Vector3.UnitY * -100f, Size = new Size(300, 200) });
+                    text2.AddComponent(new Resource<string, IFont>(FontFilename));
+                }
+                {
+                    var text2 = world.CreateEntity();
+                    text2.AddComponent(new UITextComponent(str4, Color.White));
+                    text2.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Left, Offset = Vector3.UnitY * -300f, Size = new Size(300, 200) });
+                    text2.AddComponent(new Resource<string, IFont>(FontFilename));
+                }
+
+
+                //var text3 = world.CreateEntity();
+                //text3.AddComponent(new UITextComponent("Fjupp", Color.Red));
+                //text3.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Left, Offset = Vector3.UnitY * 0f, Size = new Size(300, 200) });
+                //text3.AddComponent(new Resource<string, IFont>(FontFilename));
+                //text3.AddComponent(new Sprite { TextureCoordinates = ButtonCoordinates, Color = Color.Green });
+                //text3.AddComponent(new Resource<string, ITexture2D>(SpriteSheet));
 
                 //mainEntity.Attach(topLeftButton);
 

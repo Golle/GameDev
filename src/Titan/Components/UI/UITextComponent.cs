@@ -7,8 +7,6 @@ namespace Titan.Components.UI
         public string Text;
         public Color Color;
 
-
-
         public UITextComponent(string text, in Color color = default)
         {
             Text = text;
