@@ -101,19 +101,15 @@ namespace Titan.Graphics.Renderer
             _vertices[index].Color = color;
             _vertices[index++].TextureCoordinates = bottomRight;
 
-            //_vertices[index++].Color = color;
-
             // Top right
             _vertices[index].Position = new Vector2(position.X + size.X, position.Y + size.Y);
             _vertices[index].Color = color;
             _vertices[index++].TextureCoordinates = new Vector2(bottomRight.X, topLeft.Y);
-            //_vertices[index++].Color = color;
 
             // Top left
             _vertices[index].Position = new Vector2(position.X, position.Y + size.Y);
             _vertices[index].Color = color;
             _vertices[index].TextureCoordinates = topLeft; 
-            //_vertices[index].Color = color;
 
             _numberOfVertices += 4;
             _numberOfIndices += 6;

@@ -8,6 +8,7 @@ namespace Titan.Graphics.Fonts
         ITexture2D Texture { get; }
         public int LineHeight { get; }
         public int Baseline { get; }
+        public int FontSize { get; }
         public Character GetCharacter(char c);
     }
 }

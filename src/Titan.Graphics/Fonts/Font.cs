@@ -8,15 +8,17 @@ namespace Titan.Graphics.Fonts
     {
         public ITexture2D Texture { get; }
         public int LineHeight { get; }
+        public int FontSize { get; }
         public int Baseline { get; }
         private readonly IDictionary<char, Character> _characters;
         private readonly Character _fallbackCharacter;
-        public Font(int baseline, int lineHeight, ITexture2D texture, IDictionary<char, Character> characters, in Character fallbackCharacter)
+        public Font(int baseline, int lineHeight, int fontSize, ITexture2D texture, IDictionary<char, Character> characters, in Character fallbackCharacter)
         {
             _characters = characters;
             _fallbackCharacter = fallbackCharacter;
             Baseline = baseline;
             LineHeight = lineHeight;
+            FontSize = fontSize;
             Texture = texture;
         }
 

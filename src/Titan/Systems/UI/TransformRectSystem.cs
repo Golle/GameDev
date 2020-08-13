@@ -1,6 +1,5 @@
 using System;
 using System.Numerics;
-using System.Reflection.Metadata.Ecma335;
 using Titan.Components;
 using Titan.Core.Math;
 using Titan.ECS;
@@ -43,7 +42,6 @@ namespace Titan.Systems.UI
             {
                 worldPosition = CalculateWorldPosition(transform, _windowBoundingBox);
             }
-
             
             transform.BoundingBox = new BoundingBox2D(new Vector2(worldPosition.X, worldPosition.Y), transform.Size);
         }

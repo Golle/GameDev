@@ -27,5 +27,6 @@ namespace Titan.D3D11
         public static readonly Color Red = new Color(1f, 0, 0);
         public static readonly Color Blue = new Color(0, 0, 1f);
         public static readonly Color Green = new Color(0, 1f, 0);
+        public static readonly Color Black = new Color(0, 0f, 0);
     }
 }

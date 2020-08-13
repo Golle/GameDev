@@ -49,7 +49,7 @@ namespace Titan.Core.Assets.Fonts
                 })
                 .ToArray();
 
-            return new FontAsset(font.Common.Base, font.Common.LineHeight, image, characters);
+            return new FontAsset(font.Common.Base, font.Common.LineHeight, font.Info.Size, image, characters);
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Titan.Game
         private const string SpriteSheet = @"F:\Git\GameDev\resources\ui_spritesheet.png";
         private const string FontFilename = @"F:\Git\GameDev\resources\fonts\segoe_ui_light.fnt";
         private static readonly TextureCoordinates ButtonCoordinates = new TextureCoordinates { BottomRight = new Vector2(1f / 8f, 1 / 16f), TopLeft = new Vector2(0, 0) };
+        private static readonly TextureCoordinates GrayBox = new TextureCoordinates { BottomRight = new Vector2(1f / 4f, 1 / 16f), TopLeft = new Vector2(1/8f, 0) };
 
         private readonly IWindow _window;
 
@@ -63,39 +64,50 @@ namespace Titan.Game
                 bottom.AddComponent(new Resource<string, ITexture2D>(SpriteSheet));
 
 
-                //var text1 = world.CreateEntity();
-                //text1.AddComponent(new UITextComponent("A simple text", Color.Green));
-                //text1.AddComponent(new TransformRectComponent{AnchorPoint = AnchorPoint.Center, Offset = Vector3.UnitY*-200f, Size = new Size(300, 200)});
-                //text1.AddComponent(new Resource<string, IFont>(FontFilename));
+                var loremText = world.CreateEntity();
+                loremText.AddComponent(new UITextComponent("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", fontSize: 24, color: Color.Black));
+                loremText.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Center, Offset = Vector3.UnitY * -200f, Size = new Size(600, 600) });
+                loremText.AddComponent(new Sprite { TextureCoordinates = GrayBox, Color = Color.White });
+                loremText.AddComponent(new Resource<string, IFont>(FontFilename));
+                loremText.AddComponent(new Resource<string, ITexture2D>(SpriteSheet));
 
-                var str1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                var str2 = "abcdefghijklmnopqrstuvwxyz";
-                var str3 = "1234567890 ";
-                var str4 = "\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*";
-                {
-                    var text2 = world.CreateEntity();
-                    text2.AddComponent(new UITextComponent(str1, Color.Red));
-                    text2.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Left, Offset = Vector3.UnitY * 300f, Size = new Size(300, 200) });
-                    text2.AddComponent(new Resource<string, IFont>(FontFilename));
-                }
-                {
-                    var text2 = world.CreateEntity();
-                    text2.AddComponent(new UITextComponent(str2, Color.Blue));
-                    text2.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Left, Offset = Vector3.UnitY * 100f, Size = new Size(300, 200) });
-                    text2.AddComponent(new Resource<string, IFont>(FontFilename));
-                }
-                {
-                    var text2 = world.CreateEntity();
-                    text2.AddComponent(new UITextComponent(str3, Color.Green));
-                    text2.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Left, Offset = Vector3.UnitY * -100f, Size = new Size(300, 200) });
-                    text2.AddComponent(new Resource<string, IFont>(FontFilename));
-                }
-                {
-                    var text2 = world.CreateEntity();
-                    text2.AddComponent(new UITextComponent(str4, Color.White));
-                    text2.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Left, Offset = Vector3.UnitY * -300f, Size = new Size(300, 200) });
-                    text2.AddComponent(new Resource<string, IFont>(FontFilename));
-                }
+                var anotherText = world.CreateEntity();
+                anotherText.AddComponent(new UITextComponent("Bottom text woop woop!", fontSize: 42, color: Color.Red));
+                anotherText.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.BottomRight, Size = new Size(250, 120) });
+                anotherText.AddComponent(new Resource<string, IFont>(FontFilename));
+                //anotherText.AddComponent(new Resource<string, ITexture2D>(SpriteSheet));
+                //anotherText.AddComponent(new Sprite { TextureCoordinates = ButtonCoordinates, Color = Color.White });
+                loremText.Attach(anotherText);
+
+
+                //var str1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                //var str2 = "abcdefghijklmnopqrstuvwxyz";
+                //var str3 = "1234567890 ";
+                //var str4 = "\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*";
+                //{
+                //    var text2 = world.CreateEntity();
+                //    text2.AddComponent(new UITextComponent(str1, Color.Red));
+                //    text2.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Left, Offset = Vector3.UnitY * 300f, Size = new Size(300, 200) });
+                //    text2.AddComponent(new Resource<string, IFont>(FontFilename));
+                //}
+                //{
+                //    var text2 = world.CreateEntity();
+                //    text2.AddComponent(new UITextComponent(str2, Color.Blue));
+                //    text2.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Left, Offset = Vector3.UnitY * 100f, Size = new Size(300, 200) });
+                //    text2.AddComponent(new Resource<string, IFont>(FontFilename));
+                //}
+                //{
+                //    var text2 = world.CreateEntity();
+                //    text2.AddComponent(new UITextComponent(str3, Color.Green));
+                //    text2.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Left, Offset = Vector3.UnitY * -100f, Size = new Size(300, 200) });
+                //    text2.AddComponent(new Resource<string, IFont>(FontFilename));
+                //}
+                //{
+                //    var text2 = world.CreateEntity();
+                //    text2.AddComponent(new UITextComponent(str4, Color.White));
+                //    text2.AddComponent(new TransformRectComponent { AnchorPoint = AnchorPoint.Left, Offset = Vector3.UnitY * -300f, Size = new Size(300, 200) });
+                //    text2.AddComponent(new Resource<string, IFont>(FontFilename));
+                //}
 
 
                 //var text3 = world.CreateEntity();

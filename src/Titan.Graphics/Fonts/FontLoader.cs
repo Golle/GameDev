@@ -34,18 +34,17 @@ namespace Titan.Graphics.Fonts
                 };
             }
 
-
             // Translate offset to pixels on screen
-            static Vector2 GetOffset(CharacterAsset asset)
+            Vector2 GetOffset(CharacterAsset asset)
             {
-                return new Vector2(asset.Offset.X, -asset.Offset.Y - asset.Size.Height);
+                return new Vector2(asset.Offset.X, font.LineHeight - asset.Offset.Y - asset.Size.Height);
             }
 
             var characters = font
                 .Characters
                 .ToDictionary(c => c.Id, character => new Character(character.Size, GetOffset(character), character.AdvanceX, GetCoords(character)));
 
-            return new Font(font.Baseline, font.LineHeight, texture2D, characters, characters['?']); // TODO: use ? for FallbackCharacter, should specify it in some other way maybe? in case it doesn't exist in the sheet.
+            return new Font(font.Baseline, font.LineHeight, font.FontSize, texture2D, characters, characters['?']); // TODO: use ? for FallbackCharacter, should specify it in some other way maybe? in case it doesn't exist in the sheet.
         }
     }
 }
