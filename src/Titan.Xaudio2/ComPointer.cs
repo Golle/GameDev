@@ -1,12 +1,12 @@
 using System;
-using Titan.D3D11.Bindings;
+using System.Runtime.InteropServices;
 
-namespace Titan.D3D11
+namespace Titan.Xaudio2
 {
     public class ComPointer : IDisposable
     {
         public IntPtr Handle { get; }
-        
+
         public ComPointer(IntPtr handle)
         {
             Handle = handle;
@@ -14,7 +14,7 @@ namespace Titan.D3D11
 
         public void Dispose()
         {
-            D3D11CommonBindings.ReleaseComObject(Handle);
+            Marshal.Release(Handle);
         }
     }
 }

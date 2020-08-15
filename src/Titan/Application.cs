@@ -14,6 +14,7 @@ using Titan.ECS.Runners;
 using Titan.ECS.Systems;
 using Titan.Graphics;
 using Titan.Scenes;
+using Titan.Sound;
 using Titan.Systems;
 using Titan.Systems.Debugging;
 using Titan.Systems.Rendering;
@@ -35,6 +36,7 @@ namespace Titan
         private readonly IContainer _container = Bootstrapper.CreateContainer()
                 .AddRegistry<WindowsRegistry>()
                 .AddRegistry<GraphicsRegistry>()
+                .AddRegistry<SoundRegistry>()
                 .AddRegistry<EngineRegistry>()
                 .Register<GameEngine>()
             ;
