@@ -20,6 +20,7 @@ namespace Titan.Game
         private const string SpriteSheet = @"F:\Git\GameDev\resources\ui_spritesheet.png";
         private const string FontFilename = @"F:\Git\GameDev\resources\fonts\segoe_ui_light.fnt";
         private const string BackgroundMusic = @"F:\Git\GameDev\resources\sound\speck_-_Hydrogen_Sky0.wav";
+        private const string ClickSound = @"F:\Git\GameDev\resources\sound\click_004.wav";
         private static readonly TextureCoordinates ButtonCoordinates = new TextureCoordinates { BottomRight = new Vector2(1f / 8f, 1 / 16f), TopLeft = new Vector2(0, 0) };
         private static readonly TextureCoordinates GrayBox = new TextureCoordinates { BottomRight = new Vector2(1f / 4f, 1 / 16f), TopLeft = new Vector2(1/8f, 0) };
 
@@ -56,6 +57,10 @@ namespace Titan.Game
             {
                 var sound = world.CreateEntity();
                 sound.AddComponent(new Resource<string, ISoundClip>(BackgroundMusic));
+            }
+            {
+                var sound = world.CreateEntity();
+                sound.AddComponent(new Resource<string, ISoundClip>(ClickSound));
             }
 
             // set up the UI

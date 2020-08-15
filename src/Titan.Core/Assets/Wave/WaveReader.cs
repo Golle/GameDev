@@ -9,14 +9,14 @@ namespace Titan.Core.Assets.Wave
         public WaveData ReadFromStream(Stream stream)
         {
             var data = IntPtr.Zero;
-            var dataSize = 0;
+            var dataSize = 0u;
             WaveformatEx format = default;
             try
             {
                 while (true)
                 {
                     if (ReadChunk<WaveChunkTypes>(stream, out var chunkType) == 0) break;
-                    if (ReadChunk<int>(stream, out var chunkSize) == 0) break;
+                    if (ReadChunk<uint>(stream, out var chunkSize) == 0) break;
                     switch (chunkType)
                     {
                         case WaveChunkTypes.RIFF:
@@ -48,22 +48,22 @@ namespace Titan.Core.Assets.Wave
             return new WaveData(data, dataSize, format);
         }
 
-        private static int ReadBytes(Stream stream, out IntPtr data, int size)
+        private static uint ReadBytes(Stream stream, out IntPtr data, uint size)
         {
-            data = Marshal.AllocHGlobal(size);
+            data = Marshal.AllocHGlobal((int)size);
             unsafe
             {
-                return stream.Read(new Span<byte>(data.ToPointer(), size));
+                return (uint)stream.Read(new Span<byte>(data.ToPointer(), (int)size));
             }
         }
 
-        private static int ReadChunk<T>(Stream stream, out T data, int size = -1) where T : unmanaged
+        private static int ReadChunk<T>(Stream stream, out T data, uint size = 0) where T : unmanaged
         {
             unsafe
             {
                 fixed (void * a = &data)
                 {
-                    return stream.Read(new Span<byte>(a, size == -1 ? sizeof(T) : size));
+                    return stream.Read(new Span<byte>(a, size == 0 ? sizeof(T) : (int)size));
                 }
             }
         }

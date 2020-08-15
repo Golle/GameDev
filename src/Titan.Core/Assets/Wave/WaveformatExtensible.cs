@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 namespace Titan.Core.Assets.Wave
 {
     [StructLayout(LayoutKind.Explicit)]
-    internal struct WaveformatExtensible
+    public struct WaveformatExtensible
     {
         [FieldOffset(0)]
         public WaveformatEx Format;

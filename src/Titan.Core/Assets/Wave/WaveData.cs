@@ -7,9 +7,9 @@ namespace Titan.Core.Assets.Wave
     {
         public WaveformatEx Format { get; }
         public IntPtr Data { get; private set; }
-        public int Size { get; private set; }
+        public uint Size { get; private set; }
 
-        public WaveData(IntPtr data, int size, in WaveformatEx format)
+        public WaveData(IntPtr data, uint size, in WaveformatEx format)
         {
             Format = format;
             Data = data;

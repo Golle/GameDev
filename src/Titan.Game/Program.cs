@@ -30,12 +30,6 @@ namespace Titan.Game
         {
             _gameWorld = container.GetInstance<GameWorld>();
 
-            var factory = container
-                .GetInstance<IXAudioDeviceFactory>();
-
-            using var device = factory.CreateDevice();
-            using var masteringVoice = device.CreateMasteringVoice();
-
         }
 
         protected override void OnStart()

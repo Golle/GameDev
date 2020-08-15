@@ -1,5 +1,6 @@
 using System;
 using Titan.Core.Assets.Wave;
+using Titan.Xaudio2.Bindings;
 
 namespace Titan.Sound
 {
