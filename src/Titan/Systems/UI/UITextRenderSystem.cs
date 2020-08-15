@@ -1,5 +1,3 @@
-using System;
-using System.Net.Mail;
 using System.Numerics;
 using Titan.Components;
 using Titan.Components.UI;
@@ -8,7 +6,6 @@ using Titan.ECS;
 using Titan.ECS.Components;
 using Titan.ECS.Systems;
 using Titan.Graphics.Renderer;
-using Titan.Resources;
 
 namespace Titan.Systems.UI
 {

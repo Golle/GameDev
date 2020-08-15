@@ -1,6 +1,5 @@
 using System.IO;
 using System.Runtime.CompilerServices;
-using Titan.Core.Assets.Wave;
 using Titan.Core.Ioc;
 using Titan.ECS;
 using Titan.ECS.Runners;
@@ -30,14 +29,6 @@ namespace Titan.Game
         protected override void OnInitialize(IContainer container)
         {
             _gameWorld = container.GetInstance<GameWorld>();
-
-            var filename = @"F:\Git\GameDev\resources\sound\speck_-_Hydrogen_Sky0.wav";
-            using var file = File.OpenRead(filename);
-
-            using var wave = container
-                .GetInstance<IWaveReader>()
-                .ReadFromStream(file);
-
 
             var factory = container
                 .GetInstance<IXAudioDeviceFactory>();

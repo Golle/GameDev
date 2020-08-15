@@ -1,6 +1,6 @@
-using System;
 using System.Diagnostics;
 using Titan.Components;
+using Titan.Core.Logging;
 using Titan.ECS.Entities;
 using Titan.ECS.Systems;
 using Titan.Graphics.Models;
@@ -10,9 +10,12 @@ namespace Titan.Resources
     internal class MeshManager : ResourceManager<string, IMesh>
     {
         private readonly IMeshLoader _meshLoader;
-        public MeshManager(IMeshLoader meshLoader)
+        private readonly ILogger _logger;
+
+        public MeshManager(IMeshLoader meshLoader, ILogger logger)
         {
             _meshLoader = meshLoader;
+            _logger = logger;
         }
 
         protected override IMesh Load(in string identifier)
@@ -20,13 +23,13 @@ namespace Titan.Resources
             var timer = Stopwatch.StartNew();
             var mesh = _meshLoader.Load(identifier);
             timer.Stop();
-            Console.WriteLine($"Mesh: {identifier} loaded in {timer.Elapsed.TotalMilliseconds} ms");
+            _logger.Debug("Mesh: {0} loaded in {1} ms", identifier, timer.Elapsed.TotalMilliseconds);
             return mesh;
         }
 
         protected override void Unload(in string identifier, IMesh mesh)
         {
-            Console.WriteLine($"Mesh {identifier} unloaded");
+            _logger.Debug("Mesh: {0} unloaded", identifier);
             mesh.Dispose();
         }
 

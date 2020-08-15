@@ -2,8 +2,6 @@ using System;
 using Titan.Components;
 using Titan.Configuration;
 using Titan.Core;
-using Titan.Core.Assets.Angelfont;
-using Titan.Core.Assets.Fonts;
 using Titan.Core.EventSystem;
 using Titan.Core.GameLoop;
 using Titan.Core.GameLoop.Events;
@@ -140,7 +138,6 @@ namespace Titan
 
         private (IWorld world, ISystemsRunner systemsRummer) CreateWorld(SceneConfiguration configuration)
         {
-
             var builder = new WorldBuilder(maxEntities: configuration.MaxEntities, defaultComponentPoolSize: configuration.ComponentPoolDefaultSize);
             foreach (var component in configuration.Components)
             {

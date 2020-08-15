@@ -23,6 +23,10 @@
             {
                 "identifier":"System.String",
                 "type":"Titan.Graphics.Fonts.IFont, Titan.Graphics"
+            },
+            {
+                "identifier":"System.String",
+                "type":"Titan.Sound.ISoundClip, Titan.Sound"
             }
         ],
         "components": [
@@ -76,6 +80,10 @@
             },
             {
                 "name": "Titan.Components.FontComponent",
+                "size": 100
+            },
+            {
+                "name": "Titan.Components.SoundClipComponent",
                 "size": 100
             }
         ]

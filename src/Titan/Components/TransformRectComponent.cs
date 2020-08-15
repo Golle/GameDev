@@ -1,7 +1,6 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
 using Titan.Core.Math;
 
 namespace Titan.Components

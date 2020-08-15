@@ -10,6 +10,7 @@ using Titan.ECS.Systems;
 using Titan.Graphics.Fonts;
 using Titan.Graphics.Models;
 using Titan.Graphics.Textures;
+using Titan.Sound;
 using Titan.Windows.Window;
 
 namespace Titan.Game
@@ -18,6 +19,7 @@ namespace Titan.Game
     {
         private const string SpriteSheet = @"F:\Git\GameDev\resources\ui_spritesheet.png";
         private const string FontFilename = @"F:\Git\GameDev\resources\fonts\segoe_ui_light.fnt";
+        private const string BackgroundMusic = @"F:\Git\GameDev\resources\sound\speck_-_Hydrogen_Sky0.wav";
         private static readonly TextureCoordinates ButtonCoordinates = new TextureCoordinates { BottomRight = new Vector2(1f / 8f, 1 / 16f), TopLeft = new Vector2(0, 0) };
         private static readonly TextureCoordinates GrayBox = new TextureCoordinates { BottomRight = new Vector2(1f / 4f, 1 / 16f), TopLeft = new Vector2(1/8f, 0) };
 
@@ -50,6 +52,11 @@ namespace Titan.Game
                 player.Attach(camera);
             }
 
+            // add sound component
+            {
+                var sound = world.CreateEntity();
+                sound.AddComponent(new Resource<string, ISoundClip>(BackgroundMusic));
+            }
 
             // set up the UI
             {

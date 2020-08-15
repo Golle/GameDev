@@ -10,6 +10,8 @@ namespace Titan.Sound
             container
                 .AddRegistry<XAudio2Registry>()
 
+                .Register<ISoundLoader, SoundLoader>()
+
                 ;
         }
     }
