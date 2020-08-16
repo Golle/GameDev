@@ -73,11 +73,16 @@ namespace Titan.Sound
                         voice.Start();
 
                         Task.Delay(TimeSpan.FromSeconds(4)).Wait();
+                        GC.Collect();
                     }
                 });
-
+                /*
+                TODO
+                    * Dont call COM Release on anything except the main XAUdio object.why ?
+                    *On release, stop all sounds, release buffers and wait for all to stop(callbacks called) or it might crash.
+                 * */
             }
-            
+
 
         }
     }

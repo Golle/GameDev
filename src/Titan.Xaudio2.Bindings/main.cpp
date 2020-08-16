@@ -50,5 +50,3 @@ EXPORT HRESULT SubmitSourceBuffer_(
 {
     return handle->SubmitSourceBuffer(pBuffer, pBufferWMA);
 }
-
-
