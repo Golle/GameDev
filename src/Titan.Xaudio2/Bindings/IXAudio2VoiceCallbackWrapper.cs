@@ -23,16 +23,20 @@ namespace Titan.Xaudio2.Bindings
 
         public IXAudio2VoiceCallbackWrapper(IXAudio2VoiceCallback callback)
         {
+            if (callback == null)
+            {
+                return;
+            }
+            
             _callback = callback;
-
             // Store callbacks to prevent them from being garbage collected
-            _startCallback = _callback.OnVoiceProcessingPassStart;
-            _endCallback = _callback.OnVoiceProcessingPassEnd;
-            _streamEndCallback = _callback.OnStreamEnd;
-            _bufferStartCallback = _callback.OnBufferStart;
-            _bufferEndCallback = _callback.OnBufferEnd;
-            _loopEndCallback = _callback.OnLoopEnd;
-            _voiceErrorCallback = _callback.OnVoiceError;
+            _startCallback = (_, bytesRequired) => _callback.OnVoiceProcessingPassStart(bytesRequired);
+            _endCallback = _ => _callback.OnVoiceProcessingPassEnd();
+            _streamEndCallback = _ =>  _callback.OnStreamEnd();
+            _bufferStartCallback = (_, context) => _callback.OnBufferStart(context);
+            _bufferEndCallback = (_, context) => _callback.OnBufferEnd(context);
+            _loopEndCallback = (_, context) => _callback.OnLoopEnd(context);
+            _voiceErrorCallback = (_, context, error) => _callback.OnVoiceError(context, error);
 
             // Allocate memory for the C++ interface
             _nativePointer = Marshal.AllocHGlobal(IntPtr.Size * 8); // 7 methods + vtbl
@@ -61,19 +65,20 @@ namespace Titan.Xaudio2.Bindings
             }
         }
 
+        [UnmanagedFunctionPointer(CallingConvention.ThisCall)]
+        internal delegate void OnVoiceProcessingPassStartDelegate(IntPtr handle, uint bytesRequired);
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate void OnVoiceProcessingPassStartDelegate(uint bytesRequired);
+        internal delegate void OnVoiceProcessingPassEnd(IntPtr handle);
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate void OnVoiceProcessingPassEnd();
+        internal delegate void OnStreamEnd(IntPtr handle);
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate void OnStreamEnd();
+        
+        internal delegate void OnBufferStart(IntPtr handle, IntPtr pBufferContext);
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate void OnBufferStart(IntPtr pBufferContext);
+        internal delegate void OnBufferEnd(IntPtr handle, IntPtr pBufferContext);
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate void OnBufferEnd(IntPtr pBufferContext);
+        internal delegate void OnLoopEnd(IntPtr handle, IntPtr pBufferContext);
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate void OnLoopEnd(IntPtr pBufferContext);
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        internal delegate void OnVoiceError(IntPtr pBufferContext, HRESULT error);
+        internal delegate void OnVoiceError(IntPtr handle, IntPtr pBufferContext, HRESULT error);
     }
 }

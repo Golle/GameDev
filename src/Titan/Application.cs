@@ -87,6 +87,32 @@ namespace Titan
                 .RegisterSingleton(display.Device)
                 .RegisterSingleton(display.Window);
 
+            using var soundSystem = GetInstance<ISoundSystemFactory>()
+                .Create();
+
+            _container.RegisterSingleton(soundSystem);
+
+            soundSystem.AddPlayer("Music",
+                new SoundPlayerConfiguration
+                {
+                    NumberOfPlayers = 2, 
+                    AverageBytesPerSecond = 176_400, 
+                    SamplesPerSecond = 44100, 
+                    BlockAlign = 4,
+                    BitsPerSample = 16, 
+                    NumberOfChannels = 2
+                });
+            soundSystem.AddPlayer("SoundEffects",
+                new SoundPlayerConfiguration
+                {
+                    NumberOfPlayers = 50,
+                    AverageBytesPerSecond = 176_400,
+                    SamplesPerSecond = 44100,
+                    BlockAlign = 4,
+                    BitsPerSample = 16,
+                    NumberOfChannels = 2
+                });
+
             _logger.Debug("Initialize Sandbox");
             OnInitialize(_container);
 

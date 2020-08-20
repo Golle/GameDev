@@ -1,5 +1,6 @@
 using System;
 using Titan.Core.Assets.Wave;
+using Titan.Xaudio2.Bindings;
 
 namespace Titan.Xaudio2
 {
@@ -7,6 +8,6 @@ namespace Titan.Xaudio2
     {
         IXAudio2MasteringVoice CreateMasteringVoice();
 
-        IXAudio2SourceVoice CreateSourceVoice(in WaveformatEx format);
+        IXAudio2SourceVoice CreateSourceVoice(in WaveformatEx format, IXAudio2VoiceCallback callback = null);
     }
 }

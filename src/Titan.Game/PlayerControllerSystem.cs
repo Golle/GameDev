@@ -4,11 +4,60 @@ using Titan.Components;
 using Titan.ECS;
 using Titan.ECS.Components;
 using Titan.ECS.Systems;
+using Titan.Sound;
 using Titan.Windows.Input;
 using Titan.Windows.Window;
 
 namespace Titan.Game
 {
+
+    public class SoundTestSystem : EntitySystem
+    {
+        private readonly IKeyboard _keyboard;
+        private readonly IComponentMap<SoundClipComponent> _sound;
+        private readonly ISoundPlayer _soundEffects;
+        private readonly ISoundPlayer _music;
+
+        public SoundTestSystem(IWorld world, ISoundSystem soundSystem, IInputManager inputManager) : base(world, world.EntityFilter(10).With<SoundClipComponent>())
+        {
+            _keyboard = inputManager.Keyboard;
+            _sound = Map<SoundClipComponent>();
+            _soundEffects = soundSystem.GetPlayer("SoundEffects");
+            _music = soundSystem.GetPlayer("Music");
+
+            _soundEffects.SetVolume(0.5f);
+            
+        }
+
+        private float _volume;
+
+        protected override void OnPreUpdate()
+        {
+            if (_keyboard.IsKeyDown(KeyCode.Up))
+            {
+                _volume = Math.Min(1f, _volume + 0.001f);
+                _soundEffects.SetVolume(_volume);
+            }
+
+
+            if (_keyboard.IsKeyDown(KeyCode.Down))
+            {
+                _volume = Math.Max(-1f, _volume - 0.001f);
+                _soundEffects.SetVolume(_volume);
+            }
+                
+        }
+
+        protected override void OnUpdate(float deltaTime, uint entityId)
+        {
+            ref var sound = ref _sound[entityId];
+            if (_keyboard.IsKeyReleased(KeyCode.Q))
+            {
+                sound.Clip.Play(_soundEffects);
+            }
+        }
+    }
+
     public class PlayerControllerSystem : EntitySystem
     {
         private readonly IInputManager _inputManager;

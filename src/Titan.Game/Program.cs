@@ -23,8 +23,7 @@ namespace Titan.Game
             //noop
         }
 
-        protected override SystemsRunnerBuilder ConfigureSystems(SystemsRunnerBuilder builder) =>
-            builder.WithSystem<PlayerControllerSystem>();
+        protected override SystemsRunnerBuilder ConfigureSystems(SystemsRunnerBuilder builder) => _gameWorld.ConfigureSystems(builder);
 
         protected override void OnInitialize(IContainer container)
         {

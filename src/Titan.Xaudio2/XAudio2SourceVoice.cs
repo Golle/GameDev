@@ -19,7 +19,7 @@ namespace Titan.Xaudio2
             {
                 fixed (Xaudio2Buffer* pointer = &buffer)
                 {
-                    result = IXAudio2SourceVoiceBindings.SubmitSourceBuffer_(Handle, pointer);
+                    result = IXAudio2SourceVoiceBindings.SubmitSourceBuffer_(Handle, buffer);
                 }
             }
         }
@@ -31,6 +31,12 @@ namespace Titan.Xaudio2
             {
                 throw new Win32Exception($"XAudio2SourceVoice Start failed with code: 0x{result.Code.ToString("X")}");
             }
+        }
+
+        public void SetVolume(float volume)
+        {
+            var result = IXAudio2VoiceBindings.SetVolume_(Handle, volume);
+            result.Check(nameof(XAudio2SourceVoice), nameof(SetVolume));
         }
     }
 }

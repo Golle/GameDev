@@ -17,7 +17,7 @@ namespace Titan.Xaudio2.Bindings
         [DllImport(Constants.XAudio2Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern unsafe HRESULT SubmitSourceBuffer_(
             [In] IntPtr handle,
-            [In] Xaudio2Buffer* pointer,
+            [In] in Xaudio2Buffer pointer,
             [In] void* pBufferWma = null // XAUDIO2_BUFFER_WMA
         );
     }

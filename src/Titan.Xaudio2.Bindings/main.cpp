@@ -31,6 +31,7 @@ EXPORT HRESULT CreateSourceVoice_(
     const XAUDIO2_VOICE_SENDS* pSendList,
     const XAUDIO2_EFFECT_CHAIN* pEffectChain)
 {
+    pCallback->OnVoiceProcessingPassStart(10);
     return ppXAudio2->CreateSourceVoice(ppSourceVoice, pSourceFormat, Flags, MaxFrequencyRatio, pCallback, pSendList, pEffectChain);
 }
 
@@ -49,4 +50,13 @@ EXPORT HRESULT SubmitSourceBuffer_(
     const XAUDIO2_BUFFER_WMA* pBufferWMA) 
 {
     return handle->SubmitSourceBuffer(pBuffer, pBufferWMA);
+}
+
+
+EXPORT HRESULT SetVolume_(
+    IXAudio2SourceVoice* handle, 
+    float volume,
+    UINT32 operantionSet) 
+{
+    return handle->SetVolume(volume, operantionSet);
 }

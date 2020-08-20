@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Titan.Windows;
 
 namespace Titan.Xaudio2.Bindings

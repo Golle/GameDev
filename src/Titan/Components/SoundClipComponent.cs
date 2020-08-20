@@ -4,7 +4,7 @@ using Titan.Sound;
 namespace Titan.Components
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SoundClipComponent
+    public struct SoundClipComponent
     {
         public ISoundClip Clip;
     }

@@ -34,9 +34,11 @@ namespace Titan.Game
         public string SceneDescriptor() => @"F:\Git\GameDev\src\Titan.Game\Scenes\scene01.json";
         public SystemsRunnerBuilder ConfigureSystems(SystemsRunnerBuilder builder)
         {
-            return builder.WithSystem<PlayerControllerSystem>();
+            return builder
+                .WithSystem<PlayerControllerSystem>()
+                .WithSystem<SoundTestSystem>();
         }
-
+        
         public IWorld CreateWorld(IWorld world)
         {
 
