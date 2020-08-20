@@ -30,8 +30,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
-resources/**
-!**/resources/
+resources/sound/**
+!**/resources/sound
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
