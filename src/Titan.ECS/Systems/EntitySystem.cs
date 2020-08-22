@@ -33,11 +33,6 @@ namespace Titan.ECS.Systems
         protected abstract void OnUpdate(float deltaTime, uint entityId);
         protected virtual void OnPostUpdate() { }
 
-        public void Dispose()
-        {
-            _filter.Dispose();
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected IComponentMap<T> Map<T>() where T : struct => _world.GetComponentMap<T>();
 
