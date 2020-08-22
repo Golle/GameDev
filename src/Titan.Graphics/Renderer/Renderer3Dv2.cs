@@ -175,13 +175,13 @@ namespace Titan.Graphics.Renderer
 
         public void Dispose()
         {
-            _perObjectConstantBuffer.Dispose();
-            _perFrameConstantBuffer.Dispose();
-            _lightsConstantBuffer.Dispose();
-            _vertexShader.Dispose();
-            _pixelShader.Dispose();
-            _inputLayout.Dispose();
-
+            _perObjectConstantBuffer?.Dispose();
+            _perFrameConstantBuffer?.Dispose();
+            _lightsConstantBuffer?.Dispose();
+            _vertexShader?.Dispose();
+            _pixelShader?.Dispose();
+            _inputLayout?.Dispose();
+            _sampler?.Dispose();
         }
 
         public void SubmitLight(in Color color, in Vector3 position)

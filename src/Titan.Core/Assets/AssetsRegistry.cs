@@ -1,6 +1,7 @@
 using Titan.Core.Assets.Angelfont;
 using Titan.Core.Assets.Fonts;
 using Titan.Core.Assets.Images;
+using Titan.Core.Assets.Wave;
 using Titan.Core.Assets.WavefrontObj;
 using Titan.Core.Assets.WavefrontObj.Parsers;
 using Titan.Core.Ioc;
@@ -28,6 +29,8 @@ namespace Titan.Core.Assets
 
                 .Register<IAngelfontLoader, AngelfontLoader>()
                 .Register<IAngelfontParser, AngelfontParser>()
+
+                .Register<IWaveReader, WaveReader>()
                 ;
         }
     }

@@ -1,5 +1,4 @@
 using Titan.Core.Assets.Images;
-using Titan.Core.Math;
 
 namespace Titan.Core.Assets.Fonts
 {

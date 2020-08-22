@@ -140,6 +140,12 @@ namespace Titan.Windows.Window
                 case WindowsMessage.WM_KEYDOWN:
                 case WindowsMessage.WM_SYSKEYDOWN:
                     KeyDown((KeyCode) wParam, (lParam.ToUInt32() & 0x40000000) > 0);
+
+                    // TODO: Temporary quit button to support graceful shutdown
+                    if ((KeyCode) wParam == KeyCode.Escape)
+                    {
+                        User32.PostQuitMessage(0);
+                    }
                     break;
                 case WindowsMessage.WM_KEYUP:
                 case WindowsMessage.WM_SYSKEYUP:

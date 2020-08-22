@@ -17,6 +17,7 @@ namespace Titan
                 //.Register<VertexShaderManager>()
                 .Register<MeshManager>()
                 .Register<FontManager>()
+                .Register<SoundClipManager>()
                 .Register<ISceneParser, SceneParser>()
                 ;
         }

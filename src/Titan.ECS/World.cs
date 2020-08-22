@@ -14,7 +14,7 @@ namespace Titan.ECS
         private readonly ComponentManager _componentManager;
         private readonly Publisher _publisher;
         
-        private ISerializer _serializer;
+        private readonly ISerializer _serializer;
         public uint MaxEntities { get; }
         public uint Id { get; }
         internal World(WorldConfiguration configuration)
@@ -31,7 +31,6 @@ namespace Titan.ECS
             {
                 _componentManager.RegisterComponent(componentType, size);
             }
-
             _serializer = new EntitySerializer(this, _publisher);
         }
 
@@ -43,7 +42,9 @@ namespace Titan.ECS
 
         public void Dispose()
         {
+            _publisher.Publish(new WorldDisposingMessage(Id));
             Worlds.DestroyWorld(this);
+            _publisher.Publish(new WorldDisposedMessage(Id));
         }
 
         public void RemoveComponent<T>(in uint entityId) where T : struct

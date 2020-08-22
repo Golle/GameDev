@@ -1,7 +1,9 @@
+using System.IO;
 using System.Runtime.CompilerServices;
 using Titan.Core.Ioc;
 using Titan.ECS;
 using Titan.ECS.Runners;
+using Titan.Xaudio2;
 
 namespace Titan.Game
 {
@@ -11,6 +13,7 @@ namespace Titan.Game
 
         static void Main(string[] args)
         {
+
             Start();
         }
 
@@ -20,12 +23,12 @@ namespace Titan.Game
             //noop
         }
 
-        protected override SystemsRunnerBuilder ConfigureSystems(SystemsRunnerBuilder builder) =>
-            builder.WithSystem<PlayerControllerSystem>();
+        protected override SystemsRunnerBuilder ConfigureSystems(SystemsRunnerBuilder builder) => _gameWorld.ConfigureSystems(builder);
 
         protected override void OnInitialize(IContainer container)
         {
             _gameWorld = container.GetInstance<GameWorld>();
+
         }
 
         protected override void OnStart()

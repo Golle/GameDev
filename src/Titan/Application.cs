@@ -2,8 +2,6 @@ using System;
 using Titan.Components;
 using Titan.Configuration;
 using Titan.Core;
-using Titan.Core.Assets.Angelfont;
-using Titan.Core.Assets.Fonts;
 using Titan.Core.EventSystem;
 using Titan.Core.GameLoop;
 using Titan.Core.GameLoop.Events;
@@ -13,7 +11,9 @@ using Titan.ECS;
 using Titan.ECS.Runners;
 using Titan.ECS.Systems;
 using Titan.Graphics;
+using Titan.Graphics.Renderer;
 using Titan.Scenes;
+using Titan.Sound;
 using Titan.Systems;
 using Titan.Systems.Debugging;
 using Titan.Systems.Rendering;
@@ -35,6 +35,7 @@ namespace Titan
         private readonly IContainer _container = Bootstrapper.CreateContainer()
                 .AddRegistry<WindowsRegistry>()
                 .AddRegistry<GraphicsRegistry>()
+                .AddRegistry<SoundRegistry>()
                 .AddRegistry<EngineRegistry>()
                 .Register<GameEngine>()
             ;
@@ -74,8 +75,6 @@ namespace Titan
                 .Initialize();
 
             RegisterServices(_container);
-
-
             
             _logger.Debug("Initialize Window and D3D11Device");
 
@@ -86,6 +85,32 @@ namespace Titan
             _container
                 .RegisterSingleton(display.Device)
                 .RegisterSingleton(display.Window);
+
+            using var soundSystem = GetInstance<ISoundSystemFactory>()
+                .Create();
+
+            _container.RegisterSingleton(soundSystem);
+
+            soundSystem.AddPlayer("Music",
+                new SoundPlayerConfiguration
+                {
+                    NumberOfPlayers = 2,
+                    AverageBytesPerSecond = 176_400,
+                    SamplesPerSecond = 44100,
+                    BlockAlign = 4,
+                    BitsPerSample = 16,
+                    NumberOfChannels = 2
+                });
+            soundSystem.AddPlayer("SoundEffects",
+                new SoundPlayerConfiguration
+                {
+                    NumberOfPlayers = 50,
+                    AverageBytesPerSecond = 176_400,
+                    SamplesPerSecond = 44100,
+                    BlockAlign = 4,
+                    BitsPerSample = 16,
+                    NumberOfChannels = 2
+                });
 
             _logger.Debug("Initialize Sandbox");
             OnInitialize(_container);
@@ -124,10 +149,14 @@ namespace Titan
 
             GetInstance<IGameLoop>().Run(engine.Execute);
 
-            //_world.Destroy();
+            
             _logger.Debug("Main loop ended");
             OnQuit();
             world.Dispose();
+            GetInstance<Renderer3Dv2>().Dispose();
+            GetInstance<RendererDebug3Dv3>().Dispose();
+            GetInstance<ISpriteBatchRenderer>().Dispose();
+
             _logger.Debug("Ending application");
 
         }
@@ -138,7 +167,6 @@ namespace Titan
 
         private (IWorld world, ISystemsRunner systemsRummer) CreateWorld(SceneConfiguration configuration)
         {
-
             var builder = new WorldBuilder(maxEntities: configuration.MaxEntities, defaultComponentPoolSize: configuration.ComponentPoolDefaultSize);
             foreach (var component in configuration.Components)
             {
@@ -156,20 +184,20 @@ namespace Titan
             var world = builder.Build();
 
             var systemsRunner = ConfigureSystems(new SystemsRunnerBuilder(world, _container.CreateChildContainer()))
-                .WithSystem<UIButtonSystem>()
+                //.WithSystem<UIButtonSystem>()
 
                 .WithSystem<MovementSystem2D>()
                 .WithSystem<MovementSystem3D>()
                 .WithSystem<Transform2DEntitySystem>()
                 .WithSystem<Transform3DEntitySystem>()
-                .WithSystem<TransformRectSystem>()
+                //.WithSystem<TransformRectSystem>()
 
                 .WithSystem<Camera3DSystem>()
                 .WithSystem<LightSystem>()
                 .WithSystem<Model3DRenderSystem>()
                 .WithSystem<BoundingBoxSystem>()
                 
-                //.WithSystem<SpriteRenderSystem>()
+                .WithSystem<SpriteRenderSystem>()
                 
                 
                 .WithSystem<UIRenderSystem>()
