@@ -15,12 +15,30 @@ namespace Titan.ECS.Systems
         {
             // TODO: Add handling of world destruction
             var componentMap = world.GetComponentMap<Resource<TIdentifier, TResource>>();
-            
+            world.Subscribe((in WorldDisposingMessage message) => OnWorldDisposed(componentMap));
             world.Subscribe((in ComponentAddedMessage<Resource<TIdentifier, TResource>> message) => OnAdded(message.EntityId, world.Id, componentMap));
             world.Subscribe((in ComponentRemovedMessage<Resource<TIdentifier, TResource>> message) => OnRemoved(message.EntityId, componentMap));
             world.Subscribe((in EntityDestroyedMessage message) => OnEntityDestroyed(message.Id, componentMap));
 
             //TODO:  Loop over existing entities (if any) and call OnLoaded
+        }
+
+        private void OnWorldDisposed(IComponentMap<Resource<TIdentifier, TResource>> componentMap)
+        {
+            lock (_loadedResources)
+            {
+                foreach (ref var resource in componentMap.AsSpan())
+                {
+                    if (_loadedResources.TryGetValue(resource.Identifier, out var loadedResource))
+                    {
+                        if (--loadedResource.References <= 0)
+                        {
+                            Unload(resource.Identifier, loadedResource.Value);
+                            _loadedResources.Remove(resource.Identifier);
+                        }
+                    }
+                }
+            }
         }
 
         private void OnEntityDestroyed(uint entityId, IComponentMap<Resource<TIdentifier, TResource>> map)
