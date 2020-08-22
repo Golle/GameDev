@@ -5,7 +5,7 @@ using Titan.Xaudio2.Bindings;
 
 namespace Titan.Xaudio2
 {
-    internal class XAudio2SourceVoice : ComPointer, IXAudio2SourceVoice
+    internal class XAudio2SourceVoice : XAudio2Voice, IXAudio2SourceVoice
     {
         public XAudio2SourceVoice(IntPtr handle) 
             : base(handle)
@@ -22,21 +22,13 @@ namespace Titan.Xaudio2
                     result = IXAudio2SourceVoiceBindings.SubmitSourceBuffer_(Handle, buffer);
                 }
             }
+            result.Check(nameof(XAudio2SourceVoice), nameof(SubmitSourceBuffer));
         }
 
         public void Start()
         {
             var result = IXAudio2SourceVoiceBindings.Start_(Handle, 0);
-            if (result.Failed)
-            {
-                throw new Win32Exception($"XAudio2SourceVoice Start failed with code: 0x{result.Code.ToString("X")}");
-            }
-        }
-
-        public void SetVolume(float volume)
-        {
-            var result = IXAudio2VoiceBindings.SetVolume_(Handle, volume);
-            result.Check(nameof(XAudio2SourceVoice), nameof(SetVolume));
+            result.Check(nameof(XAudio2SourceVoice), nameof(Start));
         }
     }
 }

@@ -32,13 +32,17 @@ namespace Titan.Sound
             }
         }
 
+        public float GetVolume()
+        {
+            return _players[0].GetVolume();
+        }
+
         public void SetVolume(float volume)
         {
             for (var i = 0; i < _players.Length; ++i)
             {
                 _players[i].SetVolume(volume);
             }
-            
         }
 
         public void Play(WaveData wave)

@@ -52,11 +52,18 @@ EXPORT HRESULT SubmitSourceBuffer_(
     return handle->SubmitSourceBuffer(pBuffer, pBufferWMA);
 }
 
-
 EXPORT HRESULT SetVolume_(
     IXAudio2SourceVoice* handle, 
     float volume,
     UINT32 operantionSet) 
 {
     return handle->SetVolume(volume, operantionSet);
+}
+
+EXPORT void GetVolume_(
+    IXAudio2SourceVoice* handle,
+    float *volume
+)
+{
+    handle->GetVolume(volume);
 }

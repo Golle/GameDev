@@ -63,9 +63,9 @@ namespace Titan.Graphics.Models
                     vertices1.Add((vertex.Position, vertex.Texture));
                 }
             }
-            Console.WriteLine("{0} unique vertices(v3, v2, v3) out of {1}", vertices.Count, numberOfVertices);
-            Console.WriteLine("{0} unique vertices(v3, v2) out of {1}", vertices1.Count, numberOfVertices);
-            Console.WriteLine("Min: {0}  Max: {1}", min, max);
+            //Console.WriteLine("{0} unique vertices(v3, v2, v3) out of {1}", vertices.Count, numberOfVertices);
+            //Console.WriteLine("{0} unique vertices(v3, v2) out of {1}", vertices1.Count, numberOfVertices);
+            //Console.WriteLine("Min: {0}  Max: {1}", min, max);
 
             //var vertexIndex = 0;
             //for (var i = 0; i < indices.Length; i += 6)

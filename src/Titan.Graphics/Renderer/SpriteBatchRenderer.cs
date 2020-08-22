@@ -160,7 +160,6 @@ namespace Titan.Graphics.Renderer
 
         public void Dispose()
         {
-            _device?.Dispose();
             _buffer?.Dispose();
             _indices?.Dispose();
             _vertexShader?.Dispose();
@@ -168,6 +167,7 @@ namespace Titan.Graphics.Renderer
             _inputLayout?.Dispose();
             _blendState?.Dispose();
             _sampler?.Dispose();
+            _cameraBuffer?.Dispose();
         }
     }
 }

@@ -11,6 +11,7 @@ using Titan.ECS;
 using Titan.ECS.Runners;
 using Titan.ECS.Systems;
 using Titan.Graphics;
+using Titan.Graphics.Renderer;
 using Titan.Scenes;
 using Titan.Sound;
 using Titan.Systems;
@@ -74,8 +75,6 @@ namespace Titan
                 .Initialize();
 
             RegisterServices(_container);
-
-
             
             _logger.Debug("Initialize Window and D3D11Device");
 
@@ -95,11 +94,11 @@ namespace Titan
             soundSystem.AddPlayer("Music",
                 new SoundPlayerConfiguration
                 {
-                    NumberOfPlayers = 2, 
-                    AverageBytesPerSecond = 176_400, 
-                    SamplesPerSecond = 44100, 
+                    NumberOfPlayers = 2,
+                    AverageBytesPerSecond = 176_400,
+                    SamplesPerSecond = 44100,
                     BlockAlign = 4,
-                    BitsPerSample = 16, 
+                    BitsPerSample = 16,
                     NumberOfChannels = 2
                 });
             soundSystem.AddPlayer("SoundEffects",
@@ -150,10 +149,14 @@ namespace Titan
 
             GetInstance<IGameLoop>().Run(engine.Execute);
 
-            //_world.Destroy();
+            
             _logger.Debug("Main loop ended");
             OnQuit();
             world.Dispose();
+            GetInstance<Renderer3Dv2>().Dispose();
+            GetInstance<RendererDebug3Dv3>().Dispose();
+            GetInstance<ISpriteBatchRenderer>().Dispose();
+
             _logger.Debug("Ending application");
 
         }
@@ -181,20 +184,20 @@ namespace Titan
             var world = builder.Build();
 
             var systemsRunner = ConfigureSystems(new SystemsRunnerBuilder(world, _container.CreateChildContainer()))
-                .WithSystem<UIButtonSystem>()
+                //.WithSystem<UIButtonSystem>()
 
                 .WithSystem<MovementSystem2D>()
                 .WithSystem<MovementSystem3D>()
                 .WithSystem<Transform2DEntitySystem>()
                 .WithSystem<Transform3DEntitySystem>()
-                .WithSystem<TransformRectSystem>()
+                //.WithSystem<TransformRectSystem>()
 
                 .WithSystem<Camera3DSystem>()
                 .WithSystem<LightSystem>()
                 .WithSystem<Model3DRenderSystem>()
                 .WithSystem<BoundingBoxSystem>()
                 
-                //.WithSystem<SpriteRenderSystem>()
+                .WithSystem<SpriteRenderSystem>()
                 
                 
                 .WithSystem<UIRenderSystem>()

@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using Titan.Xaudio2;
 using Titan.Xaudio2.Bindings;
 
@@ -21,14 +22,8 @@ namespace Titan.Sound
             _source.Start();
         }
 
-        public void Dispose()
-        {
-            _source.Dispose();
-        }
-
-        public void SetVolume(in float volume)
-        {
-            _source.SetVolume(volume);
-        }
+        public void SetVolume(in float volume) => _source.SetVolume(volume);
+        public float GetVolume() => _source.GetVolume();
+        public void Dispose() => _source.Dispose();
     }
 }

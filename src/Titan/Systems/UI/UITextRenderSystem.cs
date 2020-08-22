@@ -1,7 +1,6 @@
 using System.Numerics;
 using Titan.Components;
 using Titan.Components.UI;
-using Titan.D3D11;
 using Titan.ECS;
 using Titan.ECS.Components;
 using Titan.ECS.Systems;
@@ -9,13 +8,6 @@ using Titan.Graphics.Renderer;
 
 namespace Titan.Systems.UI
 {
-    public struct TextVertexData
-    {
-        public Vector2 Position;
-        public Vector2 Texture;
-        public Color Color;
-    }
-
     internal class UITextRenderSystem : EntitySystem
     {
         private readonly ISpriteBatchRenderer _renderer;
@@ -33,17 +25,6 @@ namespace Titan.Systems.UI
             _text = Map<UITextComponent>();
         }
 
-
-        private bool reverse;
-        private bool first;
-
-
-        private float width = 200f;
-        protected override void OnPreUpdate()
-        {
-            first = true;
-        }
-
         protected override void OnUpdate(float deltaTime, uint entityId)
         {
             ref var rect = ref _transform[entityId];
@@ -51,29 +32,7 @@ namespace Titan.Systems.UI
             ref var text = ref _text[entityId];
             ref var s = ref rect.Size;
 
-            // Stupid test code to animate the rectangle :) don't do this kids!
-            if (first)
-            {
-                var speed = 150f * deltaTime;
-                if (reverse)
-                {
-                    width -= speed;
-                }
-                else
-                {
-                    width += speed;
-                }
-
-                if (width > 1200)
-                    reverse = true;
-                if (width < 300)
-                    reverse = false;
-
-                s.Width = (int)width;
-                first = false;
-            }
-
-
+        
             //TODO: This needs to be moved to the text renderer. All calculations with the fontSizeFactory should be handled at the renderer, and not here. (or when creating the Text)
             var fontSizeFactor = text.FontSize == 0 ? 1f : text.FontSize/(float)font.FontSize;
 

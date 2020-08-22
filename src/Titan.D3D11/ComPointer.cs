@@ -1,5 +1,5 @@
 using System;
-using Titan.D3D11.Bindings;
+using System.Runtime.InteropServices;
 
 namespace Titan.D3D11
 {
@@ -14,7 +14,8 @@ namespace Titan.D3D11
 
         public void Dispose()
         {
-            D3D11CommonBindings.ReleaseComObject(Handle);
+            Marshal.Release(Handle);
+            //D3D11CommonBindings.ReleaseComObject(Handle);
         }
     }
 }

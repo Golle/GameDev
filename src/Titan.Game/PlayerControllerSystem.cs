@@ -22,11 +22,12 @@ namespace Titan.Game
         {
             _keyboard = inputManager.Keyboard;
             _sound = Map<SoundClipComponent>();
+            
             _soundEffects = soundSystem.GetPlayer("SoundEffects");
             _music = soundSystem.GetPlayer("Music");
 
-            _soundEffects.SetVolume(0.5f);
-            
+            _volume = _soundEffects.GetVolume();
+
         }
 
         private float _volume;
@@ -39,13 +40,11 @@ namespace Titan.Game
                 _soundEffects.SetVolume(_volume);
             }
 
-
             if (_keyboard.IsKeyDown(KeyCode.Down))
             {
-                _volume = Math.Max(-1f, _volume - 0.001f);
+                _volume = Math.Max(0f, _volume - 0.001f);
                 _soundEffects.SetVolume(_volume);
             }
-                
         }
 
         protected override void OnUpdate(float deltaTime, uint entityId)
@@ -125,16 +124,6 @@ namespace Titan.Game
             movement = Vector3.Transform(movement, transform.Rotation);
             
             transform.Position += movement;
-        }
-
-        protected override void OnPostUpdate()
-        {
-
-            // Temporary to support exiting the app
-            if (_inputManager.Keyboard.IsKeyDown(KeyCode.Escape))
-            {
-                Environment.Exit(0);
-            }
         }
     }
 }
