@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Titan.Components;
 using Titan.Configuration;
 using Titan.Core;
@@ -149,16 +150,19 @@ namespace Titan
 
             GetInstance<IGameLoop>().Run(engine.Execute);
 
-            
             _logger.Debug("Main loop ended");
+
             OnQuit();
+
+            
             world.Dispose();
+            world = null; 
+            systemsRummer = null;
+            
             GetInstance<Renderer3Dv2>().Dispose();
             GetInstance<RendererDebug3Dv3>().Dispose();
             GetInstance<ISpriteBatchRenderer>().Dispose();
-
             _logger.Debug("Ending application");
-
         }
 
 
@@ -184,7 +188,7 @@ namespace Titan
             var world = builder.Build();
 
             var systemsRunner = ConfigureSystems(new SystemsRunnerBuilder(world, _container.CreateChildContainer()))
-                //.WithSystem<UIButtonSystem>()
+                .WithSystem<UIButtonSystem>()
 
                 .WithSystem<MovementSystem2D>()
                 .WithSystem<MovementSystem3D>()
@@ -196,10 +200,10 @@ namespace Titan
                 .WithSystem<LightSystem>()
                 .WithSystem<Model3DRenderSystem>()
                 .WithSystem<BoundingBoxSystem>()
-                
+
                 .WithSystem<SpriteRenderSystem>()
-                
-                
+
+
                 .WithSystem<UIRenderSystem>()
                 .WithSystem<UITextRenderSystem>()
                 .Build();

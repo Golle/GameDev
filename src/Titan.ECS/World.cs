@@ -44,7 +44,9 @@ namespace Titan.ECS
         {
             _publisher.Publish(new WorldDisposingMessage(Id));
             Worlds.DestroyWorld(this);
+
             _publisher.Publish(new WorldDisposedMessage(Id));
+            _publisher.Dispose();
         }
 
         public void RemoveComponent<T>(in uint entityId) where T : struct
