@@ -194,7 +194,7 @@ namespace Titan
                 .WithSystem<MovementSystem3D>()
                 .WithSystem<Transform2DEntitySystem>()
                 .WithSystem<Transform3DEntitySystem>()
-                //.WithSystem<TransformRectSystem>()
+                .WithSystem<TransformRectSystem>()
 
                 .WithSystem<Camera3DSystem>()
                 .WithSystem<LightSystem>()
