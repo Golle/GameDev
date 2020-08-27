@@ -24,5 +24,7 @@ namespace Titan.D3D11.Device
         void OMSetDepthStencilState(ID3D11DepthStencilState stencilState, uint stencilRef);
         unsafe void UpdateSubresourceData(ID3D11Resource resource, void * data);
         void OMSetBlendState(ID3D11BlendState blendState, Color blendFactor, uint sampleMask);
+        ID3D11CommandList FinishCommandList(bool restoreDeferredContextState = false);
+        void ExecuteCommandList(ID3D11CommandList commandList, bool restoreDeferredContextState = false);
     }
 }

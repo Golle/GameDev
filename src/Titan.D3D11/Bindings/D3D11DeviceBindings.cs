@@ -125,5 +125,12 @@ namespace Titan.D3D11.Bindings
             [In] in D3D11BlendDesc desc,
             [Out] out IntPtr ppBlendState
         );
+
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern HRESULT CreateDeferredContext_(
+            [In] IntPtr device,
+            [In] uint contextFlags,
+            [Out] out IntPtr ppDeferredContext
+        );
     }
 }

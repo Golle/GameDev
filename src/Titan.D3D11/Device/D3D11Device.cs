@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using Titan.D3D11.Bindings;
 using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.InfoQueue;
@@ -30,21 +29,14 @@ namespace Titan.D3D11.Device
             {
                 result = D3D11DeviceBindings.CreateRenderTargetView_(_handle, resource.Handle, (D3D11RenderTargetViewDesc*)null, out renderTargetView);
             }
-            if (result.Failed)
-            {
-                throw new Win32Exception($"Device D3D11CreateRenderTargetView failed with code: 0x{result.Code.ToString("X")}");
-            }
+            result.Check(nameof(D3D11Device));
             return new D3D11RenderTargetView(renderTargetView);
         }
 
         public ID3D11InfoQueue CreateInfoQueue()
         {
             var result = D3D11CommonBindings.QueryInterface_(_handle, D3D11Resources.D3D11InfoQueue, out var infoQueue);
-            if (result.Failed)
-            {
-                throw new Win32Exception($"Device CreateInfoQueue failed with code: 0x{result.Code.ToString("X")}");
-            }
-
+            result.Check(nameof(D3D11Device));
             return new D3D11InfoQueue(infoQueue);
         }
 
@@ -67,10 +59,7 @@ namespace Titan.D3D11.Device
                     }
                 }
             }
-            if (result.Failed)
-            {
-                throw new Win32Exception($"Device CreateBuffer failed with code: 0x{result.Code.ToString("X")}");
-            }
+            result.Check(nameof(D3D11Device));
             return new D3D11Buffer(buffer);
         }
 
@@ -82,11 +71,7 @@ namespace Titan.D3D11.Device
         public ID3D11VertexShader CreateVertexShader(IntPtr buffer, UIntPtr size)
         {
             var result = D3D11DeviceBindings.CreateVertexShader_(_handle, buffer, size , IntPtr.Zero, out var vertexShader);
-            if (result.Failed)
-            {
-                throw new Win32Exception($"Device CreateVertexShader failed with code: 0x{result.Code.ToString("X")}");
-            }
-
+            result.Check(nameof(D3D11Device));
             return new D3D11VertexShader(vertexShader);
         }
 
@@ -98,11 +83,7 @@ namespace Titan.D3D11.Device
         public ID3D11PixelShader CreatePixelShader(IntPtr buffer, UIntPtr size)
         {
             var result = D3D11DeviceBindings.CreatePixelShader_(_handle, buffer, size, IntPtr.Zero, out var pixelShader);
-            if (result.Failed)
-            {
-                throw new Win32Exception($"Device CreatePixelShader failed with code: 0x{result.Code.ToString("X")}");
-            }
-
+            result.Check(nameof(D3D11Device));
             return new D3D11PixelShader(pixelShader);
         }
 
@@ -114,10 +95,7 @@ namespace Titan.D3D11.Device
         public ID3D11InputLayout CreateInputLayout(in D3D11InputElementDesc[] descs, IntPtr buffer, UIntPtr size)
         {
             var result = D3D11DeviceBindings.CreateInputLayout_(_handle, descs, (uint)descs.Length, buffer, size, out var inputLayout);
-            if (result.Failed)
-            {
-                throw new Win32Exception($"Device CreateInputLayout failed with code: 0x{result.Code.ToString("X")}");
-            }
+            result.Check(nameof(D3D11Device));
             return new D3D11InputLayout(inputLayout);
         }
         public ID3D11DepthStencilState CreateDepthStencilState(in D3D11DepthStencilDesc depthDesc)
@@ -131,10 +109,7 @@ namespace Titan.D3D11.Device
                     result = D3D11DeviceBindings.CreateDepthStencilState_(_handle, pointer, out depthStencilState);
                 }
             }
-            if (result.Failed)
-            {
-                throw new Win32Exception($"Device CreateDepthStencilState failed with code: 0x{result.Code.ToString("X")}");
-            }
+            result.Check(nameof(D3D11Device));
             return new D3D11DepthStencilState(depthStencilState);
         }
 
@@ -157,10 +132,7 @@ namespace Titan.D3D11.Device
                     }
                 }
             }
-            if (result.Failed)
-            {
-                throw new Win32Exception($"Device CreateTexture2D failed with code: 0x{result.Code.ToString("X")}");
-            }
+            result.Check(nameof(D3D11Device));
             return new D3D11Texture2D(texture2D);
         }
 
@@ -175,41 +147,36 @@ namespace Titan.D3D11.Device
                     result = D3D11DeviceBindings.CreateDepthStencilView_(_handle, resource.Handle, viewDescPointer, out stencilView);
                 }
             }
-            if (result.Failed)
-            {
-                throw new Win32Exception($"Device CreateDepthStencilView failed with code: 0x{result.Code.ToString("X")}");
-            }
+            result.Check(nameof(D3D11Device));
             return new D3D11DepthStencilView(stencilView);
         }
 
         public ID3D11SamplerState CreateSamplerState(in D3D11SamplerDesc desc)
         {
             var result = D3D11DeviceBindings.CreateSamplerState_(_handle, desc, out var sampleState);
-            if (result.Failed)
-            {
-                throw new Win32Exception($"Device CreateSamplerState failed with code: 0x{result.Code.ToString("X")}");
-            }
+            result.Check(nameof(D3D11Device));
             return new D3D11SamplerState(sampleState);
         }
 
         public ID3D11ShaderResourceView CreateShaderResourceView(ID3D11Resource resource, D3D11ShaderResourceViewDesc desc)
         {
             var result = D3D11DeviceBindings.CreateShaderResourceView_(_handle, resource.Handle, desc, out var resourceView);
-            if (result.Failed)
-            {
-                throw new Win32Exception($"Device CreateShaderResourceView failed with code: 0x{result.Code.ToString("X")}");
-            }
+            result.Check(nameof(D3D11Device));
             return new D3D11ShaderResourceView(resourceView);
         }
 
         public ID3D11BlendState CreateBlendState(in D3D11BlendDesc desc)
         {
             var result = D3D11DeviceBindings.CreateBlendState_(_handle, desc, out var blendState);
-            if (result.Failed)
-            {
-                throw new Win32Exception($"Device CreateBlendState failed with code: 0x{result.Code.ToString("X")}");
-            }
+            result.Check(nameof(D3D11Device));
             return new D3D11BlendState(blendState);
+        }
+
+        public ID3D11DeviceContext CreateDeferredContext(uint contextFlags = 0)
+        {
+            var result = D3D11DeviceBindings.CreateDeferredContext_(_handle, contextFlags, out var deferredContext);
+            result.Check(nameof(D3D11Device));
+            return new D3D11DeviceContext(deferredContext);
         }
 
         public void Dispose()

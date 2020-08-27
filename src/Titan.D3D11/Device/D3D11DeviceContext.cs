@@ -115,5 +115,17 @@ namespace Titan.D3D11.Device
         {
             D3D11DeviceContextBindings.OMSetBlendState_(Handle, blendState.Handle, blendFactor, sampleMask);
         }
+
+        public ID3D11CommandList FinishCommandList(bool restoreDeferredContextState = false)
+        {
+            var result = D3D11DeviceContextBindings.FinishCommandList_(Handle, restoreDeferredContextState, out var commandList);
+            result.Check(nameof(D3D11DeviceContext));
+            return new D3D11CommandList(commandList);
+        }
+        
+        public void ExecuteCommandList(ID3D11CommandList commandList, bool restoreDeferredContextState = false)
+        {
+            D3D11DeviceContextBindings.ExecuteCommandList_(Handle, commandList.Handle, restoreDeferredContextState);
+        }
     }
 }

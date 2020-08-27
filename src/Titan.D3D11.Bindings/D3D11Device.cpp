@@ -146,3 +146,12 @@ EXPORT HRESULT STDMETHODCALLTYPE CreateBlendState_(
 {
 	return device->CreateBlendState(pBlendStateDesc, ppBlendState);
 }
+
+EXPORT HRESULT CreateDeferredContext_(
+	ID3D11Device* device,
+	UINT contextFlags,
+	ID3D11DeviceContext** ppDeferredContext
+)
+{
+	return device->CreateDeferredContext(contextFlags, ppDeferredContext);
+}

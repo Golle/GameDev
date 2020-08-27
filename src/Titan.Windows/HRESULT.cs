@@ -8,12 +8,12 @@ namespace Titan.Windows
     [StructLayout(LayoutKind.Sequential)]
     public struct HRESULT
     {
-        private IntPtr _value;
+        private readonly IntPtr _value;
         public IntPtr Code => _value;
         public bool Failed => _value != IntPtr.Zero;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Check(string className, string function)
+        public void Check(string className, [CallerMemberName] string function = null)
         {
             if (Failed)
             {

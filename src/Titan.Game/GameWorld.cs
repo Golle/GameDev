@@ -93,11 +93,6 @@ namespace Titan.Game
                 //anotherText.AddComponent(new Sprite { TextureCoordinates = ButtonCoordinates, Color = Color.White });
                 loremText.Attach(anotherText);
 
-
-                //var str1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                //var str2 = "abcdefghijklmnopqrstuvwxyz";
-                //var str3 = "1234567890 ";
-                //var str4 = "\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*";
                 //{
                 //    var text2 = world.CreateEntity();
                 //    text2.AddComponent(new UITextComponent(str1, Color.Red));
