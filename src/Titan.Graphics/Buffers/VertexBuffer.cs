@@ -3,39 +3,21 @@ using Titan.D3D11.Device;
 
 namespace Titan.Graphics.Buffers
 {
-    internal class VertexBuffer<T> : IVertexBuffer<T> where T: unmanaged
+    internal class VertexBuffer : IVertexBuffer
     {
-        public uint NumberOfVertices { get; private set; }
-        private readonly ID3D11DeviceContext _context;
         private readonly ID3D11Buffer _buffer;
-        private readonly uint _strides;
+        public uint NumberOfVertices { get; private set; }
+        public uint Strides { get; }
+        public uint Offset { get; }
+        public IntPtr NativeHandle => _buffer.Handle;
 
-
-        public VertexBuffer(ID3D11DeviceContext context, ID3D11Buffer buffer, uint strides, uint length)
+        public VertexBuffer(ID3D11Buffer buffer, uint strides, uint length)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
             _buffer = buffer ?? throw new ArgumentNullException(nameof(buffer));
-            _strides = strides;
+            Strides = strides;
             NumberOfVertices = length;
+            Offset = 0; // TODO: offset needs to be configurable at some point
         }
-
-        public void Bind()
-        {
-            // TODO: offset needs to be configurable at some point
-            _context.SetVertexBuffer(0, _buffer, _strides, 0); 
-        }
-
-        public void SetData(in T[] vertices, int numberOfVertices)
-        {
-            unsafe
-            {
-                fixed (void* pointer = vertices)
-                {
-                    _context.UpdateSubresourceData(_buffer, pointer);
-                }
-            }
-        }
-
         public void Dispose()
         {
             _buffer.Dispose();

@@ -30,7 +30,7 @@ namespace Titan.Graphics
 
             // Create device
             var d3D11Device = _d3D11DeviceFactory.Create(new CreateDeviceArguments(window, defaultRefreshRate, adapter?.Handle ?? IntPtr.Zero, debug));
-
+            
             // Created the backbuffer and the RenderTargetView
             using var backBuffer = d3D11Device.SwapChain.GetBuffer(0, D3D11Resources.D3D11Resource);
             var renderTarget = d3D11Device.CreateRenderTargetView(backBuffer);

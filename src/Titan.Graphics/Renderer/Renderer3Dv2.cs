@@ -146,7 +146,7 @@ namespace Titan.Graphics.Renderer
 
             if (mesh.VertexBuffer != _lastVertexBuffer)
             {
-                mesh.VertexBuffer.Bind();
+                _device.ImmediateContext.SetVertexBuffer(mesh.VertexBuffer);
                 _lastVertexBuffer = mesh.VertexBuffer;
             }
 
@@ -217,7 +217,7 @@ namespace Titan.Graphics.Renderer
         private readonly IVertexShader _vertexShader;
         private readonly IPixelShader _pixelShader;
         private readonly IIndexBuffer _indexBuffer;
-        private readonly IVertexBuffer<LineVertex> _vertexBuffer;
+        private readonly IVertexBuffer _vertexBuffer;
 
         private const int MaxBoxes = 8000;
 
@@ -293,16 +293,16 @@ namespace Titan.Graphics.Renderer
         {
             _device.SetPrimitiveTopology(PrimitiveTopology.LineList);
 
-            _vertexBuffer.SetData(_vertices, _numberOfVertices);
-            _indexBuffer.SetData(_indices, _numberOfIndices);
+            _device.ImmediateContext.UpdateResourceData(_vertexBuffer, _vertices, _numberOfVertices);
+            _device.ImmediateContext.UpdateResourceData(_indexBuffer, _indices, _numberOfIndices);
 
             _inputLayout.Bind();
             _vertexShader.Bind();
             _pixelShader.Bind();
-            _vertexBuffer.Bind();
-            _indexBuffer.Bind();
 
-            _device.DrawIndexed((uint) _numberOfIndices, 0, 0);
+            _device.ImmediateContext.SetVertexBuffer(_vertexBuffer);
+            _device.ImmediateContext.SetIndexBuffer(_indexBuffer);
+            _device.ImmediateContext.DrawIndexed((uint) _numberOfIndices, 0,0);
             
             _numberOfIndices = 0;
             _numberOfVertices = 0;

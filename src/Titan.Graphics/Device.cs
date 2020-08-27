@@ -21,11 +21,18 @@ namespace Titan.Graphics
 
         private readonly bool _vSync = false;
 
+        public IDeviceContext ImmediateContext { get; }
         public Device(ID3D11Device device, ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencilView)
         {
             _device = device ?? throw new ArgumentNullException(nameof(device));
             _renderTarget = renderTarget ?? throw new ArgumentNullException(nameof(renderTarget));
             _depthStencilView = depthStencilView ?? throw new ArgumentNullException(nameof(depthStencilView));
+            ImmediateContext = new DeviceContext(device.Context);
+        }
+
+        public IDeviceContext CreateDeferredContext()
+        {
+            throw new NotImplementedException();
         }
 
         public IIndexBuffer CreateIndexBuffer(in short[] indices)
@@ -61,7 +68,7 @@ namespace Titan.Graphics
             return new IndexBuffer(_device.Context, _device.CreateBuffer(desc), size); 
         }
 
-        public IVertexBuffer<T> CreateVertexBuffer<T>(uint numberOfVertices) where T : unmanaged
+        public IVertexBuffer CreateVertexBuffer<T>(uint numberOfVertices) where T : unmanaged
         {
             if (numberOfVertices == 0)
             {
@@ -76,10 +83,10 @@ namespace Titan.Graphics
             desc.ByteWidth = (numberOfVertices * size);
             desc.StructureByteStride = size;
 
-            return new VertexBuffer<T>(_device.Context, _device.CreateBuffer(desc), size, 0);
+            return new VertexBuffer(_device.CreateBuffer(desc), size, 0);
         }
 
-        public IVertexBuffer<T> CreateVertexBuffer<T>(in T[] initialData) where T : unmanaged
+        public IVertexBuffer CreateVertexBuffer<T>(in T[] initialData) where T : unmanaged
         {
             if (initialData == null)
             {
@@ -99,7 +106,7 @@ namespace Titan.Graphics
                 {
                     D3D11SubresourceData data = default;
                     data.pSysMem = initialDataPointer;
-                    return new VertexBuffer<T>(_device.Context, _device.CreateBuffer(desc, data), size, (uint) initialData.Length);
+                    return new VertexBuffer(_device.CreateBuffer(desc, data), size, (uint) initialData.Length);
                 }
             }
         }

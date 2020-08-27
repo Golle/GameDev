@@ -11,10 +11,8 @@ namespace Titan.D3D11.Device
         {
         }
 
-        public void SetVertexBuffer(uint startSlot, ID3D11Buffer vertexBuffer, uint strides, uint offset)
-        {
-            D3D11DeviceContextBindings.IASetVertexBuffers_(Handle, startSlot, 1, vertexBuffer.Handle, strides, offset);
-        }
+        public void SetVertexBuffer(uint startSlot, ID3D11Buffer vertexBuffer, uint strides, uint offset) => SetVertexBuffer(startSlot, vertexBuffer.Handle, strides, offset);
+        public void SetVertexBuffer(uint startSlot, IntPtr vertexBuffer, uint strides, uint offset) => D3D11DeviceContextBindings.IASetVertexBuffers_(Handle, startSlot, 1, vertexBuffer, strides, offset);
 
         public void Draw(uint vertexCount, uint startLocation)
         {
@@ -71,44 +69,30 @@ namespace Titan.D3D11.Device
             D3D11DeviceContextBindings.IASetInputLayout_(Handle, inputLayout.Handle);
         }
 
-        public void SetIndexBuffer(ID3D11Buffer buffer, DxgiFormat format, uint offset)
-        {
-            D3D11DeviceContextBindings.IASetIndexBuffer_(Handle, buffer.Handle, format, offset);
-        }
+        public void DrawIndexed(uint indexCount, uint startIndexLocation, int baseVertexLocation) => D3D11DeviceContextBindings.DrawIndexed_(Handle, indexCount, startIndexLocation, baseVertexLocation);
 
-        public void DrawIndexed(uint indexCount, uint startIndexLocation, int baseVertexLocation)
-        {
-            D3D11DeviceContextBindings.DrawIndexed_(Handle, indexCount, startIndexLocation, baseVertexLocation);
-        }
-
-        public void VSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer)
-        {
-            D3D11DeviceContextBindings.VSSetConstantBuffers_(Handle, startSlot, 1, constantBuffer.Handle);
-        }
-        
-        public void PSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer)
-        {
-            D3D11DeviceContextBindings.PSSetConstantBuffers_(Handle, startSlot, 1, constantBuffer.Handle);
-        }
-
-        public void PSSetShaderResources(uint startSlot, ID3D11ShaderResourceView resourceView)
-        {
-            D3D11DeviceContextBindings.PSSetShaderResources_(Handle, startSlot, 1, resourceView.Handle);
-        }
-
-        public void PSSetSamplers(uint startSlot, ID3D11SamplerState sampler)
-        {
-            D3D11DeviceContextBindings.PSSetSamplers_(Handle, startSlot, 1, sampler.Handle);
-        }
+        public void SetIndexBuffer(ID3D11Buffer buffer, DxgiFormat format, uint offset) => SetIndexBuffer(buffer.Handle, format, offset);
+        public void SetIndexBuffer(IntPtr buffer, DxgiFormat format, uint offset) => D3D11DeviceContextBindings.IASetIndexBuffer_(Handle, buffer, format, offset);
+        public void VSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer) => VSSetConstantBuffer(startSlot, constantBuffer.Handle);
+        public void VSSetConstantBuffer(uint startSlot, IntPtr constantBuffer) => D3D11DeviceContextBindings.VSSetConstantBuffers_(Handle, startSlot, 1, constantBuffer);
+        public void PSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer) => PSSetConstantBuffer(startSlot, constantBuffer.Handle);
+        public void PSSetConstantBuffer(uint startSlot, IntPtr constantBuffer) => D3D11DeviceContextBindings.PSSetConstantBuffers_(Handle, startSlot, 1, constantBuffer);
+        public void PSSetShaderResources(uint startSlot, ID3D11ShaderResourceView resourceView) => PSSetShaderResources(startSlot, resourceView.Handle);
+        public void PSSetShaderResources(uint startSlot, IntPtr resourceView) => D3D11DeviceContextBindings.PSSetShaderResources_(Handle, startSlot, 1, resourceView);
+        public void PSSetSamplers(uint startSlot, ID3D11SamplerState sampler) => PSSetSamplers(startSlot, sampler.Handle);
+        public void PSSetSamplers(uint startSlot, IntPtr sampler) => D3D11DeviceContextBindings.PSSetSamplers_(Handle, startSlot, 1, sampler);
 
         public void OMSetDepthStencilState(ID3D11DepthStencilState stencilState, uint stencilRef)
         {
             D3D11DeviceContextBindings.OMSetDepthStencilState_(Handle, stencilState.Handle, stencilRef);
         }
 
-        public unsafe void UpdateSubresourceData(ID3D11Resource resource, void * data)
+        public unsafe void UpdateSubresourceData(ID3D11Resource resource, void * data) => UpdateSubresourceData(resource.Handle, data);
+        public unsafe void UpdateSubresourceData(IntPtr resource, void* data) => D3D11DeviceContextBindings.UpdateSubresource_(Handle, resource, 0, (D3D11Box*)null, data, 0, 0);
+
+        public void UpdateSubresourceData<T>(IntPtr resource, in T[] data) where T : unmanaged
         {
-            D3D11DeviceContextBindings.UpdateSubresource_(Handle, resource.Handle, 0, (D3D11Box*)null, data, 0,0);
+            
         }
 
         public void OMSetBlendState(ID3D11BlendState blendState, Color blendFactor, uint sampleMask)

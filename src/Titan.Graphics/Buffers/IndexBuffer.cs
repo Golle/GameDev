@@ -9,9 +9,8 @@ namespace Titan.Graphics.Buffers
         private readonly ID3D11DeviceContext _context;
         private readonly ID3D11Buffer _buffer;
         private readonly short[] _indices;
-        
+        public IntPtr NativeHandle => _buffer.Handle;
         public ref readonly short[] Indicies => ref _indices; // should this me stored in memory? we can just access the buffer in the GPU
-
         public uint NumberOfIndices { get; private set; }
 
         public IndexBuffer(ID3D11DeviceContext context, ID3D11Buffer buffer, in short[] indices)

@@ -29,7 +29,7 @@ namespace Titan.Graphics.Renderer
         private const uint MaxSprites = 10900;
         private const uint MaxIndices = 6 * MaxSprites;
         private const uint MaxVertices = 4 * MaxSprites;
-        private readonly IVertexBuffer<Vertex2D> _buffer;
+        private readonly IVertexBuffer _buffer;
         private readonly IIndexBuffer _indices;
         private readonly Vertex2D[] _vertices = new Vertex2D[MaxVertices];
         private readonly IVertexShader _vertexShader;
@@ -46,9 +46,12 @@ namespace Titan.Graphics.Renderer
         private ISampler _sampler;
         private IBlendState _blendState;
 
+        private IDeviceContext _context;
+
         public SpriteBatchRenderer(IDevice device, IBlobReader blobReader, ICameraFactory cameraFactory)
         {
             _device = device;
+            _context = _device.ImmediateContext;
             _camera = cameraFactory.CreateOrhographicCamera();
 
             _buffer = device.CreateVertexBuffer<Vertex2D>(MaxVertices);
@@ -128,11 +131,7 @@ namespace Titan.Graphics.Renderer
             return _numberOfTextures++;
         }
 
-        public void Flush()
-        {
-            _buffer.SetData(_vertices, 0); //TODO: replace this with map/unmap
-           
-        }
+        public void Flush() => _context.UpdateResourceData(_buffer, _vertices, 0);
 
         public void Render()
         {
@@ -140,9 +139,12 @@ namespace Titan.Graphics.Renderer
             if (_numberOfIndices > 0u)
             {
                 _device.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
+                
                 _cameraBuffer.BindToVertexShader();
-                _buffer.Bind();
-                _indices.Bind();
+                
+                _context.SetVertexBuffer(_buffer);
+                _context.SetIndexBuffer(_indices);
+                
                 _inputLayout.Bind();
                 _vertexShader.Bind();
                 _pixelShader.Bind();
@@ -150,7 +152,8 @@ namespace Titan.Graphics.Renderer
                 _textures[0].Bind();
                 _blendState.Bind();
 
-                _device.DrawIndexed(_numberOfIndices, 0, 0);
+
+                _context.DrawIndexed(_numberOfIndices, 0, 0);
                 
             }
             _numberOfIndices = 0u;
