@@ -1,4 +1,5 @@
 using Titan.Graphics.Buffers;
+using Titan.Graphics.Layout;
 using Titan.Graphics.Shaders;
 
 namespace Titan.Graphics
@@ -11,5 +12,6 @@ namespace Titan.Graphics
         void DrawIndexed(uint numberOfIndices, uint startIndexLocation, int baseVertexLocation);
         void SetVertexShader(IVertexShader vertexShader);
         void SetPixelShader(IPixelShader pixelShader);
+        void SetInputLayout(IInputLayout inputLayout);
     }
 }

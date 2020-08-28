@@ -126,7 +126,7 @@ namespace Titan.Graphics.Renderer
             _lightsConstantBuffer.BindToPixelShader(0);
 
             _sampler.Bind();
-            _inputLayout.Bind();
+            _device.ImmediateContext.SetInputLayout(_inputLayout);
 
             _device.ImmediateContext.SetVertexShader(_vertexShader);
             _device.ImmediateContext.SetPixelShader(_pixelShader);
@@ -298,7 +298,7 @@ namespace Titan.Graphics.Renderer
             _device.ImmediateContext.UpdateResourceData(_vertexBuffer, _vertices, _numberOfVertices);
             _device.ImmediateContext.UpdateResourceData(_indexBuffer, _indices, _numberOfIndices);
 
-            _inputLayout.Bind();
+            _device.ImmediateContext.SetInputLayout(_inputLayout);
             _device.ImmediateContext.SetVertexShader(_vertexShader);
             _device.ImmediateContext.SetPixelShader(_pixelShader);
 

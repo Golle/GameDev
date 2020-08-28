@@ -163,7 +163,7 @@ namespace Titan.Graphics
         public IInputLayout CreateInputLayout(VertexLayout vertexLayout, IBlob vertexShaderBlob)
         {
             var layout = _device.CreateInputLayout(vertexLayout.Descriptors, vertexShaderBlob.Buffer, vertexShaderBlob.Size);
-            return new InputLayout(_device.Context, layout);
+            return new InputLayout(layout);
         }
 
         public ITexture2D CreateTexture2D(uint width, uint height, in byte[] pixels)

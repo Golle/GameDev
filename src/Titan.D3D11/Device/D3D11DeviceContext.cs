@@ -59,13 +59,9 @@ namespace Titan.D3D11.Device
             D3D11DeviceContextBindings.IASetPrimitiveTopology_(Handle, topology);
         }
 
-        public void SetInputLayout(ID3D11InputLayout inputLayout)
-        {
-            D3D11DeviceContextBindings.IASetInputLayout_(Handle, inputLayout.Handle);
-        }
-
+        public void SetInputLayout(ID3D11InputLayout inputLayout) => SetInputLayout(inputLayout.Handle);
+        public void SetInputLayout(IntPtr inputLayout) => D3D11DeviceContextBindings.IASetInputLayout_(Handle, inputLayout);
         public void DrawIndexed(uint indexCount, uint startIndexLocation, int baseVertexLocation) => D3D11DeviceContextBindings.DrawIndexed_(Handle, indexCount, startIndexLocation, baseVertexLocation);
-
         public void SetIndexBuffer(ID3D11Buffer buffer, DxgiFormat format, uint offset) => SetIndexBuffer(buffer.Handle, format, offset);
         public void SetIndexBuffer(IntPtr buffer, DxgiFormat format, uint offset) => D3D11DeviceContextBindings.IASetIndexBuffer_(Handle, buffer, format, offset);
         public void VSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer) => VSSetConstantBuffer(startSlot, constantBuffer.Handle);
