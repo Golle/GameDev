@@ -68,7 +68,7 @@ namespace Titan.Graphics
             return new IndexBuffer(_device.Context, _device.CreateBuffer(desc), size); 
         }
 
-        public IVertexBuffer CreateVertexBuffer<T>(uint numberOfVertices) where T : unmanaged
+        public IVertexBuffer<T> CreateVertexBuffer<T>(uint numberOfVertices) where T : unmanaged
         {
             if (numberOfVertices == 0)
             {
@@ -83,10 +83,10 @@ namespace Titan.Graphics
             desc.ByteWidth = (numberOfVertices * size);
             desc.StructureByteStride = size;
 
-            return new VertexBuffer(_device.CreateBuffer(desc), size, 0);
+            return new VertexBuffer<T>(_device.CreateBuffer(desc), size, 0);
         }
 
-        public IVertexBuffer CreateVertexBuffer<T>(in T[] initialData) where T : unmanaged
+        public IVertexBuffer<T> CreateVertexBuffer<T>(in T[] initialData) where T : unmanaged
         {
             if (initialData == null)
             {
@@ -106,7 +106,7 @@ namespace Titan.Graphics
                 {
                     D3D11SubresourceData data = default;
                     data.pSysMem = initialDataPointer;
-                    return new VertexBuffer(_device.CreateBuffer(desc, data), size, (uint) initialData.Length);
+                    return new VertexBuffer<T>(_device.CreateBuffer(desc, data), size, (uint) initialData.Length);
                 }
             }
         }
@@ -121,7 +121,7 @@ namespace Titan.Graphics
             desc.Usage = D3D11Usage.Default; // not sure about this one
             desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified; // not sure about this one
             desc.ByteWidth = size;
-            return new ConstantBuffer<T>(_device.Context, _device.CreateBuffer(desc));
+            return new ConstantBuffer<T>(_device.CreateBuffer(desc));
         }
 
         public IConstantBuffer<T> CreateConstantBuffer<T>(in T initialData) where T : unmanaged
@@ -141,7 +141,7 @@ namespace Titan.Graphics
                 {
                     D3D11SubresourceData data = default;
                     data.pSysMem = initialDataPointer;
-                    return new ConstantBuffer<T>(_device.Context, _device.CreateBuffer(desc, data));
+                    return new ConstantBuffer<T>(_device.CreateBuffer(desc, data));
                 }
             }
         }

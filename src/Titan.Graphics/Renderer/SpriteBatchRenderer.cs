@@ -29,7 +29,7 @@ namespace Titan.Graphics.Renderer
         private const uint MaxSprites = 10900;
         private const uint MaxIndices = 6 * MaxSprites;
         private const uint MaxVertices = 4 * MaxSprites;
-        private readonly IVertexBuffer _buffer;
+        private readonly IVertexBuffer<Vertex2D> _buffer;
         private readonly IIndexBuffer _indices;
         private readonly Vertex2D[] _vertices = new Vertex2D[MaxVertices];
         private readonly IVertexShader _vertexShader;
@@ -131,16 +131,15 @@ namespace Titan.Graphics.Renderer
             return _numberOfTextures++;
         }
 
-        public void Flush() => _context.UpdateResourceData(_buffer, _vertices, 0);
+        public void Flush() => _context.UpdateVertexBuffer(_buffer, _vertices, 0);
 
         public void Render()
         {
             
             if (_numberOfIndices > 0u)
             {
-                _device.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
-                
-                _cameraBuffer.BindToVertexShader();
+                _context.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
+                _context.SetVertexShaderConstantBuffer(_cameraBuffer);
                 
                 _context.SetVertexBuffer(_buffer);
                 _context.SetIndexBuffer(_indices);
@@ -148,10 +147,10 @@ namespace Titan.Graphics.Renderer
                 _context.SetInputLayout(_inputLayout);
                 _context.SetVertexShader(_vertexShader);
                 _context.SetPixelShader(_pixelShader);
+                
                 _sampler.Bind();
                 _textures[0].Bind();
                 _blendState.Bind();
-
 
                 _context.DrawIndexed(_numberOfIndices, 0, 0);
                 

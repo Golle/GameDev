@@ -11,6 +11,7 @@ namespace Titan.Graphics.Layout
         {
             _inputLayout = inputLayout ?? throw new ArgumentNullException(nameof(inputLayout));
         }
+
         public void Dispose()
         {
             _inputLayout.Dispose();

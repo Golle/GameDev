@@ -80,10 +80,26 @@ namespace Titan.D3D11.Device
 
         public unsafe void UpdateSubresourceData(ID3D11Resource resource, void * data) => UpdateSubresourceData(resource.Handle, data);
         public unsafe void UpdateSubresourceData(IntPtr resource, void* data) => D3D11DeviceContextBindings.UpdateSubresource_(Handle, resource, 0, (D3D11Box*)null, data, 0, 0);
+        public void UpdateSubresourceData<T>(IntPtr resource, in T data) where T : unmanaged
+        {
+            unsafe
+            {
+                fixed (void* ptr = &data)
+                {
+                    D3D11DeviceContextBindings.UpdateSubresource_(Handle, resource, 0, null, ptr, 0, 0);
+                }
+            }
+        }
 
         public void UpdateSubresourceData<T>(IntPtr resource, in T[] data) where T : unmanaged
         {
-            
+            unsafe
+            {
+                fixed (void* ptr = data)
+                {
+                    D3D11DeviceContextBindings.UpdateSubresource_(Handle, resource, 0, null, ptr, 0, 0);
+                }
+            }
         }
 
         public void OMSetBlendState(ID3D11BlendState blendState, Color blendFactor, uint sampleMask)

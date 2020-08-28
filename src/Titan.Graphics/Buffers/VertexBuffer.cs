@@ -3,7 +3,7 @@ using Titan.D3D11.Device;
 
 namespace Titan.Graphics.Buffers
 {
-    internal class VertexBuffer : IVertexBuffer
+    internal class VertexBuffer<T> : IVertexBuffer<T>
     {
         private readonly ID3D11Buffer _buffer;
         public uint NumberOfVertices { get; private set; }

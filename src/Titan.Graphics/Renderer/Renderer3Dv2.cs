@@ -108,8 +108,8 @@ namespace Titan.Graphics.Renderer
 
         public void SetCamera(in Matrix4x4 viewProjection, in Matrix4x4 view)
         {
-            _perFrameConstantBuffer.Update(new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
-            _perFrameConstantBuffer.BindToVertexShader(PerFrameSlot);
+            _device.ImmediateContext.UpdateConstantBuffer(_perFrameConstantBuffer, new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
+            _device.ImmediateContext.SetVertexShaderConstantBuffer(_perFrameConstantBuffer, PerFrameSlot);
         }
 
         public void Begin()
@@ -122,8 +122,8 @@ namespace Titan.Graphics.Renderer
                 lights.SetLightColor(i, color);
                 lights.SetLightPosition(i, position);
             }
-            _lightsConstantBuffer.Update(lights);
-            _lightsConstantBuffer.BindToPixelShader(0);
+            _device.ImmediateContext.UpdateConstantBuffer(_lightsConstantBuffer, lights);
+            _device.ImmediateContext.SetPixelShaderConstantBuffer(_lightsConstantBuffer);
 
             _sampler.Bind();
             _device.ImmediateContext.SetInputLayout(_inputLayout);
@@ -139,9 +139,8 @@ namespace Titan.Graphics.Renderer
         private ITexture2D _lastTexture = null;
         public void Render(IMesh mesh, in Matrix4x4 worldMatrix, ITexture2D texture)
         {
-            
-            _perObjectConstantBuffer.Update(new PerObjectContantBuffer {World = Matrix4x4.Transpose(worldMatrix)});
-            _perObjectConstantBuffer.BindToVertexShader(PerObjectSlot);
+            _device.ImmediateContext.UpdateConstantBuffer(_perObjectConstantBuffer, new PerObjectContantBuffer { World = Matrix4x4.Transpose(worldMatrix) });
+            _device.ImmediateContext.SetVertexShaderConstantBuffer(_perObjectConstantBuffer, PerObjectSlot);
             
             texture.Bind();
             //mesh.IndexBuffer.Bind();
@@ -219,7 +218,7 @@ namespace Titan.Graphics.Renderer
         private readonly IVertexShader _vertexShader;
         private readonly IPixelShader _pixelShader;
         private readonly IIndexBuffer _indexBuffer;
-        private readonly IVertexBuffer _vertexBuffer;
+        private readonly IVertexBuffer<LineVertex> _vertexBuffer;
 
         private const int MaxBoxes = 8000;
 
@@ -287,21 +286,18 @@ namespace Titan.Graphics.Renderer
 
         public void SetCamera(in Matrix4x4 viewProjection, in Matrix4x4 view)
         {
-            _perFrameConstantBuffer.Update(new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
-            _perFrameConstantBuffer.BindToVertexShader(0);
+            _device.ImmediateContext.UpdateConstantBuffer(_perFrameConstantBuffer, new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
+            _device.ImmediateContext.SetVertexShaderConstantBuffer(_perFrameConstantBuffer);
         }
 
         public void Render()
         {
-            _device.SetPrimitiveTopology(PrimitiveTopology.LineList);
-
-            _device.ImmediateContext.UpdateResourceData(_vertexBuffer, _vertices, _numberOfVertices);
-            _device.ImmediateContext.UpdateResourceData(_indexBuffer, _indices, _numberOfIndices);
-
+            _device.ImmediateContext.SetPrimitiveTopology(PrimitiveTopology.LineList);
+            _device.ImmediateContext.UpdateVertexBuffer(_vertexBuffer, _vertices, _numberOfVertices);
+            _device.ImmediateContext.UpdateIndexBuffer(_indexBuffer, _indices, _numberOfIndices);
             _device.ImmediateContext.SetInputLayout(_inputLayout);
             _device.ImmediateContext.SetVertexShader(_vertexShader);
             _device.ImmediateContext.SetPixelShader(_pixelShader);
-
             _device.ImmediateContext.SetVertexBuffer(_vertexBuffer);
             _device.ImmediateContext.SetIndexBuffer(_indexBuffer);
             _device.ImmediateContext.DrawIndexed((uint) _numberOfIndices, 0,0);

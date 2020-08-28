@@ -33,6 +33,7 @@ namespace Titan.D3D11.Device
         void OMSetDepthStencilState(ID3D11DepthStencilState stencilState, uint stencilRef);
         unsafe void UpdateSubresourceData(ID3D11Resource resource, void * data);
         unsafe void UpdateSubresourceData(IntPtr resource, void * data);
+        void UpdateSubresourceData<T>(IntPtr resource, in T data) where T : unmanaged;
         void UpdateSubresourceData<T>(IntPtr resource, in T[] data) where T : unmanaged;
         void OMSetBlendState(ID3D11BlendState blendState, Color blendFactor, uint sampleMask);
         ID3D11CommandList FinishCommandList(bool restoreDeferredContextState = false);

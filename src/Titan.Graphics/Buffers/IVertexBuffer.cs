@@ -8,4 +8,8 @@ namespace Titan.Graphics.Buffers
         uint Strides { get; }
         uint Offset { get; }
     }
+
+    public interface IVertexBuffer<T> : IVertexBuffer
+    {
+    }
 }
