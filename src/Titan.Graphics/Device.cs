@@ -211,11 +211,7 @@ namespace Titan.Graphics
             desc.AddressU = D3D11TextureAddressMode.Wrap;
             desc.AddressV = D3D11TextureAddressMode.Wrap;
             desc.AddressW = D3D11TextureAddressMode.Wrap;
-
-            var sampler = _device.CreateSamplerState(desc);
-
-            return new Sampler(_device.Context, sampler);
-
+            return new Sampler(_device.CreateSamplerState(desc));
         }
 
         public IBlendState CreateBlendState()
@@ -225,10 +221,8 @@ namespace Titan.Graphics
             desc.RenderTargets[0].RenderTargetWriteMask = D3D11ColorWriteEnable.All;
             desc.RenderTargets[0].SrcBlend = D3D11Blend.SrcAlpha;
             desc.RenderTargets[0].DestBlend = D3D11Blend.InvSrcAlpha;
-            
-            var blendState = _device.CreateBlendState(desc);
 
-            return new BlendState(_device.Context, blendState);
+            return new BlendState(_device.CreateBlendState(desc));
         }
 
         public void SetPrimitiveTopology(PrimitiveTopology topology)

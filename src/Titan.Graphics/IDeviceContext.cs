@@ -1,6 +1,7 @@
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
 using Titan.Graphics.Shaders;
+using Titan.Graphics.Textures;
 
 namespace Titan.Graphics
 {
@@ -18,5 +19,7 @@ namespace Titan.Graphics
         void SetPrimitiveTopology(PrimitiveTopology topology);
         void SetPixelShaderConstantBuffer(IConstantBuffer constantBuffer, uint startSlot = 0);
         void SetVertexShaderConstantBuffer(IConstantBuffer constantBuffer, uint startSlot = 0);
+        void SetPixelShaderSampler(ISampler sampler, uint startSlot = 0u);
+        void SetBlendstate(IBlendState blendState);
     }
 }

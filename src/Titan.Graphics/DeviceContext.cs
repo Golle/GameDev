@@ -1,10 +1,10 @@
-using System;
 using System.Runtime.CompilerServices;
 using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.Device;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
 using Titan.Graphics.Shaders;
+using Titan.Graphics.Textures;
 
 namespace Titan.Graphics
 {
@@ -45,6 +45,10 @@ namespace Titan.Graphics
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetVertexShaderConstantBuffer(IConstantBuffer constantBuffer, uint startSlot = 0) => _context.VSSetConstantBuffer(startSlot, constantBuffer.NativeHandle);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetPixelShaderSampler(ISampler sampler, uint startSlot = 0) => _context.PSSetSamplers(startSlot, sampler.NativeHandle);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetBlendstate(IBlendState blendState) => _context.OMSetBlendState(blendState.NativeHandle, blendState.BlendFactor, blendState.SampleMask);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetVertexShader(IVertexShader shader) => _context.SetVertexShader(shader.NativeHandle);

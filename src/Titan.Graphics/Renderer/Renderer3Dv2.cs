@@ -125,7 +125,7 @@ namespace Titan.Graphics.Renderer
             _device.ImmediateContext.UpdateConstantBuffer(_lightsConstantBuffer, lights);
             _device.ImmediateContext.SetPixelShaderConstantBuffer(_lightsConstantBuffer);
 
-            _sampler.Bind();
+            _device.ImmediateContext.SetPixelShaderSampler(_sampler);
             _device.ImmediateContext.SetInputLayout(_inputLayout);
 
             _device.ImmediateContext.SetVertexShader(_vertexShader);

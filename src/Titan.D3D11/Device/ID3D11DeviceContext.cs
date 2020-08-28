@@ -35,7 +35,8 @@ namespace Titan.D3D11.Device
         unsafe void UpdateSubresourceData(IntPtr resource, void * data);
         void UpdateSubresourceData<T>(IntPtr resource, in T data) where T : unmanaged;
         void UpdateSubresourceData<T>(IntPtr resource, in T[] data) where T : unmanaged;
-        void OMSetBlendState(ID3D11BlendState blendState, Color blendFactor, uint sampleMask);
+        void OMSetBlendState(ID3D11BlendState blendState, in Color blendFactor, uint sampleMask);
+        void OMSetBlendState(IntPtr blendState, in Color blendFactor, uint sampleMask);
         ID3D11CommandList FinishCommandList(bool restoreDeferredContextState = false);
         void ExecuteCommandList(ID3D11CommandList commandList, bool restoreDeferredContextState = false);
     }

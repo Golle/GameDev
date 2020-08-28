@@ -102,10 +102,8 @@ namespace Titan.D3D11.Device
             }
         }
 
-        public void OMSetBlendState(ID3D11BlendState blendState, Color blendFactor, uint sampleMask)
-        {
-            D3D11DeviceContextBindings.OMSetBlendState_(Handle, blendState.Handle, blendFactor, sampleMask);
-        }
+        public void OMSetBlendState(ID3D11BlendState blendState, in Color blendFactor, uint sampleMask) => OMSetBlendState(blendState.Handle, blendFactor, sampleMask);
+        public void OMSetBlendState(IntPtr blendState, in Color blendFactor, uint sampleMask) => D3D11DeviceContextBindings.OMSetBlendState_(Handle, blendState, blendFactor, sampleMask);
 
         public ID3D11CommandList FinishCommandList(bool restoreDeferredContextState = false)
         {
