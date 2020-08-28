@@ -1,3 +1,4 @@
+using Titan.D3D11;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
 using Titan.Graphics.Shaders;
@@ -13,6 +14,7 @@ namespace Titan.Graphics
         void SetVertexBuffer(IVertexBuffer vertexBuffer, uint startSlot = 0);
         void SetIndexBuffer(IIndexBuffer indexBuffer, uint offset = 0u);
         void DrawIndexed(uint numberOfIndices, uint startIndexLocation, int baseVertexLocation);
+        void Draw(uint vertexCount, uint startLocation);
         void SetVertexShader(IVertexShader vertexShader);
         void SetPixelShader(IPixelShader pixelShader);
         void SetInputLayout(IInputLayout inputLayout);
@@ -21,5 +23,7 @@ namespace Titan.Graphics
         void SetVertexShaderConstantBuffer(IConstantBuffer constantBuffer, uint startSlot = 0);
         void SetPixelShaderSampler(ISampler sampler, uint startSlot = 0u);
         void SetBlendstate(IBlendState blendState);
+        void ClearRenderTarget(IRenderTarget renderTarget, in Color color);
+        void ClearDepthStencil(IDepthStencil depthStencil);
     }
 }

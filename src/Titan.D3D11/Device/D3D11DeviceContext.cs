@@ -29,15 +29,10 @@ namespace Titan.D3D11.Device
             }
         }
 
-        public void ClearRenderTargetView(ID3D11RenderTargetView renderTarget, in Color color)
-        {
-            D3D11DeviceContextBindings.ClearRenderTargetView_(Handle, renderTarget.Handle, color);
-        }
-
-        public void ClearDepthStencilView(ID3D11DepthStencilView depthStencilView, D3D11ClearFlag clearFlags, float depth, sbyte stencil)
-        {
-            D3D11DeviceContextBindings.ClearDepthStencilView_(Handle,depthStencilView.Handle, clearFlags, depth, stencil);
-        }
+        public void ClearRenderTargetView(ID3D11RenderTargetView renderTarget, in Color color) => ClearRenderTargetView(renderTarget.Handle, color);
+        public void ClearRenderTargetView(IntPtr renderTarget, in Color color) => D3D11DeviceContextBindings.ClearRenderTargetView_(Handle, renderTarget, color);
+        public void ClearDepthStencilView(ID3D11DepthStencilView depthStencilView, D3D11ClearFlag clearFlags, float depth, sbyte stencil) => ClearDepthStencilView(depthStencilView.Handle, clearFlags, depth, stencil);
+        public void ClearDepthStencilView(IntPtr depthStencilView, D3D11ClearFlag clearFlags, float depth, sbyte stencil) => D3D11DeviceContextBindings.ClearDepthStencilView_(Handle, depthStencilView, clearFlags, depth, stencil);
 
         public void SetVertexShader(ID3D11VertexShader vertexShader) => SetVertexShader(vertexShader.Handle);
         public void SetVertexShader(IntPtr vertexShader) => D3D11DeviceContextBindings.VSSetShader_(Handle, vertexShader, IntPtr.Zero, 0u);

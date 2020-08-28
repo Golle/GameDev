@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using Titan.D3D11;
 using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.Device;
 using Titan.Graphics.Buffers;
@@ -30,6 +31,8 @@ namespace Titan.Graphics
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void DrawIndexed(uint numberOfIndices, uint startIndexLocation, int baseVertexLocation) => _context.DrawIndexed(numberOfIndices, startIndexLocation, baseVertexLocation);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Draw(uint vertexCount, uint startLocation) => _context.Draw(vertexCount, startLocation);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetPixelShader(IPixelShader shader) => _context.SetPixelShader(shader.NativeHandle);
@@ -49,6 +52,10 @@ namespace Titan.Graphics
         public void SetPixelShaderSampler(ISampler sampler, uint startSlot = 0) => _context.PSSetSamplers(startSlot, sampler.NativeHandle);
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetBlendstate(IBlendState blendState) => _context.OMSetBlendState(blendState.NativeHandle, blendState.BlendFactor, blendState.SampleMask);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ClearRenderTarget(IRenderTarget renderTarget, in Color color) => _context.ClearRenderTargetView(renderTarget.NativeHandle, color);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ClearDepthStencil(IDepthStencil depthStencil) => _context.ClearDepthStencilView(depthStencil.NativeHandle, D3D11ClearFlag.Depth, 1, 0);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetVertexShader(IVertexShader shader) => _context.SetVertexShader(shader.NativeHandle);

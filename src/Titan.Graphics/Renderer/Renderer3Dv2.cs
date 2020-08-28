@@ -159,12 +159,9 @@ namespace Titan.Graphics.Renderer
 
             //_perObjectConstantBuffer.BindToPixelShader();
 
-            _device.Draw(mesh.VertexBuffer.NumberOfVertices, 0);
+            _device.ImmediateContext.Draw(mesh.VertexBuffer.NumberOfVertices, 0);
             //_device.DrawIndexed(mesh.IndexBuffer.NumberOfIndices, 0, 0);
-
         }
-
-        
 
         public void End()
         {
@@ -191,7 +188,7 @@ namespace Titan.Graphics.Renderer
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetPrimitiveTopology(PrimitiveTopology topology) => _device.SetPrimitiveTopology(topology);
+        public void SetPrimitiveTopology(PrimitiveTopology topology) => _device.ImmediateContext.SetPrimitiveTopology(topology);
     }
 
 

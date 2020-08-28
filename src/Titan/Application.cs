@@ -8,6 +8,7 @@ using Titan.Core.GameLoop;
 using Titan.Core.GameLoop.Events;
 using Titan.Core.Ioc;
 using Titan.Core.Logging;
+using Titan.D3D11;
 using Titan.ECS;
 using Titan.ECS.Runners;
 using Titan.ECS.Systems;
@@ -136,8 +137,14 @@ namespace Titan
             _container.GetInstance<IEventManager>()
                 .Subscribe((in UpdateEvent @event) =>
                 {
-                    display.Device.BeginRender();
+
+                    var device = display.Device;
+                    var context = device.ImmediateContext;
+                    context.ClearRenderTarget(device.BackBuffer, new Color { B = 0.1f});
+                    context.ClearDepthStencil(device.DepthStencil);
+
                     systemsRummer.Update(@event.ElapsedTime);
+
                     display.Device.EndRender();
                 });
 

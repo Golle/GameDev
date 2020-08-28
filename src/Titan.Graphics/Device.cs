@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using Titan.D3D11;
 using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.Device;
 using Titan.Graphics.Blobs;
@@ -17,22 +16,24 @@ namespace Titan.Graphics
         private readonly ID3D11RenderTargetView _renderTarget;
         private readonly ID3D11DepthStencilView _depthStencilView;
 
-        private readonly Color _clearColor = new Color{B = 0.6f, A = 1f};
-
         private readonly bool _vSync = false;
 
         public IDeviceContext ImmediateContext { get; }
+        public IRenderTarget BackBuffer { get; }
+        public IDepthStencil DepthStencil { get; }
         public Device(ID3D11Device device, ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencilView)
         {
             _device = device ?? throw new ArgumentNullException(nameof(device));
             _renderTarget = renderTarget ?? throw new ArgumentNullException(nameof(renderTarget));
             _depthStencilView = depthStencilView ?? throw new ArgumentNullException(nameof(depthStencilView));
             ImmediateContext = new DeviceContext(device.Context);
+            BackBuffer = new RenderTarget(renderTarget);
+            DepthStencil = new DepthStencil(depthStencilView);
         }
 
         public IDeviceContext CreateDeferredContext()
         {
-            throw new NotImplementedException();
+            return new DeviceContext(_device.CreateDeferredContext());
         }
 
         public IIndexBuffer CreateIndexBuffer(in short[] indices)
@@ -50,7 +51,7 @@ namespace Titan.Graphics
                 {
                     D3D11SubresourceData data = default;
                     data.pSysMem = indicesPointer;
-                    return new IndexBuffer(_device.Context, _device.CreateBuffer(desc, data), indices);
+                    return new IndexBuffer(_device.CreateBuffer(desc, data), indices);
                 }
             }
         }
@@ -65,7 +66,7 @@ namespace Titan.Graphics
             desc.ByteWidth = size * sizeof(short);
             desc.StructureByteStride = sizeof(short);
 
-            return new IndexBuffer(_device.Context, _device.CreateBuffer(desc), size); 
+            return new IndexBuffer(_device.CreateBuffer(desc), size); 
         }
 
         public IVertexBuffer<T> CreateVertexBuffer<T>(uint numberOfVertices) where T : unmanaged
@@ -225,30 +226,9 @@ namespace Titan.Graphics
             return new BlendState(_device.CreateBlendState(desc));
         }
 
-        public void SetPrimitiveTopology(PrimitiveTopology topology)
-        {
-            _device.Context.SetPrimitiveTopology((D3D11PrimitiveTopology)topology);
-        }
-
-        public void BeginRender()
-        {
-            _device.Context.ClearRenderTargetView(_renderTarget, _clearColor);
-            _device.Context.ClearDepthStencilView(_depthStencilView, D3D11ClearFlag.Depth, 1f, 0);
-        }
-
         public void EndRender()
         {
             _device.SwapChain.Present(_vSync);
-        }
-
-        public void DrawIndexed(uint numberOfIndices, uint startIndexLocation, int baseVertexLocation)
-        {
-            _device.Context.DrawIndexed(numberOfIndices, startIndexLocation, baseVertexLocation);
-        }
-
-        public void Draw(uint vertexCount, uint startLocation)
-        {
-            _device.Context.Draw(vertexCount, startLocation);
         }
 
         private static void CheckAlignment(uint bytes)

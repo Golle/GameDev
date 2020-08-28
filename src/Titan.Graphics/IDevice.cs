@@ -10,6 +10,8 @@ namespace Titan.Graphics
     public interface IDevice : IDisposable
     {
         IDeviceContext ImmediateContext { get; }
+        IRenderTarget BackBuffer { get; }
+        IDepthStencil DepthStencil { get; }
         IDeviceContext CreateDeferredContext();
         IIndexBuffer CreateIndexBuffer(in short[] indices);
         IIndexBuffer CreateIndexBuffer(uint size);
@@ -23,10 +25,6 @@ namespace Titan.Graphics
         ITexture2D CreateTexture2D(uint width, uint height, in byte[] pixels);
         ISampler CreateSampler(bool point = false);
         IBlendState CreateBlendState();
-        void SetPrimitiveTopology(PrimitiveTopology topology);
-        void BeginRender();
         void EndRender();
-        void DrawIndexed(uint numberOfIndices, uint startIndexLocation, int baseVertexLocation);
-        void Draw(uint vertexCount, uint startLocation);
     }
 }
