@@ -150,14 +150,14 @@ namespace Titan.Graphics
         {
             var shader = _device.CreateVertexShader(vertexShaderBlob.Buffer, vertexShaderBlob.Size);
 
-            return new VertexShader(_device.Context, shader);
+            return new VertexShader(shader);
         }
 
         public IPixelShader CreatePixelShader(IBlob pixelShaderBlob)
         {
             var shader = _device.CreatePixelShader(pixelShaderBlob.Buffer, pixelShaderBlob.Size);
 
-            return new PixelShader(_device.Context, shader);
+            return new PixelShader(shader);
         }
 
         public IInputLayout CreateInputLayout(VertexLayout vertexLayout, IBlob vertexShaderBlob)

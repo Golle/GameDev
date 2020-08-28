@@ -1,7 +1,6 @@
-﻿namespace Titan.Graphics.Shaders
+namespace Titan.Graphics.Shaders
 {
     public interface IPixelShader : IShader
     {
-        
     }
 }

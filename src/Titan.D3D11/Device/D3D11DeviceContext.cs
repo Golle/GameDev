@@ -39,15 +39,10 @@ namespace Titan.D3D11.Device
             D3D11DeviceContextBindings.ClearDepthStencilView_(Handle,depthStencilView.Handle, clearFlags, depth, stencil);
         }
 
-        public void SetVertexShader(ID3D11VertexShader vertexShader)
-        {
-            D3D11DeviceContextBindings.VSSetShader_(Handle, vertexShader.Handle, IntPtr.Zero, 0u);
-        }
-
-        public void SetPixelShader(ID3D11PixelShader pixelShader)
-        {
-            D3D11DeviceContextBindings.PSSetShader_(Handle, pixelShader.Handle, IntPtr.Zero, 0u);
-        }
+        public void SetVertexShader(ID3D11VertexShader vertexShader) => SetVertexShader(vertexShader.Handle);
+        public void SetVertexShader(IntPtr vertexShader) => D3D11DeviceContextBindings.VSSetShader_(Handle, vertexShader, IntPtr.Zero, 0u);
+        public void SetPixelShader(ID3D11PixelShader pixelShader) => SetPixelShader(pixelShader.Handle);
+        public void SetPixelShader(IntPtr pixelShader) => D3D11DeviceContextBindings.PSSetShader_(Handle, pixelShader, IntPtr.Zero, 0u);
 
         public void SetViewport(in D3D11Viewport viewport)
         {

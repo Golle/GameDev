@@ -12,7 +12,9 @@ namespace Titan.D3D11.Device
         void ClearRenderTargetView(ID3D11RenderTargetView renderTarget, in Color color);
         void ClearDepthStencilView(ID3D11DepthStencilView depthStencilView, D3D11ClearFlag clearFlags, float depth, sbyte stencil);
         void SetVertexShader(ID3D11VertexShader vertexShader);
+        void SetVertexShader(IntPtr vertexShader);
         void SetPixelShader(ID3D11PixelShader pixelShader);
+        void SetPixelShader(IntPtr pixelShader);
         void SetViewport(in D3D11Viewport viewport);
         void SetPrimitiveTopology(D3D11PrimitiveTopology topology);
         void SetInputLayout(ID3D11InputLayout inputLayout);

@@ -146,8 +146,8 @@ namespace Titan.Graphics.Renderer
                 _context.SetIndexBuffer(_indices);
                 
                 _inputLayout.Bind();
-                _vertexShader.Bind();
-                _pixelShader.Bind();
+                _context.SetVertexShader(_vertexShader);
+                _context.SetPixelShader(_pixelShader);
                 _sampler.Bind();
                 _textures[0].Bind();
                 _blendState.Bind();
