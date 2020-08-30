@@ -25,8 +25,13 @@ namespace Titan.D3D11.Device
             {
                 var renderTargetViews = stackalloc IntPtr[1];
                 renderTargetViews[0] = renderTarget.Handle;
-                D3D11DeviceContextBindings.OMSetRenderTargets_(Handle, 1, renderTargetViews, depthStencil?.Handle ?? IntPtr.Zero);
+                OMSetRenderTargets(renderTargetViews, 1, depthStencil?.Handle ?? IntPtr.Zero);
             }
+        }
+
+        public unsafe void OMSetRenderTargets(IntPtr* renderTargets, uint numberOfRenderTargets, IntPtr depthStencil)
+        {
+            D3D11DeviceContextBindings.OMSetRenderTargets_(Handle, numberOfRenderTargets, renderTargets, depthStencil);
         }
 
         public void ClearRenderTargetView(ID3D11RenderTargetView renderTarget, in Color color) => ClearRenderTargetView(renderTarget.Handle, color);

@@ -12,7 +12,7 @@ namespace Titan.Graphics
         IDeviceContext ImmediateContext { get; }
         IRenderTarget BackBuffer { get; }
         IDepthStencil DepthStencil { get; }
-        IDeviceContext CreateDeferredContext();
+        IDeferredDeviceContext CreateDeferredContext();
         IIndexBuffer CreateIndexBuffer(in short[] indices);
         IIndexBuffer CreateIndexBuffer(uint size);
         IVertexBuffer<T> CreateVertexBuffer<T>(uint numberOfVertices) where T : unmanaged;

@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using Titan.D3D11;
 using Titan.D3D11.Bindings.Models;
@@ -9,18 +10,20 @@ using Titan.Graphics.Textures;
 
 namespace Titan.Graphics
 {
+    public interface IDeferredDeviceContext : IDeviceContext
+    {
+        void Finialize(IDeviceContext context);
+    }
 
-    //internal class DeferredContext : IDeviceContext
-    //{
-
-    //}
-
-    internal class DeviceContext : IDeviceContext
+    internal class DeviceContext : IDeferredDeviceContext
     {
         private readonly ID3D11DeviceContext _context;
-        public DeviceContext(ID3D11DeviceContext context)
+        private readonly bool _canDispose;
+
+        public DeviceContext(ID3D11DeviceContext context, bool canDispose = true)
         {
             _context = context;
+            _canDispose = canDispose;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -57,6 +60,16 @@ namespace Titan.Graphics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ClearDepthStencil(IDepthStencil depthStencil) => _context.ClearDepthStencilView(depthStencil.NativeHandle, D3D11ClearFlag.Depth, 1, 0);
 
+        public void Finialize(IDeviceContext context)
+        {
+            if (context is DeviceContext immediateContext)
+            {
+                // TODO: this is a temporary solution, figure out a better way to handle this.
+                using var commandlist = _context.FinishCommandList();
+                immediateContext._context.ExecuteCommandList(commandlist);
+            }
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetVertexShader(IVertexShader shader) => _context.SetVertexShader(shader.NativeHandle);
 
@@ -67,5 +80,14 @@ namespace Titan.Graphics
         public void UpdateVertexBuffer<T>(IVertexBuffer<T> vertexBuffer, in T[] data, int count) where T : unmanaged => _context.UpdateSubresourceData(vertexBuffer.NativeHandle, data);
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void UpdateIndexBuffer(IIndexBuffer indexBuffer, in short[] data, int count) => _context.UpdateSubresourceData(indexBuffer.NativeHandle, data);
+
+        public void Dispose()
+        {
+            if (!_canDispose)
+            {
+                throw new InvalidOperationException("Trying to Dispose a DeviceContext that has been flagged as not disposable.");
+            }
+            _context?.Dispose();
+        }
     }
 }

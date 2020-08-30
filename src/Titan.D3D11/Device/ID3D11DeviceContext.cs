@@ -9,6 +9,7 @@ namespace Titan.D3D11.Device
         void SetVertexBuffer(uint startSlot, IntPtr vertexBuffer, uint strides, uint offset);
         void Draw(uint vertexCount, uint startLocation);
         void OMSetRenderTargets(ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencil);
+        unsafe void OMSetRenderTargets(IntPtr * renderTargets, uint numberOfRenderTargets, IntPtr depthStencil);
         void ClearRenderTargetView(ID3D11RenderTargetView renderTarget, in Color color);
         void ClearRenderTargetView(IntPtr renderTarget, in Color color);
         void ClearDepthStencilView(ID3D11DepthStencilView depthStencilView, D3D11ClearFlag clearFlags, float depth, sbyte stencil);

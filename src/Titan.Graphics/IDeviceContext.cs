@@ -1,3 +1,4 @@
+using System;
 using Titan.D3D11;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
@@ -6,7 +7,7 @@ using Titan.Graphics.Textures;
 
 namespace Titan.Graphics
 {
-    public interface IDeviceContext
+    public interface IDeviceContext : IDisposable
     {
         void UpdateConstantBuffer<T>(IConstantBuffer<T> constantBuffer, in T data) where T : unmanaged;
         void UpdateVertexBuffer<T>(IVertexBuffer<T> vertexBuffer, in T[] data, int count) where T : unmanaged;

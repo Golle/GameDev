@@ -224,10 +224,12 @@ namespace Titan.Graphics.Renderer
         private readonly short[] _indices = new short[24 * MaxBoxes];
         private int _numberOfVertices;
         private int _numberOfIndices;
+        private readonly IDeviceContext _context;
 
         public RendererDebug3Dv3(IDevice device, IBlobReader blobReader)
         {
             _device = device;
+            _context = device.ImmediateContext; //.CreateDeferredContext();
             using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/LineVertexShader.cso");
             _vertexShader = _device.CreateVertexShader(vertexShaderBlob);
             using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/LinePixelShader.cso");
@@ -283,22 +285,24 @@ namespace Titan.Graphics.Renderer
 
         public void SetCamera(in Matrix4x4 viewProjection, in Matrix4x4 view)
         {
-            _device.ImmediateContext.UpdateConstantBuffer(_perFrameConstantBuffer, new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
-            _device.ImmediateContext.SetVertexShaderConstantBuffer(_perFrameConstantBuffer);
+            _context.UpdateConstantBuffer(_perFrameConstantBuffer, new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
+            
         }
 
         public void Render()
         {
-            _device.ImmediateContext.SetPrimitiveTopology(PrimitiveTopology.LineList);
-            _device.ImmediateContext.UpdateVertexBuffer(_vertexBuffer, _vertices, _numberOfVertices);
-            _device.ImmediateContext.UpdateIndexBuffer(_indexBuffer, _indices, _numberOfIndices);
-            _device.ImmediateContext.SetInputLayout(_inputLayout);
-            _device.ImmediateContext.SetVertexShader(_vertexShader);
-            _device.ImmediateContext.SetPixelShader(_pixelShader);
-            _device.ImmediateContext.SetVertexBuffer(_vertexBuffer);
-            _device.ImmediateContext.SetIndexBuffer(_indexBuffer);
-            _device.ImmediateContext.DrawIndexed((uint) _numberOfIndices, 0,0);
+            _context.SetVertexShaderConstantBuffer(_perFrameConstantBuffer);
+            _context.SetPrimitiveTopology(PrimitiveTopology.LineList);
+            _context.UpdateVertexBuffer(_vertexBuffer, _vertices, _numberOfVertices);
+            _context.UpdateIndexBuffer(_indexBuffer, _indices, _numberOfIndices);
+            _context.SetInputLayout(_inputLayout);
+            _context.SetVertexShader(_vertexShader);
+            _context.SetPixelShader(_pixelShader);
+            _context.SetVertexBuffer(_vertexBuffer);
+            _context.SetIndexBuffer(_indexBuffer);
+            _context.DrawIndexed((uint) _numberOfIndices, 0,0);
             
+            //_context.Finialize(_device.ImmediateContext);
             _numberOfIndices = 0;
             _numberOfVertices = 0;
         }

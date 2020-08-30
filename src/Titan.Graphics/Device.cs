@@ -26,14 +26,16 @@ namespace Titan.Graphics
             _device = device ?? throw new ArgumentNullException(nameof(device));
             _renderTarget = renderTarget ?? throw new ArgumentNullException(nameof(renderTarget));
             _depthStencilView = depthStencilView ?? throw new ArgumentNullException(nameof(depthStencilView));
-            ImmediateContext = new DeviceContext(device.Context);
+            ImmediateContext = new DeviceContext(device.Context, false);
             BackBuffer = new RenderTarget(renderTarget);
             DepthStencil = new DepthStencil(depthStencilView);
         }
 
-        public IDeviceContext CreateDeferredContext()
+        public IDeferredDeviceContext CreateDeferredContext()
         {
-            return new DeviceContext(_device.CreateDeferredContext());
+            var context = _device.CreateDeferredContext();
+            context.OMSetRenderTargets(_renderTarget, _depthStencilView);
+            return new DeviceContext(context);
         }
 
         public IIndexBuffer CreateIndexBuffer(in short[] indices)
