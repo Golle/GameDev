@@ -195,7 +195,7 @@ namespace Titan
             var world = builder.Build();
 
             var systemsRunner = ConfigureSystems(new SystemsRunnerBuilder(world, _container.CreateChildContainer()))
-                .WithSystem<UIButtonSystem>()
+                //.WithSystem<UIButtonSystem>()
 
                 .WithSystem<MovementSystem2D>()
                 .WithSystem<MovementSystem3D>()
@@ -208,12 +208,12 @@ namespace Titan
                 .WithSystem<Model3DRenderSystem>()
                 
 
-                .WithSystem<SpriteRenderSystem>()
+                //.WithSystem<SpriteRenderSystem>()
 
 
-                .WithSystem<UIRenderSystem>()
-                .WithSystem<UITextRenderSystem>()
-                .WithSystem<BoundingBoxSystem>()
+                //.WithSystem<UIRenderSystem>()
+                //.WithSystem<UITextRenderSystem>()
+                //.WithSystem<BoundingBoxSystem>()
                 .Build();
 
             return (world, systemsRunner);

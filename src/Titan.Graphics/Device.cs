@@ -33,9 +33,7 @@ namespace Titan.Graphics
 
         public IDeferredDeviceContext CreateDeferredContext()
         {
-            var context = _device.CreateDeferredContext();
-            context.OMSetRenderTargets(_renderTarget, _depthStencilView);
-            return new DeviceContext(context);
+            return new DeviceContext(_device.CreateDeferredContext());
         }
 
         public IIndexBuffer CreateIndexBuffer(in short[] indices)

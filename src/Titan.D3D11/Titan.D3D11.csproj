@@ -31,7 +31,16 @@
     <Content Include="..\Titan.D3D11.Bindings\bin\x64\$(Configuration)\VertexShader2D.cso" Link="Shaders\VertexShader2D.cso">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Titan.D3D11.Bindings\bin\x64\$(Configuration)\VertexShaderDeferred.cso" Link="Shaders\VertexShaderDeferred.cso">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Titan.D3D11.Bindings\bin\x64\$(Configuration)\PixelShader2D.cso" Link="Shaders\PixelShader2D.cso">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Titan.D3D11.Bindings\bin\x64\$(Configuration)\PixelShaderDeferred.cso" Link="Shaders\PixelShaderDeferred.cso">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Titan.D3D11.Bindings\bin\x64\$(Configuration)\PixelShaderDeferred1.cso" Link="Shaders\PixelShaderDeferred1.cso">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Titan.D3D11.Bindings\bin\x64\$(Configuration)\LinePixelShader.cso" Link="Shaders\LinePixelShader.cso">
