@@ -2,11 +2,11 @@ using System;
 
 namespace Titan.Graphics.Buffers
 {
-    public interface IConstantBuffer<T> : IDisposable where T: unmanaged
+    public interface IConstantBuffer : IResource, IDisposable
     {
-        
-        void BindToPixelShader(uint startSlot = 0);
-        void BindToVertexShader(uint startSlot = 0);
-        void Update(in T data);
+    }
+
+    public interface IConstantBuffer<T> : IConstantBuffer where T: unmanaged
+    {
     }
 }

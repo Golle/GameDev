@@ -30,10 +30,25 @@ namespace Titan.Graphics
 
             // Create device
             var d3D11Device = _d3D11DeviceFactory.Create(new CreateDeviceArguments(window, defaultRefreshRate, adapter?.Handle ?? IntPtr.Zero, debug));
-
+            
             // Created the backbuffer and the RenderTargetView
             using var backBuffer = d3D11Device.SwapChain.GetBuffer(0, D3D11Resources.D3D11Resource);
             var renderTarget = d3D11Device.CreateRenderTargetView(backBuffer);
+
+
+            D3D11Texture2DDesc sTarget = default;
+            sTarget.Height = (uint)window.Height;
+            sTarget.Width = (uint)window.Width;
+            sTarget.MipLevels = 1u;
+            sTarget.ArraySize = 1u;
+            sTarget.Format = DxgiFormat.R8G8B8A8Unorm;
+            sTarget.SampleDesc.Count = 1;
+            sTarget.SampleDesc.Quality = 0;
+            sTarget.Usage = D3D11Usage.Default;
+            sTarget.BindFlags = D3D11BindFlag.RenderTarget;
+
+            //var d3D11Texture2D = d3D11Device.CreateTexture2D(sTarget); // TODO: this is getting leaked
+            //var secondRenderTarget = d3D11Device.CreateRenderTargetView(d3D11Texture2D); // TODO: this is getting leaked
 
 
             // Create the DepthStencilView (z-buffering)
@@ -66,9 +81,14 @@ namespace Titan.Graphics
             viewDesc.Texture2D.MipSlice = 0u;
             var depthStencilView = d3D11Device.CreateDepthStencilView(depthStencil, viewDesc);
 
-
             // Set the render target view and depthStencil
-            d3D11Device.Context.OMSetRenderTargets(renderTarget, depthStencilView);
+            unsafe
+            {
+                var renderTargets = stackalloc IntPtr[1];
+                renderTargets[0] = renderTarget.Handle;
+                d3D11Device.Context.OMSetRenderTargets(renderTargets, 1, depthStencilView.Handle);
+            }
+            
 
 
             // Set the default viewport

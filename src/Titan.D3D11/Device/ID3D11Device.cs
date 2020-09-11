@@ -23,5 +23,6 @@ namespace Titan.D3D11.Device
         ID3D11SamplerState CreateSamplerState(in D3D11SamplerDesc desc);
         ID3D11ShaderResourceView CreateShaderResourceView(ID3D11Resource resource, D3D11ShaderResourceViewDesc desc);
         ID3D11BlendState CreateBlendState(in D3D11BlendDesc desc);
+        ID3D11DeviceContext CreateDeferredContext(uint contextFlags = 0);
     }
 }

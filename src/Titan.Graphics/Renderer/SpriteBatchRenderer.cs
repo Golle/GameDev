@@ -46,9 +46,12 @@ namespace Titan.Graphics.Renderer
         private ISampler _sampler;
         private IBlendState _blendState;
 
+        private IDeviceContext _context;
+
         public SpriteBatchRenderer(IDevice device, IBlobReader blobReader, ICameraFactory cameraFactory)
         {
             _device = device;
+            _context = _device.ImmediateContext;
             _camera = cameraFactory.CreateOrhographicCamera();
 
             _buffer = device.CreateVertexBuffer<Vertex2D>(MaxVertices);
@@ -128,29 +131,28 @@ namespace Titan.Graphics.Renderer
             return _numberOfTextures++;
         }
 
-        public void Flush()
-        {
-            _buffer.SetData(_vertices, 0); //TODO: replace this with map/unmap
-           
-        }
+        public void Flush() => _context.UpdateVertexBuffer(_buffer, _vertices, 0);
 
         public void Render()
         {
             
             if (_numberOfIndices > 0u)
             {
-                _device.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
-                _cameraBuffer.BindToVertexShader();
-                _buffer.Bind();
-                _indices.Bind();
-                _inputLayout.Bind();
-                _vertexShader.Bind();
-                _pixelShader.Bind();
-                _sampler.Bind();
+                _context.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
+                _context.SetVertexShaderConstantBuffer(_cameraBuffer);
+                
+                _context.SetVertexBuffer(_buffer);
+                _context.SetIndexBuffer(_indices);
+                
+                _context.SetInputLayout(_inputLayout);
+                _context.SetVertexShader(_vertexShader);
+                _context.SetPixelShader(_pixelShader);
+                
+                _context.SetPixelShaderSampler(_sampler);
                 _textures[0].Bind();
-                _blendState.Bind();
+                _context.SetBlendstate(_blendState);
 
-                _device.DrawIndexed(_numberOfIndices, 0, 0);
+                _context.DrawIndexed(_numberOfIndices, 0, 0);
                 
             }
             _numberOfIndices = 0u;

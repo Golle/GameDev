@@ -93,7 +93,6 @@ namespace Titan.Graphics.Renderer
         public Renderer3Dv2(IDevice device, IBlobReader blobReader)
         {
             _device = device;
-
             using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/VertexShader.cso");
             _vertexShader = _device.CreateVertexShader(vertexShaderBlob);
             using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/PixelShader.cso");
@@ -108,8 +107,8 @@ namespace Titan.Graphics.Renderer
 
         public void SetCamera(in Matrix4x4 viewProjection, in Matrix4x4 view)
         {
-            _perFrameConstantBuffer.Update(new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
-            _perFrameConstantBuffer.BindToVertexShader(PerFrameSlot);
+            _device.ImmediateContext.UpdateConstantBuffer(_perFrameConstantBuffer, new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
+            _device.ImmediateContext.SetVertexShaderConstantBuffer(_perFrameConstantBuffer, PerFrameSlot);
         }
 
         public void Begin()
@@ -122,31 +121,32 @@ namespace Titan.Graphics.Renderer
                 lights.SetLightColor(i, color);
                 lights.SetLightPosition(i, position);
             }
-            _lightsConstantBuffer.Update(lights);
-            _lightsConstantBuffer.BindToPixelShader(0);
+            _device.ImmediateContext.UpdateConstantBuffer(_lightsConstantBuffer, lights);
+            _device.ImmediateContext.SetPixelShaderConstantBuffer(_lightsConstantBuffer);
 
-            _sampler.Bind();
-            _inputLayout.Bind();
-            _vertexShader.Bind();
-            _pixelShader.Bind();
-            //_device.BeginRender();
+            _device.ImmediateContext.SetPixelShaderSampler(_sampler);
+            _device.ImmediateContext.SetInputLayout(_inputLayout);
+
+            _device.ImmediateContext.SetVertexShader(_vertexShader);
+            _device.ImmediateContext.SetPixelShader(_pixelShader);
+
         }
 
 
         private IVertexBuffer _lastVertexBuffer = null;
         private ITexture2D _lastTexture = null;
+
         public void Render(IMesh mesh, in Matrix4x4 worldMatrix, ITexture2D texture)
         {
-            
-            _perObjectConstantBuffer.Update(new PerObjectContantBuffer {World = Matrix4x4.Transpose(worldMatrix)});
-            _perObjectConstantBuffer.BindToVertexShader(PerObjectSlot);
+            _device.ImmediateContext.UpdateConstantBuffer(_perObjectConstantBuffer, new PerObjectContantBuffer { World = Matrix4x4.Transpose(worldMatrix) });
+            _device.ImmediateContext.SetVertexShaderConstantBuffer(_perObjectConstantBuffer, PerObjectSlot);
             
             texture.Bind();
             //mesh.IndexBuffer.Bind();
 
             if (mesh.VertexBuffer != _lastVertexBuffer)
             {
-                mesh.VertexBuffer.Bind();
+                _device.ImmediateContext.SetVertexBuffer(mesh.VertexBuffer);
                 _lastVertexBuffer = mesh.VertexBuffer;
             }
 
@@ -158,12 +158,9 @@ namespace Titan.Graphics.Renderer
 
             //_perObjectConstantBuffer.BindToPixelShader();
 
-            _device.Draw(mesh.VertexBuffer.NumberOfVertices, 0);
+            _device.ImmediateContext.Draw(mesh.VertexBuffer.NumberOfVertices, 0);
             //_device.DrawIndexed(mesh.IndexBuffer.NumberOfIndices, 0, 0);
-
         }
-
-        
 
         public void End()
         {
@@ -190,7 +187,7 @@ namespace Titan.Graphics.Renderer
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetPrimitiveTopology(PrimitiveTopology topology) => _device.SetPrimitiveTopology(topology);
+        public void SetPrimitiveTopology(PrimitiveTopology topology) => _device.ImmediateContext.SetPrimitiveTopology(topology);
     }
 
 
@@ -226,10 +223,12 @@ namespace Titan.Graphics.Renderer
         private readonly short[] _indices = new short[24 * MaxBoxes];
         private int _numberOfVertices;
         private int _numberOfIndices;
+        private readonly IDeviceContext _context;
 
         public RendererDebug3Dv3(IDevice device, IBlobReader blobReader)
         {
             _device = device;
+            _context = device.ImmediateContext; //.CreateDeferredContext();
             using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/LineVertexShader.cso");
             _vertexShader = _device.CreateVertexShader(vertexShaderBlob);
             using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/LinePixelShader.cso");
@@ -285,25 +284,24 @@ namespace Titan.Graphics.Renderer
 
         public void SetCamera(in Matrix4x4 viewProjection, in Matrix4x4 view)
         {
-            _perFrameConstantBuffer.Update(new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
-            _perFrameConstantBuffer.BindToVertexShader(0);
+            _context.UpdateConstantBuffer(_perFrameConstantBuffer, new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
+            
         }
 
         public void Render()
         {
-            _device.SetPrimitiveTopology(PrimitiveTopology.LineList);
-
-            _vertexBuffer.SetData(_vertices, _numberOfVertices);
-            _indexBuffer.SetData(_indices, _numberOfIndices);
-
-            _inputLayout.Bind();
-            _vertexShader.Bind();
-            _pixelShader.Bind();
-            _vertexBuffer.Bind();
-            _indexBuffer.Bind();
-
-            _device.DrawIndexed((uint) _numberOfIndices, 0, 0);
+            _context.SetVertexShaderConstantBuffer(_perFrameConstantBuffer);
+            _context.SetPrimitiveTopology(PrimitiveTopology.LineList);
+            _context.UpdateVertexBuffer(_vertexBuffer, _vertices, _numberOfVertices);
+            _context.UpdateIndexBuffer(_indexBuffer, _indices, _numberOfIndices);
+            _context.SetInputLayout(_inputLayout);
+            _context.SetVertexShader(_vertexShader);
+            _context.SetPixelShader(_pixelShader);
+            _context.SetVertexBuffer(_vertexBuffer);
+            _context.SetIndexBuffer(_indexBuffer);
+            _context.DrawIndexed((uint) _numberOfIndices, 0,0);
             
+            //_context.Finialize(_device.ImmediateContext);
             _numberOfIndices = 0;
             _numberOfVertices = 0;
         }

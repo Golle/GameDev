@@ -37,8 +37,9 @@ namespace Titan.Graphics.Renderer
         }
         public void Execute()
         {
-            _vertexBuffer.Bind();
-            _indexBuffer.Bind();
+            throw new NotImplementedException();
+            //_vertexBuffer.Bind();
+            //_indexBuffer.Bind();
         }
     }
 

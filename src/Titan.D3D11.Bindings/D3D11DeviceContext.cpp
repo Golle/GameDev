@@ -226,3 +226,26 @@ EXPORT void Unmap_(
 ) {
 	context->Unmap(pResource, subresource);
 }
+
+
+
+/////////////////////////////////////////////
+///// Command lists
+/////////////////////////////////////////////
+EXPORT HRESULT FinishCommandList_(
+	ID3D11DeviceContext* context,
+	BOOL restoreDeferredContextState,
+	ID3D11CommandList** ppCommandList
+) 
+{
+	return context->FinishCommandList(restoreDeferredContextState, ppCommandList);
+}
+
+EXPORT void ExecuteCommandList_(
+	ID3D11DeviceContext* context,
+	ID3D11CommandList* pCommandList,
+	BOOL restoreContextState
+) 
+{
+	context->ExecuteCommandList(pCommandList, restoreContextState);
+}

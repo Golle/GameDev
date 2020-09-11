@@ -174,6 +174,20 @@ namespace Titan.D3D11.Bindings
             [In] IntPtr pResource,  // ID3D11Resource
             [In] uint subresource
         );
+
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern HRESULT FinishCommandList_(
+            [In] IntPtr context,
+            [In, MarshalAs(UnmanagedType.Bool)] bool restoreDeferredContextState,
+            [Out] out IntPtr ppCommandList
+        );
+
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern void ExecuteCommandList_(
+            [In] IntPtr context,
+            [In] IntPtr pCommandList,
+            [In, MarshalAs(UnmanagedType.Bool)] bool restoreContextState
+        );
     }
 
     [StructLayout(LayoutKind.Sequential, Size = 24)]

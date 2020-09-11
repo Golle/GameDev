@@ -4,6 +4,6 @@ namespace Titan.Graphics.Layout
 {
     public interface IInputLayout : IDisposable
     {
-        void Bind();
+        IntPtr NativeHandle { get; }
     }
 }

@@ -4,6 +4,6 @@ namespace Titan.Graphics.Shaders
 {
     public interface IShader : IDisposable
     {
-        void Bind();
+        IntPtr NativeHandle { get; }
     }
 }

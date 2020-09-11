@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using Titan.D3D11;
 using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.Device;
 using Titan.Graphics.Blobs;
@@ -17,15 +16,24 @@ namespace Titan.Graphics
         private readonly ID3D11RenderTargetView _renderTarget;
         private readonly ID3D11DepthStencilView _depthStencilView;
 
-        private readonly Color _clearColor = new Color{B = 0.6f, A = 1f};
-
         private readonly bool _vSync = false;
 
+        public IDeviceContext ImmediateContext { get; }
+        public IRenderTarget BackBuffer { get; }
+        public IDepthStencil DepthStencil { get; }
         public Device(ID3D11Device device, ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencilView)
         {
             _device = device ?? throw new ArgumentNullException(nameof(device));
             _renderTarget = renderTarget ?? throw new ArgumentNullException(nameof(renderTarget));
             _depthStencilView = depthStencilView ?? throw new ArgumentNullException(nameof(depthStencilView));
+            ImmediateContext = new DeviceContext(device.Context, false);
+            BackBuffer = new RenderTarget(renderTarget);
+            DepthStencil = new DepthStencil(depthStencilView);
+        }
+
+        public IDeferredDeviceContext CreateDeferredContext()
+        {
+            return new DeviceContext(_device.CreateDeferredContext());
         }
 
         public IIndexBuffer CreateIndexBuffer(in short[] indices)
@@ -43,7 +51,7 @@ namespace Titan.Graphics
                 {
                     D3D11SubresourceData data = default;
                     data.pSysMem = indicesPointer;
-                    return new IndexBuffer(_device.Context, _device.CreateBuffer(desc, data), indices);
+                    return new IndexBuffer(_device.CreateBuffer(desc, data), indices);
                 }
             }
         }
@@ -58,7 +66,7 @@ namespace Titan.Graphics
             desc.ByteWidth = size * sizeof(short);
             desc.StructureByteStride = sizeof(short);
 
-            return new IndexBuffer(_device.Context, _device.CreateBuffer(desc), size); 
+            return new IndexBuffer(_device.CreateBuffer(desc), size); 
         }
 
         public IVertexBuffer<T> CreateVertexBuffer<T>(uint numberOfVertices) where T : unmanaged
@@ -76,7 +84,7 @@ namespace Titan.Graphics
             desc.ByteWidth = (numberOfVertices * size);
             desc.StructureByteStride = size;
 
-            return new VertexBuffer<T>(_device.Context, _device.CreateBuffer(desc), size, 0);
+            return new VertexBuffer<T>(_device.CreateBuffer(desc), size, 0);
         }
 
         public IVertexBuffer<T> CreateVertexBuffer<T>(in T[] initialData) where T : unmanaged
@@ -99,7 +107,7 @@ namespace Titan.Graphics
                 {
                     D3D11SubresourceData data = default;
                     data.pSysMem = initialDataPointer;
-                    return new VertexBuffer<T>(_device.Context, _device.CreateBuffer(desc, data), size, (uint) initialData.Length);
+                    return new VertexBuffer<T>(_device.CreateBuffer(desc, data), size, (uint) initialData.Length);
                 }
             }
         }
@@ -114,7 +122,7 @@ namespace Titan.Graphics
             desc.Usage = D3D11Usage.Default; // not sure about this one
             desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified; // not sure about this one
             desc.ByteWidth = size;
-            return new ConstantBuffer<T>(_device.Context, _device.CreateBuffer(desc));
+            return new ConstantBuffer<T>(_device.CreateBuffer(desc));
         }
 
         public IConstantBuffer<T> CreateConstantBuffer<T>(in T initialData) where T : unmanaged
@@ -134,7 +142,7 @@ namespace Titan.Graphics
                 {
                     D3D11SubresourceData data = default;
                     data.pSysMem = initialDataPointer;
-                    return new ConstantBuffer<T>(_device.Context, _device.CreateBuffer(desc, data));
+                    return new ConstantBuffer<T>(_device.CreateBuffer(desc, data));
                 }
             }
         }
@@ -143,20 +151,20 @@ namespace Titan.Graphics
         {
             var shader = _device.CreateVertexShader(vertexShaderBlob.Buffer, vertexShaderBlob.Size);
 
-            return new VertexShader(_device.Context, shader);
+            return new VertexShader(shader);
         }
 
         public IPixelShader CreatePixelShader(IBlob pixelShaderBlob)
         {
             var shader = _device.CreatePixelShader(pixelShaderBlob.Buffer, pixelShaderBlob.Size);
 
-            return new PixelShader(_device.Context, shader);
+            return new PixelShader(shader);
         }
 
         public IInputLayout CreateInputLayout(VertexLayout vertexLayout, IBlob vertexShaderBlob)
         {
             var layout = _device.CreateInputLayout(vertexLayout.Descriptors, vertexShaderBlob.Buffer, vertexShaderBlob.Size);
-            return new InputLayout(_device.Context, layout);
+            return new InputLayout(layout);
         }
 
         public ITexture2D CreateTexture2D(uint width, uint height, in byte[] pixels)
@@ -204,11 +212,7 @@ namespace Titan.Graphics
             desc.AddressU = D3D11TextureAddressMode.Wrap;
             desc.AddressV = D3D11TextureAddressMode.Wrap;
             desc.AddressW = D3D11TextureAddressMode.Wrap;
-
-            var sampler = _device.CreateSamplerState(desc);
-
-            return new Sampler(_device.Context, sampler);
-
+            return new Sampler(_device.CreateSamplerState(desc));
         }
 
         public IBlendState CreateBlendState()
@@ -218,36 +222,13 @@ namespace Titan.Graphics
             desc.RenderTargets[0].RenderTargetWriteMask = D3D11ColorWriteEnable.All;
             desc.RenderTargets[0].SrcBlend = D3D11Blend.SrcAlpha;
             desc.RenderTargets[0].DestBlend = D3D11Blend.InvSrcAlpha;
-            
-            var blendState = _device.CreateBlendState(desc);
 
-            return new BlendState(_device.Context, blendState);
-        }
-
-        public void SetPrimitiveTopology(PrimitiveTopology topology)
-        {
-            _device.Context.SetPrimitiveTopology((D3D11PrimitiveTopology)topology);
-        }
-
-        public void BeginRender()
-        {
-            _device.Context.ClearRenderTargetView(_renderTarget, _clearColor);
-            _device.Context.ClearDepthStencilView(_depthStencilView, D3D11ClearFlag.Depth, 1f, 0);
+            return new BlendState(_device.CreateBlendState(desc));
         }
 
         public void EndRender()
         {
             _device.SwapChain.Present(_vSync);
-        }
-
-        public void DrawIndexed(uint numberOfIndices, uint startIndexLocation, int baseVertexLocation)
-        {
-            _device.Context.DrawIndexed(numberOfIndices, startIndexLocation, baseVertexLocation);
-        }
-
-        public void Draw(uint vertexCount, uint startLocation)
-        {
-            _device.Context.Draw(vertexCount, startLocation);
         }
 
         private static void CheckAlignment(uint bytes)
