@@ -47,8 +47,8 @@ namespace Titan.Graphics
             sTarget.Usage = D3D11Usage.Default;
             sTarget.BindFlags = D3D11BindFlag.RenderTarget;
 
-            var d3D11Texture2D = d3D11Device.CreateTexture2D(sTarget); // TODO: this is getting leaked
-            var secondRenderTarget = d3D11Device.CreateRenderTargetView(d3D11Texture2D); // TODO: this is getting leaked
+            //var d3D11Texture2D = d3D11Device.CreateTexture2D(sTarget); // TODO: this is getting leaked
+            //var secondRenderTarget = d3D11Device.CreateRenderTargetView(d3D11Texture2D); // TODO: this is getting leaked
 
 
             // Create the DepthStencilView (z-buffering)
@@ -81,14 +81,12 @@ namespace Titan.Graphics
             viewDesc.Texture2D.MipSlice = 0u;
             var depthStencilView = d3D11Device.CreateDepthStencilView(depthStencil, viewDesc);
 
-
             // Set the render target view and depthStencil
             unsafe
             {
-                var renderTargets = stackalloc IntPtr[2];
+                var renderTargets = stackalloc IntPtr[1];
                 renderTargets[0] = renderTarget.Handle;
-                renderTargets[1] = secondRenderTarget.Handle;
-                d3D11Device.Context.OMSetRenderTargets(renderTargets, 2, depthStencilView.Handle);
+                d3D11Device.Context.OMSetRenderTargets(renderTargets, 1, depthStencilView.Handle);
             }
             
 

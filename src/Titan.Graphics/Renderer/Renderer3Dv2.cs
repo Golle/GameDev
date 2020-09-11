@@ -93,14 +93,10 @@ namespace Titan.Graphics.Renderer
         public Renderer3Dv2(IDevice device, IBlobReader blobReader)
         {
             _device = device;
-            _deferredContext = _device.CreateDeferredContext();
             using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/VertexShader.cso");
             _vertexShader = _device.CreateVertexShader(vertexShaderBlob);
             using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/PixelShader.cso");
             _pixelShader = _device.CreatePixelShader(pixelShaderBlob);
-
-            using var defShader = blobReader.ReadFromFile("Shaders/PixelShaderDeferred1.cso");
-            _ps1 = _device.CreatePixelShader(defShader);
 
             _inputLayout = device.CreateInputLayout(new VertexLayout(4).Append("Position", VertexLayoutTypes.Position3D).Append("Normal", VertexLayoutTypes.Position3D).Append("Texture", VertexLayoutTypes.Texture2D).Append("Color", VertexLayoutTypes.Float4Color), vertexShaderBlob);
             _perFrameConstantBuffer = device.CreateConstantBuffer<PerFrameContantBuffer>();
@@ -134,17 +130,11 @@ namespace Titan.Graphics.Renderer
             _device.ImmediateContext.SetVertexShader(_vertexShader);
             _device.ImmediateContext.SetPixelShader(_pixelShader);
 
-            //_deferredContext.SetPixelShader(_ps1);
-
-            //_deferredContext.Finialize(_device.ImmediateContext);
-            //_device.BeginRender();
         }
 
 
         private IVertexBuffer _lastVertexBuffer = null;
         private ITexture2D _lastTexture = null;
-        private readonly IDeferredDeviceContext _deferredContext;
-        private IPixelShader _ps1;
 
         public void Render(IMesh mesh, in Matrix4x4 worldMatrix, ITexture2D texture)
         {
@@ -189,7 +179,6 @@ namespace Titan.Graphics.Renderer
             _pixelShader?.Dispose();
             _inputLayout?.Dispose();
             _sampler?.Dispose();
-            _deferredContext?.Dispose();
         }
 
         public void SubmitLight(in Color color, in Vector3 position)
