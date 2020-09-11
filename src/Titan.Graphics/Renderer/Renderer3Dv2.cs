@@ -96,7 +96,7 @@ namespace Titan.Graphics.Renderer
         {
             _device = device;
 
-            using var vertexShaderBlob = new Blob(d3DCompiler.CompileShader(File.ReadAllText(@"F:\Git\GameDev\src\Titan.D3D11.Bindings\VertexShader.hlsl")));
+            using var vertexShaderBlob = new Blob(d3DCompiler.CompileShaderFromFile(@"F:\Git\GameDev\src\Titan.D3D11.Bindings\VertexShader.hlsl"));
             //using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/VertexShader.cso");
             _vertexShader = _device.CreateVertexShader(vertexShaderBlob);
             using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/PixelShader.cso");

@@ -16,3 +16,18 @@ EXPORT HRESULT D3DCompile_(
 {
     return D3DCompile(pSrcData, SrcDataSize, pSourceName, pDefines, pInclude, pEntrypoint, pTarget, Flags1, Flags2, ppCode, ppErrorMsgs);
 }
+
+EXPORT HRESULT D3DCompileFromFile_(
+    LPCWSTR pFileName,
+    CONST D3D_SHADER_MACRO* pDefines,
+    ID3DInclude* pInclude,
+    LPCSTR pEntrypoint,
+    LPCSTR pTarget,
+    UINT Flags1,
+    UINT Flags2,
+    ID3DBlob** ppCode,
+    ID3DBlob** ppErrorMsgs
+)
+{
+    return D3DCompileFromFile(pFileName, pDefines, pInclude, pEntrypoint, pTarget, Flags1, Flags2, ppCode, ppErrorMsgs);
+}
