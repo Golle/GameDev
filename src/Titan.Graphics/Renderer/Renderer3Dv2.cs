@@ -94,9 +94,9 @@ namespace Titan.Graphics.Renderer
         {
             _device = device;
             _deferredContext = _device.CreateDeferredContext();
-            using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/VertexShaderDeferred.cso");
+            using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/VertexShader.cso");
             _vertexShader = _device.CreateVertexShader(vertexShaderBlob);
-            using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/PixelShaderDeferred.cso");
+            using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/PixelShader.cso");
             _pixelShader = _device.CreatePixelShader(pixelShaderBlob);
 
             using var defShader = blobReader.ReadFromFile("Shaders/PixelShaderDeferred1.cso");
@@ -134,9 +134,9 @@ namespace Titan.Graphics.Renderer
             _device.ImmediateContext.SetVertexShader(_vertexShader);
             _device.ImmediateContext.SetPixelShader(_pixelShader);
 
-            _deferredContext.SetPixelShader(_ps1);
+            //_deferredContext.SetPixelShader(_ps1);
 
-            _deferredContext.Finialize(_device.ImmediateContext);
+            //_deferredContext.Finialize(_device.ImmediateContext);
             //_device.BeginRender();
         }
 
