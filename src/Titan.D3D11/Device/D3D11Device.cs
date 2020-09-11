@@ -179,6 +179,11 @@ namespace Titan.D3D11.Device
             return new D3D11DeviceContext(deferredContext);
         }
 
+        public D3DFeatureLevel GetFeatureLevel()
+        {
+            return D3D11DeviceBindings.GetFeatureLevel_(_handle);
+        }
+
         public void Dispose()
         {
             SwapChain.Dispose();

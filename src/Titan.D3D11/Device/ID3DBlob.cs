@@ -6,5 +6,6 @@ namespace Titan.D3D11.Device
     {
         UIntPtr GetBufferSize();
         IntPtr GetBufferPointer();
+        IntPtr Handle { get; }
     }
 }

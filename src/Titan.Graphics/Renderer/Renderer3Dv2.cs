@@ -6,6 +6,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Titan.D3D11;
+using Titan.D3D11.Bindings;
 using Titan.D3D11.Compiler;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
@@ -96,8 +97,12 @@ namespace Titan.Graphics.Renderer
         {
             _device = device;
 
-            using var vertexShaderBlob = new Blob(d3DCompiler.CompileShaderFromFile(@"F:\Git\GameDev\src\Titan.D3D11.Bindings\VertexShader.hlsl"));
-            //using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/VertexShader.cso");
+
+            using var blob = d3DCompiler.CompileShaderFromFile(@"F:\Git\GameDev\src\Titan.D3D11.Bindings\VertexShader.hlsl", "main", "vs_5_0");
+            //D3D11CommonBindings.D3DWriteBlobToFile_(blob.Handle, @"c:\tmp\cache\vs.cso", true);
+
+            using var vertexShaderBlob = new Blob(blob);
+            //using var vertexShaderBlob = blobReader.ReadFromFile(@"C:\tmp\cache\vs.cso");
             _vertexShader = _device.CreateVertexShader(vertexShaderBlob);
             using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/PixelShader.cso");
             _pixelShader = _device.CreatePixelShader(pixelShaderBlob);

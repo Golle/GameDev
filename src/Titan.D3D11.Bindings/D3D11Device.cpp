@@ -155,3 +155,11 @@ EXPORT HRESULT CreateDeferredContext_(
 {
 	return device->CreateDeferredContext(contextFlags, ppDeferredContext);
 }
+
+
+EXPORT D3D_FEATURE_LEVEL GetFeatureLevel_(
+	ID3D11Device* device
+)
+{
+	return device->GetFeatureLevel();
+}

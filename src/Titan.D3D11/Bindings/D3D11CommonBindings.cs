@@ -24,5 +24,12 @@ namespace Titan.D3D11.Bindings
             [In, MarshalAs(UnmanagedType.LPWStr)] string pFileName,
             [Out] out IntPtr ppContents
         );
+
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern HRESULT D3DWriteBlobToFile_(
+            [In] IntPtr pBlob,
+            [In, MarshalAs(UnmanagedType.LPWStr)] string pFileName,
+            [In, MarshalAs(UnmanagedType.Bool)] bool bOverwrite
+        );
     }
 }

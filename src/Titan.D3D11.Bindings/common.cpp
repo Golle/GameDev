@@ -13,6 +13,15 @@ EXPORT HRESULT D3DReadFileToBlob_(
     return D3DReadFileToBlob(pFileName, ppContents);
 }
 
+EXPORT HRESULT D3DWriteBlobToFile_(
+    ID3DBlob* pBlob,
+    LPCWSTR  pFileName,
+    BOOL     bOverwrite
+) 
+{
+    return D3DWriteBlobToFile(pBlob, pFileName, bOverwrite);
+}
+
 EXPORT ULONG ReleaseComObject(IUnknown* unknown) 
 {
     return unknown ? unknown->Release() : 0;

@@ -132,5 +132,10 @@ namespace Titan.D3D11.Bindings
             [In] uint contextFlags,
             [Out] out IntPtr ppDeferredContext
         );
+
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern D3DFeatureLevel GetFeatureLevel_(
+            [In] IntPtr device
+        );
     }
 }

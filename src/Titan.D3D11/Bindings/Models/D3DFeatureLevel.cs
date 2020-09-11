@@ -3,7 +3,7 @@ using System;
 namespace Titan.D3D11.Bindings.Models
 {
     [Flags]
-    internal enum D3DFeatureLevel
+    public enum D3DFeatureLevel
     {
         Level_1_0_Core = 0x1000,
         Level_9_1 = 0x9100,
