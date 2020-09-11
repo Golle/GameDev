@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Titan.D3D11;
+using Titan.D3D11.Compiler;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
@@ -90,10 +92,12 @@ namespace Titan.Graphics.Renderer
 
         private readonly List<(Vector3 position, Color color)> _lights = new List<(Vector3 position, Color color)>();
 
-        public Renderer3Dv2(IDevice device, IBlobReader blobReader)
+        public Renderer3Dv2(IDevice device, IBlobReader blobReader, ID3DCompiler d3DCompiler)
         {
             _device = device;
-            using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/VertexShader.cso");
+
+            using var vertexShaderBlob = new Blob(d3DCompiler.CompileShader(File.ReadAllText(@"F:\Git\GameDev\src\Titan.D3D11.Bindings\VertexShader.hlsl")));
+            //using var vertexShaderBlob = blobReader.ReadFromFile("Shaders/VertexShader.cso");
             _vertexShader = _device.CreateVertexShader(vertexShaderBlob);
             using var pixelShaderBlob = blobReader.ReadFromFile("Shaders/PixelShader.cso");
             _pixelShader = _device.CreatePixelShader(pixelShaderBlob);

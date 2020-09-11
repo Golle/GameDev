@@ -170,6 +170,7 @@
     <ClCompile Include="D3D11DeviceContext.cpp" />
     <ClCompile Include="D3D11SwapChain.cpp" />
     <ClCompile Include="D3DBlobBindings.cpp" />
+    <ClCompile Include="D3DCompiler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />

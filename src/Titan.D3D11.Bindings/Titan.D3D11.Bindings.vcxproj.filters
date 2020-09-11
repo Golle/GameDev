@@ -22,6 +22,9 @@
     <ClCompile Include="D3DBlobBindings.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="D3DCompiler.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />

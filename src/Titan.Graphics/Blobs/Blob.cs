@@ -3,7 +3,7 @@ using Titan.D3D11.Device;
 
 namespace Titan.Graphics.Blobs
 {
-    internal class Blob : IBlob
+    public class Blob : IBlob
     {
         private readonly ID3DBlob _blob;
         public UIntPtr Size { get; }
