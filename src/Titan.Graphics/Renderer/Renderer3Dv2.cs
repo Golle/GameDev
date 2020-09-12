@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Titan.D3D11;
-using Titan.D3D11.Bindings;
 using Titan.D3D11.Compiler;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;

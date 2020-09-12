@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using Titan.Xaudio2;
 using Titan.Xaudio2.Bindings;
 
