@@ -117,6 +117,14 @@ namespace Titan.D3D11.Bindings
         );
 
         [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern unsafe void VSSetShaderResources_(
+            [In] IntPtr context,
+            [In] uint startSlot,
+            [In] uint numViews,
+            [In] IntPtr* ppShaderResourceViews
+        );
+
+        [DllImport(Constants.D3D11Dll, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern void PSSetConstantBuffers_(
             [In] IntPtr handle,
             [In] uint startSlot,

@@ -66,6 +66,16 @@ namespace Titan.D3D11.Device
         public void SetIndexBuffer(IntPtr buffer, DxgiFormat format, uint offset) => D3D11DeviceContextBindings.IASetIndexBuffer_(Handle, buffer, format, offset);
         public void VSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer) => VSSetConstantBuffer(startSlot, constantBuffer.Handle);
         public void VSSetConstantBuffer(uint startSlot, IntPtr constantBuffer) => D3D11DeviceContextBindings.VSSetConstantBuffers_(Handle, startSlot, 1, constantBuffer);
+
+        public void VSSetShaderResource(uint startSlot, ID3D11ShaderResourceView shaderResource)
+        {
+            unsafe
+            {
+                var shaderResources = stackalloc IntPtr[1];
+                shaderResources[0] = shaderResource.Handle;
+                D3D11DeviceContextBindings.VSSetShaderResources_(Handle, 0, 1, shaderResources);
+            }
+        } 
         public void PSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer) => PSSetConstantBuffer(startSlot, constantBuffer.Handle);
         public void PSSetConstantBuffer(uint startSlot, IntPtr constantBuffer) => D3D11DeviceContextBindings.PSSetConstantBuffers_(Handle, startSlot, 1, constantBuffer);
         public void PSSetShaderResources(uint startSlot, ID3D11ShaderResourceView resourceView) => PSSetShaderResources(startSlot, resourceView.Handle);
