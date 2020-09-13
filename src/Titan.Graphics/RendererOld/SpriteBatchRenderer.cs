@@ -149,7 +149,7 @@ namespace Titan.Graphics.RendererOld
                 _context.SetPixelShader(_pixelShader);
                 
                 _context.SetPixelShaderSampler(_sampler);
-                _textures[0].Bind();
+                _context.SetPixelShaderResource(_textures[0]);
                 _context.SetBlendstate(_blendState);
 
                 _context.DrawIndexed(_numberOfIndices, 0, 0);

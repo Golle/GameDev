@@ -148,7 +148,7 @@ namespace Titan.Graphics.RendererOld
             _device.ImmediateContext.UpdateConstantBuffer(_perObjectConstantBuffer, new PerObjectContantBuffer { World = Matrix4x4.Transpose(worldMatrix) });
             _device.ImmediateContext.SetVertexShaderConstantBuffer(_perObjectConstantBuffer, PerObjectSlot);
             
-            texture.Bind();
+            _device.ImmediateContext.SetPixelShaderResource(texture);
             //mesh.IndexBuffer.Bind();
 
             if (mesh.VertexBuffer != _lastVertexBuffer)
@@ -159,14 +159,12 @@ namespace Titan.Graphics.RendererOld
 
             if (_lastTexture != texture)
             {
-                texture.Bind();
+                _device.ImmediateContext.SetPixelShaderResource(texture);
                 _lastTexture = texture;
             }
 
-            //_perObjectConstantBuffer.BindToPixelShader();
 
             _device.ImmediateContext.Draw(mesh.VertexBuffer.NumberOfVertices, 0);
-            //_device.DrawIndexed(mesh.IndexBuffer.NumberOfIndices, 0, 0);
         }
 
         public void End()

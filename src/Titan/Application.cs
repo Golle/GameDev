@@ -219,16 +219,16 @@ namespace Titan
                 .WithSystem<TransformRectSystem>()
 
                 .WithSystem<Camera3DSystem>()
-                .WithSystem<LightSystem>()
+                //.WithSystem<LightSystem>()
                 .WithSystem<Model3DRenderSystem>()
                 
 
-                .WithSystem<SpriteRenderSystem>()
+                //.WithSystem<SpriteRenderSystem>()
 
 
-                .WithSystem<UIRenderSystem>()
-                .WithSystem<UITextRenderSystem>()
-                .WithSystem<BoundingBoxSystem>()
+                //.WithSystem<UIRenderSystem>()
+                //.WithSystem<UITextRenderSystem>()
+                //.WithSystem<BoundingBoxSystem>()
                 .Build();
 
             return (world, systemsRunner);

@@ -67,19 +67,59 @@ namespace Titan.D3D11.Device
         public void VSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer) => VSSetConstantBuffer(startSlot, constantBuffer.Handle);
         public void VSSetConstantBuffer(uint startSlot, IntPtr constantBuffer) => D3D11DeviceContextBindings.VSSetConstantBuffers_(Handle, startSlot, 1, constantBuffer);
 
-        public void VSSetShaderResource(uint startSlot, ID3D11ShaderResourceView shaderResource)
+        public void VSSetShaderResources(uint startSlot, IntPtr resourceView)
+        {
+            unsafe
+            {
+                var resources = stackalloc IntPtr[1];
+                resources[0] = resourceView;
+                D3D11DeviceContextBindings.VSSetShaderResources_(Handle, 0, 1, resources);
+            }
+        }
+
+        public void VSSetShaderResources(uint startSlot, ID3D11ShaderResourceView[] resourceViews)
+        {
+            unsafe
+            {
+                var count = resourceViews.Length;
+                var shaderResources = stackalloc IntPtr[count];
+                for (var i = 0; i < count; ++i)
+                {
+                    shaderResources[i] = resourceViews[i].Handle;
+                }
+                VSSetShaderResources(startSlot, shaderResources, (uint) count);
+            }
+        }
+
+        public unsafe void VSSetShaderResources(uint startSlot, IntPtr* resources, uint count)
+        {
+            D3D11DeviceContextBindings.VSSetShaderResources_(Handle, 0, count, resources);
+        }
+
+        public void VSSetShaderResource(uint startSlot, ID3D11ShaderResourceView resourceView)
         {
             unsafe
             {
                 var shaderResources = stackalloc IntPtr[1];
-                shaderResources[0] = shaderResource.Handle;
+                shaderResources[0] = resourceView.Handle;
                 D3D11DeviceContextBindings.VSSetShaderResources_(Handle, 0, 1, shaderResources);
             }
         } 
         public void PSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer) => PSSetConstantBuffer(startSlot, constantBuffer.Handle);
         public void PSSetConstantBuffer(uint startSlot, IntPtr constantBuffer) => D3D11DeviceContextBindings.PSSetConstantBuffers_(Handle, startSlot, 1, constantBuffer);
         public void PSSetShaderResources(uint startSlot, ID3D11ShaderResourceView resourceView) => PSSetShaderResources(startSlot, resourceView.Handle);
-        public void PSSetShaderResources(uint startSlot, IntPtr resourceView) => D3D11DeviceContextBindings.PSSetShaderResources_(Handle, startSlot, 1, resourceView);
+        public void PSSetShaderResources(uint startSlot, IntPtr resourceView)
+        {
+            unsafe
+            {
+                var resources = stackalloc IntPtr[1];
+                resources[0] = resourceView;
+                PSSetShaderResources(startSlot, resources, 1);
+            }
+        }
+
+        public unsafe void PSSetShaderResources(uint startSlot, IntPtr* resources, uint count) => D3D11DeviceContextBindings.PSSetShaderResources_(Handle, startSlot, count, resources);
+
         public void PSSetSamplers(uint startSlot, ID3D11SamplerState sampler) => PSSetSamplers(startSlot, sampler.Handle);
         public void PSSetSamplers(uint startSlot, IntPtr sampler) => D3D11DeviceContextBindings.PSSetSamplers_(Handle, startSlot, 1, sampler);
 

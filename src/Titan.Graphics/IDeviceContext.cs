@@ -2,6 +2,7 @@ using System;
 using Titan.D3D11;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
+using Titan.Graphics.Renderer.Passes;
 using Titan.Graphics.Shaders;
 using Titan.Graphics.Textures;
 
@@ -26,5 +27,11 @@ namespace Titan.Graphics
         void SetBlendstate(IBlendState blendState);
         void ClearRenderTarget(IRenderTarget renderTarget, in Color color);
         void ClearDepthStencil(IDepthStencil depthStencil);
+        void SetRenderTarget(IRenderTarget renderTarget, IDepthStencil depthStencil);
+        void SetRenderTargets(IRenderTarget[] renderTargets, IDepthStencil depthStencil);
+        void SetPixelShaderResource(IShaderResourceView shaderResourceView);
+        void SetPixelShaderResources(IShaderResourceView[] shaderResourceViews);
+        void SetVertexShaderResource(IShaderResourceView shaderResourceView);
+        void SetVertexShaderResources(IShaderResourceView[] shaderResourceViews);
     }
 }

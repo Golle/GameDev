@@ -4,6 +4,7 @@ using Titan.Graphics.Blobs;
 using Titan.Graphics.Camera;
 using Titan.Graphics.Fonts;
 using Titan.Graphics.Models;
+using Titan.Graphics.Renderer;
 using Titan.Graphics.RendererOld;
 using Titan.Graphics.Textures;
 
@@ -15,6 +16,7 @@ namespace Titan.Graphics
         {
             container
                 .AddRegistry<D3D11Registry>()
+                .AddRegistry<RendererRegistry>()
 
                 .Register<IDisplayFactory, DisplayFactory>()
                 .Register<IBlobReader, BlobReader>()
