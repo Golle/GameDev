@@ -27,31 +27,35 @@ namespace Titan.Graphics.Renderer.Passes
             _backBuffer = device.BackBuffer;
             _depthStencil = device.DepthStencil;
 
-            _indexBuffer = device.CreateIndexBuffer(new short[] {0, 1, 2, 2, 3, 1});
+            _indexBuffer = device.CreateIndexBuffer(new short[] {0, 3, 1, 3, 2, 1});
             _vertexBuffer = device.CreateVertexBuffer(CreateCube());
-
-            
 
             using var pixelShaderBlob = new Blob(compiler.CompileShaderFromFile(@"F:\Git\GameDev\resources\shaders\BackBufferPixelShader.hlsl", "main", "ps_5_0"));
             _pixelShader = device.CreatePixelShader(pixelShaderBlob);
             using var vertexShaderBlob = new Blob(compiler.CompileShaderFromFile(@"F:\Git\GameDev\resources\shaders\BackBufferVertexShader.hlsl", "main", "vs_5_0"));
             _vertexShader = device.CreateVertexShader(vertexShaderBlob);
-            _inputLayout = device.CreateInputLayout(new VertexLayout(2).Append("Position", VertexLayoutTypes.Position2D).Append("Texture", VertexLayoutTypes.Position2D), vertexShaderBlob);
+            _inputLayout = device.CreateInputLayout(new VertexLayout(2).Append("POSITION", VertexLayoutTypes.Position2D).Append("TEXCOORD", VertexLayoutTypes.Position2D), vertexShaderBlob);
             _sampler = device.CreateSampler();
         }
 
         
 
-        public void Render(IDeviceContext context)
+        public void Render(IDeviceContext context, ITexture2D meshRenderTexture)
         {
+            context.SetRenderTarget(_backBuffer, _depthStencil);
             context.ClearRenderTarget(_backBuffer, Color.Red);
             context.ClearDepthStencil(_depthStencil);
-
-            context.SetRenderTarget(_backBuffer, _depthStencil);
+            
             context.SetInputLayout(_inputLayout);
             
             context.SetVertexBuffer(_vertexBuffer);
             context.SetIndexBuffer(_indexBuffer);
+
+            context.SetPixelShader(_pixelShader);
+            context.SetVertexShader(_vertexShader);
+
+            
+            context.SetPixelShaderResource(meshRenderTexture);
 
             context.DrawIndexed(6, 0, 0);
         }
@@ -68,12 +72,13 @@ namespace Titan.Graphics.Renderer.Passes
 
         private static BackbufferVertex[] CreateCube()
         {
+            
             return new[]
             {
-                new BackbufferVertex{Position = new Vector2(0,0), TextureCoordinates = new Vector2(0,0)},
-                new BackbufferVertex{Position = new Vector2(1,0), TextureCoordinates = new Vector2(1,0)},
-                new BackbufferVertex{Position = new Vector2(1,1), TextureCoordinates = new Vector2(1,1)},
-                new BackbufferVertex{Position = new Vector2(0,1), TextureCoordinates = new Vector2(0,1)}
+                new BackbufferVertex{Position = new Vector2(-1,-1)/2, TextureCoordinates = new Vector2(0,1)},
+                new BackbufferVertex{Position = new Vector2(1,-1), TextureCoordinates = new Vector2(1,1)},
+                new BackbufferVertex{Position = new Vector2(1,1)/2, TextureCoordinates = new Vector2(1,0) },
+                new BackbufferVertex{Position = new Vector2(-1,1), TextureCoordinates = new Vector2(0,0) }
             };
         }
 

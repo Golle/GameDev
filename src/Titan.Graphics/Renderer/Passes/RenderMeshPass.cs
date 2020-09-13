@@ -75,5 +75,10 @@ namespace Titan.Graphics.Renderer.Passes
             _perObjectConstantBuffer?.Dispose();
             _sampler?.Dispose();
         }
+
+        public void End(IDeviceContext context)
+        {
+            
+        }
     }
 }

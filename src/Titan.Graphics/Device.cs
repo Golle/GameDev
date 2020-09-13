@@ -5,6 +5,7 @@ using Titan.D3D11.Device;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
+using Titan.Graphics.Renderer.Passes;
 using Titan.Graphics.Shaders;
 using Titan.Graphics.Textures;
 
@@ -202,7 +203,35 @@ namespace Titan.Graphics
 
             var textureView = _device.CreateShaderResourceView(texture, resourceViewDesc);
 
-            return new Texture2D(_device.Context, texture, textureView, width, height);
+            return new Texture2D(texture, textureView, width, height);
+        }
+
+        public ITexture2D CreateTexture2DRENDERTARGETPROTOTYPE(uint width, uint height)
+        {
+            D3D11Texture2DDesc desc = default;
+            desc.Height = height;
+            desc.Width = width;
+            desc.Usage = D3D11Usage.Default;
+            desc.BindFlags = D3D11BindFlag.ShaderResource | D3D11BindFlag.RenderTarget;
+            desc.MipLevels = 1; // TODO: add support for this
+            desc.ArraySize = 1; // TODO: add support for this
+            desc.Format = DxgiFormat.R32G32B32A32Float;
+            desc.SampleDesc.Count = 1;
+            desc.SampleDesc.Quality = 0;
+            desc.CPUAccessFlags = D3D11CpuAccessFlag.Unspecified;
+            desc.MiscFlags = 0;
+            
+            var texture = _device.CreateTexture2D(desc);
+
+            D3D11ShaderResourceViewDesc resourceViewDesc = default;
+            resourceViewDesc.Format = desc.Format;
+            resourceViewDesc.ViewDimension = D3D11SrvDimension.Texture2D;
+            resourceViewDesc.Texture2D.MostDetailedMip = 0;
+            resourceViewDesc.Texture2D.MipLevels = 1;
+
+            var textureView = _device.CreateShaderResourceView(texture, resourceViewDesc);
+
+            return new Texture2D(texture, textureView, width, height);
         }
 
         public ISampler CreateSampler(bool point = false)
@@ -229,6 +258,11 @@ namespace Titan.Graphics
         public void EndRender()
         {
             _device.SwapChain.Present(_vSync);
+        }
+
+        public IRenderTarget CreateRenderTarget(IntPtr resource)
+        {
+            return new RenderTarget(_device.CreateRenderTargetView(resource));
         }
 
         private static void CheckAlignment(uint bytes)

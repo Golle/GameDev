@@ -2,6 +2,7 @@ using System;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
+using Titan.Graphics.Renderer.Passes;
 using Titan.Graphics.Shaders;
 using Titan.Graphics.Textures;
 
@@ -23,8 +24,10 @@ namespace Titan.Graphics
         IPixelShader CreatePixelShader(IBlob pixelShaderBlob);
         IInputLayout CreateInputLayout(VertexLayout vertexLayout, IBlob vertexShaderBlob);
         ITexture2D CreateTexture2D(uint width, uint height, in byte[] pixels);
+        ITexture2D CreateTexture2DRENDERTARGETPROTOTYPE(uint width, uint height);
         ISampler CreateSampler(bool point = false);
         IBlendState CreateBlendState();
         void EndRender();
+        IRenderTarget CreateRenderTarget(IntPtr resource);
     }
 }

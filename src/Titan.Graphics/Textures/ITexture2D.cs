@@ -7,5 +7,6 @@ namespace Titan.Graphics.Textures
     {
         public uint Width { get; }
         public uint Height { get; }
+        public IntPtr TextureHandle { get; }
     }
 }

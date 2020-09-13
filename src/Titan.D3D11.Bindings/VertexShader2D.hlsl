@@ -11,7 +11,7 @@ struct VS_INPUT
     float4 Color : Color;
 };
 
-struct VS_OUTPUT 
+struct VS_OUTPUT
 {
     float2 Texture : Textures;
     float4 Color : Color;
