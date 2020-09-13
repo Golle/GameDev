@@ -4,7 +4,7 @@ using Titan.Graphics.Blobs;
 using Titan.Graphics.Camera;
 using Titan.Graphics.Fonts;
 using Titan.Graphics.Models;
-using Titan.Graphics.Renderer;
+using Titan.Graphics.RendererOld;
 using Titan.Graphics.Textures;
 
 namespace Titan.Graphics

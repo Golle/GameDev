@@ -3,7 +3,7 @@ using Titan.ECS;
 using Titan.ECS.Components;
 using Titan.ECS.Systems;
 using Titan.Graphics;
-using Titan.Graphics.Renderer;
+using Titan.Graphics.RendererOld;
 
 namespace Titan.Systems.Rendering
 {

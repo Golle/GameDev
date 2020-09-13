@@ -4,7 +4,7 @@ using Titan.D3D11;
 using Titan.ECS;
 using Titan.ECS.Components;
 using Titan.ECS.Systems;
-using Titan.Graphics.Renderer;
+using Titan.Graphics.RendererOld;
 using Titan.Windows.Input;
 
 namespace Titan.Systems.Debugging

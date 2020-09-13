@@ -8,7 +8,7 @@ using Titan.Graphics.Layout;
 using Titan.Graphics.Shaders;
 using Titan.Graphics.Textures;
 
-namespace Titan.Graphics.Renderer
+namespace Titan.Graphics.RendererOld
 {
     internal class SpriteBatchRenderer : ISpriteBatchRenderer
     {

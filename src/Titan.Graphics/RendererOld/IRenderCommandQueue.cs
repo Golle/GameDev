@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Titan.Graphics.Buffers;
 
-namespace Titan.Graphics.Renderer
+namespace Titan.Graphics.RendererOld
 {
 
     // POC for render queue

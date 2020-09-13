@@ -13,7 +13,7 @@ using Titan.Graphics.Models;
 using Titan.Graphics.Shaders;
 using Titan.Graphics.Textures;
 
-namespace Titan.Graphics.Renderer
+namespace Titan.Graphics.RendererOld
 {
     // Make sure this is 16 byte aligned
     [StructLayout(LayoutKind.Explicit, Size = 144)]

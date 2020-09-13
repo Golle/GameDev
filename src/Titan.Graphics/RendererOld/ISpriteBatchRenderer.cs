@@ -3,7 +3,7 @@ using System.Numerics;
 using Titan.D3D11;
 using Titan.Graphics.Textures;
 
-namespace Titan.Graphics.Renderer
+namespace Titan.Graphics.RendererOld
 {
     public interface ISpriteBatchRenderer : IDisposable
     {
