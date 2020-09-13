@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Titan.Components;
 using Titan.Configuration;
 using Titan.Core;
@@ -8,6 +9,7 @@ using Titan.Core.GameLoop.Events;
 using Titan.Core.Ioc;
 using Titan.Core.Logging;
 using Titan.D3D11;
+using Titan.D3D11.Compiler;
 using Titan.ECS;
 using Titan.ECS.Runners;
 using Titan.ECS.Systems;
@@ -112,6 +114,20 @@ namespace Titan
                     BitsPerSample = 16,
                     NumberOfChannels = 2
                 });
+
+
+            /*******Test compile shaders*******/
+            {
+                var d3dCompiler = GetInstance<ID3DCompiler>();
+                foreach (var file in Directory.GetFiles(@"F:\Git\GameDev\resources\shaders\"))
+                {
+                    using var blob = d3dCompiler.CompileShaderFromFile(file, "main", file.Contains("VertexShader") ? "vs_5_0" : "ps_5_0");
+                }
+            }
+            
+            /*******Test compile shaders*******/
+
+
 
             _logger.Debug("Initialize Sandbox");
             OnInitialize(_container);
