@@ -1,0 +1,18 @@
+{
+    "renderTargets": [
+        {
+            "id": "GBufferAlbedo",
+            "format": "R8G8B8A8_UNORM"
+        },
+        {
+            "id": "GBufferNormals",
+            "format": "R16G16B16A16_SNORM"
+        }
+    ],
+    "stages": [
+        {
+            "id": "ClearDepth",
+            "color":"ffffff"
+        }
+    ]
+}

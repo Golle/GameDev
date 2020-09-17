@@ -38,8 +38,6 @@ namespace Titan.Graphics.Renderer.Passes
             _sampler = device.CreateSampler();
         }
 
-        
-
         public void Render(IDeviceContext context, ITexture2D meshRenderTexture)
         {
             context.SetRenderTarget(_backBuffer, _depthStencil);
@@ -76,9 +74,9 @@ namespace Titan.Graphics.Renderer.Passes
             return new[]
             {
                 new BackbufferVertex{Position = new Vector2(-1,-1)/2, TextureCoordinates = new Vector2(0,1)},
-                new BackbufferVertex{Position = new Vector2(1,-1), TextureCoordinates = new Vector2(1,1)},
+                new BackbufferVertex{Position = new Vector2(1,-1)/2, TextureCoordinates = new Vector2(1,1)},
                 new BackbufferVertex{Position = new Vector2(1,1)/2, TextureCoordinates = new Vector2(1,0) },
-                new BackbufferVertex{Position = new Vector2(-1,1), TextureCoordinates = new Vector2(0,0) }
+                new BackbufferVertex{Position = new Vector2(-1,1)/2, TextureCoordinates = new Vector2(0,0) }
             };
         }
 

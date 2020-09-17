@@ -1,4 +1,5 @@
 using System;
+using Titan.D3D11.Compiler;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
@@ -10,6 +11,7 @@ namespace Titan.Graphics
 {
     public interface IDevice : IDisposable
     {
+        ID3DCompiler TEMPORARYCompiler { get; }
         IDeviceContext ImmediateContext { get; }
         IRenderTarget BackBuffer { get; }
         IDepthStencil DepthStencil { get; }
