@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using Titan.D3D11.Bindings.Models;
+using Titan.D3D11.Compiler;
 using Titan.D3D11.Device;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
@@ -19,10 +20,11 @@ namespace Titan.Graphics
 
         private readonly bool _vSync = false;
 
+        public ID3DCompiler TEMPORARYCompiler { get; }
         public IDeviceContext ImmediateContext { get; }
         public IRenderTarget BackBuffer { get; }
         public IDepthStencil DepthStencil { get; }
-        public Device(ID3D11Device device, ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencilView)
+        public Device(ID3D11Device device, ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencilView, ID3DCompiler compiler)
         {
             _device = device ?? throw new ArgumentNullException(nameof(device));
             _renderTarget = renderTarget ?? throw new ArgumentNullException(nameof(renderTarget));
@@ -30,6 +32,7 @@ namespace Titan.Graphics
             ImmediateContext = new DeviceContext(device.Context, false);
             BackBuffer = new RenderTarget(renderTarget);
             DepthStencil = new DepthStencil(depthStencilView);
+            TEMPORARYCompiler = compiler;
         }
 
         public IDeferredDeviceContext CreateDeferredContext()

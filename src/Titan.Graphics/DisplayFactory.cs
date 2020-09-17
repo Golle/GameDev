@@ -1,6 +1,7 @@
 using System;
 using Titan.D3D11;
 using Titan.D3D11.Bindings.Models;
+using Titan.D3D11.Compiler;
 using Titan.D3D11.Device;
 using Titan.Windows.Window;
 
@@ -10,11 +11,13 @@ namespace Titan.Graphics
     {
         private readonly IWindowCreator _windowCreator;
         private readonly ID3D11DeviceFactory _d3D11DeviceFactory;
+        private readonly ID3DCompiler _compiler;
 
-        public DisplayFactory(IWindowCreator windowCreator, ID3D11DeviceFactory d3D11DeviceFactory)
+        public DisplayFactory(IWindowCreator windowCreator, ID3D11DeviceFactory d3D11DeviceFactory, ID3DCompiler compiler)
         {
             _windowCreator = windowCreator;
             _d3D11DeviceFactory = d3D11DeviceFactory;
+            _compiler = compiler;
         }
         public IDisplay Create(string title, int width, int height)
         {
@@ -102,7 +105,7 @@ namespace Titan.Graphics
 
 
             // Create the device abstraction
-            var device = new Device(d3D11Device, renderTarget, depthStencilView);
+            var device = new Device(d3D11Device, renderTarget, depthStencilView, _compiler);
 
             return new Display(device, window);
         }
