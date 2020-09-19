@@ -24,14 +24,8 @@ namespace Titan.Graphics.Rendering
             _renderPasses.Add(pass1);
 
 
-<<<<<<< HEAD
-            var pass2 = 
-=======
->>>>>>> bf5ddbc5d0b412b8b4e59aa7249eb6523cbd1b02
-
-
             var pass3 = new FullScreenRenderPass();
-            pass3.SetInput(0, );
+            //pass3.SetInput(0, );
 
         }
 
