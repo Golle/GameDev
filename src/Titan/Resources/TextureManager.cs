@@ -25,7 +25,7 @@ namespace Titan.Resources
 
         protected override ITexture2D Load(in string identifier)
         {
-            var filename = Path.Combine(_configuration.ResourcesPath, identifier);
+            var filename = Path.Combine(_configuration.Paths.Base, identifier);
             if (Path.GetExtension(filename) != ".png")
             {
                 throw new NotSupportedException($"File format {Path.GetExtension(filename)} is not supported.");

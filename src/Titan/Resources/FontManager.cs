@@ -21,7 +21,7 @@ namespace Titan.Resources
 
         protected override IFont Load(in string identifier)
         {
-            var filename = Path.Combine(_configuration.FontsPath, identifier);
+            var filename = Path.Combine(_configuration.Paths.Fonts, identifier);
             if (Path.GetExtension(filename) != ".fnt")
             {
                 throw new NotSupportedException($"File format {Path.GetExtension(filename)} is not supported.");

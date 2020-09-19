@@ -1,0 +1,22 @@
+{
+    "players": [
+        {
+            "identifier": "Music",
+            "numberOfPlayers": 2,
+            "averageBytesPerSecond": 176400,
+            "samplesPerSecond": 44100,
+            "blockAlign": 4,
+            "bitsPerSample": 16,
+            "numberofChannels": 2
+        },
+        {
+            "identifier": "SoundEffects",
+            "numberOfPlayers": 50,
+            "averageBytesPerSecond": 176400,
+            "samplesPerSecond": 44100,
+            "blockAlign": 4,
+            "bitsPerSample": 16,
+            "numberofChannels": 2
+        }
+    ]
+}

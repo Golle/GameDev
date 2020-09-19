@@ -1,4 +1,3 @@
-using Titan.Configuration;
 using Titan.Core.Ioc;
 using Titan.Resources;
 using Titan.Scenes;
@@ -10,8 +9,6 @@ namespace Titan
         public void Register(IContainer container)
         {
             container
-                .Register<IEngineConfigurationHandler, EngineConfigurationHandler>()
-
                 .Register<TextureManager>()
                 //.Register<PixelShaderManager>() // TODO: add support for this later
                 //.Register<VertexShaderManager>()

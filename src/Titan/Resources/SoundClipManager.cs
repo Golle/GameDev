@@ -24,7 +24,7 @@ namespace Titan.Resources
         }
         protected override ISoundClip Load(in string identifier)
         {
-            var filename = Path.Combine(_configuration.SoundsPath, identifier);
+            var filename = Path.Combine(_configuration.Paths.Sounds, identifier);
             if (Path.GetExtension(filename) != ".wav")
             {
                 throw new NotSupportedException($"File format {Path.GetExtension(filename)} is not supported.");

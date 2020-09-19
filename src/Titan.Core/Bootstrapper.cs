@@ -15,23 +15,20 @@ namespace Titan.Core
         {
             return new Container()
 
+                    .AddRegistry<ConfigurationRegistry>()
                     .AddRegistry<AssetsRegistry>()
-
+                    
                     // Core functions
                     .Register<IDateTime, DateTimeWrapper>()
+                    .Register<IFileReader, FileReader>()
 
 
                     // Logging
                     .Register<ILogger, ConsoleLogger>() // should depend on configuration
                     .Register<ILogFormatter, LogFormatter>()
-
-
-                    // configuration    
-                    .RegisterSingleton<IConfiguration>(new EngineConfiguration()) // currently using hardcoded configuration
                     
                     // Event Manager
                     .Register<IEventManager, EventManager>()
-
 
                     // GameLoop
                     .Register<IGameLoop, BasicGameLoop>()
