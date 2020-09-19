@@ -1,5 +1,8 @@
+using System;
 using System.Diagnostics;
+using System.IO;
 using Titan.Components;
+using Titan.Core.Configuration;
 using Titan.Core.Logging;
 using Titan.ECS.Entities;
 using Titan.ECS.Systems;
@@ -10,18 +13,26 @@ namespace Titan.Resources
     internal class TextureManager : ResourceManager<string, ITexture2D>
     {
         private readonly ITextureLoader _textureLoader;
+        private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
 
-        public TextureManager(ITextureLoader textureLoader, ILogger logger)
+        public TextureManager(ITextureLoader textureLoader, IConfiguration configuration, ILogger logger)
         {
             _textureLoader = textureLoader;
+            _configuration = configuration;
             _logger = logger;
         }
 
         protected override ITexture2D Load(in string identifier)
         {
+            var filename = Path.Combine(_configuration.ResourcesPath, identifier);
+            if (Path.GetExtension(filename) != ".png")
+            {
+                throw new NotSupportedException($"File format {Path.GetExtension(filename)} is not supported.");
+            }
+
             var timer = Stopwatch.StartNew();
-            var texture = _textureLoader.LoadTexture(identifier);
+            var texture = _textureLoader.LoadTexture(filename);
             timer.Stop();
             _logger.Debug("Texture: {0} loaded in {1} ms", identifier, timer.Elapsed.TotalMilliseconds);
             return texture;

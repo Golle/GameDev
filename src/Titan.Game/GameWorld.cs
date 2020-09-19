@@ -17,10 +17,10 @@ namespace Titan.Game
 {
     internal class GameWorld : IWorldBuilder
     {
-        private const string SpriteSheet = @"F:\Git\GameDev\resources\ui_spritesheet.png";
-        private const string FontFilename = @"F:\Git\GameDev\resources\fonts\segoe_ui_light.fnt";
-        private const string BackgroundMusic = @"F:\Git\GameDev\resources\sound\speck_-_Hydrogen_Sky0.wav";
-        private const string ClickSound = @"F:\Git\GameDev\resources\sound\click_004.wav";
+        private const string SpriteSheet = @"ui_spritesheet.png";
+        private const string FontFilename = @"segoe_ui_light.fnt";
+        private const string BackgroundMusic = @"speck_-_Hydrogen_Sky0.wav";
+        private const string ClickSound = @"click_004.wav";
         private static readonly TextureCoordinates ButtonCoordinates = new TextureCoordinates { BottomRight = new Vector2(1f / 8f, 1 / 16f), TopLeft = new Vector2(0, 0) };
         private static readonly TextureCoordinates GrayBox = new TextureCoordinates { BottomRight = new Vector2(1f / 4f, 1 / 16f), TopLeft = new Vector2(1/8f, 0) };
 
@@ -153,8 +153,8 @@ namespace Titan.Game
                 {
                     var sphere = world.CreateEntity();
                     sphere.AddComponent(new Transform3D { Position = new Vector3(-3f, 0, 2f), Scale = new Vector3(1f) });
-                    sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\table.obj"));
-                    sphere.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\red.png"));
+                    sphere.AddComponent(new Resource<string, IMesh>(@"table.obj"));
+                    sphere.AddComponent(new Resource<string, ITexture2D>(@"red.png"));
                 }
 
 
@@ -166,36 +166,36 @@ namespace Titan.Game
                     sphere.AddComponent(new Velocity { Value = new Vector3(random.Next(-10000, 10000) / 1000f, random.Next(-10000, 10000) / 1000f, random.Next(-10000, 10000) / 1000f) });
                     switch (random.Next(10) % 3)
                     {
-                        case 0: sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere1.obj")); break;
-                        case 1: sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj")); break;
-                        case 2: sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\cube.obj")); break;
+                        case 0: sphere.AddComponent(new Resource<string, IMesh>(@"sphere1.obj")); break;
+                        case 1: sphere.AddComponent(new Resource<string, IMesh>(@"sphere.obj")); break;
+                        case 2: sphere.AddComponent(new Resource<string, IMesh>(@"cube.obj")); break;
                     }
 
                     sphere.AddComponent(random.Next(10) % 2 == 0
-                        ? new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\blue.png")
-                        : new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\red.png"));
+                        ? new Resource<string, ITexture2D>(@"blue.png")
+                        : new Resource<string, ITexture2D>(@"red.png"));
                 }
 
                 {
                     var sphere = world.CreateEntity();
                     sphere.AddComponent(new Transform3D { Position = new Vector3(0, 3f, 2f), Scale = new Vector3(1f) });
-                    sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\cube.obj"));
-                    sphere.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\red.png"));
+                    sphere.AddComponent(new Resource<string, IMesh>(@"cube.obj"));
+                    sphere.AddComponent(new Resource<string, ITexture2D>(@"red.png"));
                 }
 
                 {
                     var sphere = world.CreateEntity();
                     sphere.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 7f), Scale = new Vector3(10f, 10f, 1f) });
-                    sphere.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\cube.obj"));
-                    sphere.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\blue.png"));
+                    sphere.AddComponent(new Resource<string, IMesh>(@"cube.obj"));
+                    sphere.AddComponent(new Resource<string, ITexture2D>(@"blue.png"));
                 }
 
                 {
                     var light = world.CreateEntity();
                     light.AddComponent(new Light { Color = new Color(1, 1f, 1f) });
                     light.AddComponent(new Transform3D { Position = new Vector3(1f, 1f, 0), Scale = new Vector3(0.3f) });
-                    light.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
-                    light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\white.png"));
+                    light.AddComponent(new Resource<string, IMesh>(@"sphere.obj"));
+                    light.AddComponent(new Resource<string, ITexture2D>(@"white.png"));
                     light.AddComponent(new Velocity { Value = new Vector3 { X = -4.5f, Y = 6f } });
                 }
 
@@ -203,8 +203,8 @@ namespace Titan.Game
                     var light = world.CreateEntity();
                     light.AddComponent(new Light { Color = new Color(1, 1f, 1f) });
                     light.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0), Scale = new Vector3(0.3f) });
-                    light.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
-                    light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\white.png"));
+                    light.AddComponent(new Resource<string, IMesh>(@"sphere.obj"));
+                    light.AddComponent(new Resource<string, ITexture2D>(@"white.png"));
                     light.AddComponent(new Velocity { Value = new Vector3 { X = 2.5f, Y = 3f } });
                 }
 
@@ -212,8 +212,8 @@ namespace Titan.Game
                     var light = world.CreateEntity();
                     light.AddComponent(new Light { Color = new Color(1, 1f, 1f) });
                     light.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0), Scale = new Vector3(0.3f) });
-                    light.AddComponent(new Resource<string, IMesh>(@"F:\Git\GameDev\resources\sphere.obj"));
-                    light.AddComponent(new Resource<string, ITexture2D>(@"F:\Git\GameDev\resources\white.png"));
+                    light.AddComponent(new Resource<string, IMesh>(@"sphere.obj"));
+                    light.AddComponent(new Resource<string, ITexture2D>(@"white.png"));
                     light.AddComponent(new Velocity { Value = new Vector3 { X = 3.5f, Y = -8f, Z = 3f } });
                 }
             }

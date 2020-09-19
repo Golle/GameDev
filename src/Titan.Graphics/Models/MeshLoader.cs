@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using Titan.Core.Assets;
+using Titan.Core.Assets.WavefrontObj;
 using Titan.D3D11;
 
 namespace Titan.Graphics.Models
@@ -9,12 +9,12 @@ namespace Titan.Graphics.Models
     internal class MeshLoader : IMeshLoader
     {
         private readonly IDevice _device;
-        private readonly IAssetLoader _assetLoader;
+        private readonly IObjLoader _objLoader;
 
-        public MeshLoader(IDevice device, IAssetLoader assetLoader)
+        public MeshLoader(IDevice device, IObjLoader objLoader)
         {
             _device = device;
-            _assetLoader = assetLoader;
+            _objLoader = objLoader;
         }
 
         public IMesh Load(string filename)
@@ -25,7 +25,7 @@ namespace Titan.Graphics.Models
             var vertices = new HashSet<(Vector3, Vector2, Vector3)>();
             var vertices1 = new HashSet<(Vector3, Vector2)>();
 
-            var model = _assetLoader.LoadModel(filename);
+            var model = _objLoader.LoadFromFile(filename);
             
             var numberOfVertices = model.Faces.Length * 3;
             var vertexData = new TexturedVertex[numberOfVertices];

@@ -4,5 +4,9 @@ namespace Titan.Core.Configuration
     {
         bool Debug { get; }
         int FixedUpdateFrequency { get; }
+        string ResourcesPath { get; }
+        string ShadersPath { get; }
+        string FontsPath { get; }
+        string SoundsPath { get; }
     }
 }
