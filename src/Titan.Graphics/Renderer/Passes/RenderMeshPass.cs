@@ -29,23 +29,23 @@ namespace Titan.Graphics.Renderer.Passes
             _pixelShader = device.CreatePixelShader(pixelShaderBlob);
 
             _inputLayout = device.CreateInputLayout(new VertexLayout(4).Append("Position", VertexLayoutTypes.Position3D).Append("Normal", VertexLayoutTypes.Position3D).Append("Texture", VertexLayoutTypes.Texture2D).Append("Color", VertexLayoutTypes.Float4Color), vertexShaderBlob);
-            _perFrameConstantBuffer = device.CreateConstantBuffer<PerFrameContantBuffer>();
-            _lightsConstantBuffer = device.CreateConstantBuffer<LightsConstantBuffer>();
-            _perObjectConstantBuffer = device.CreateConstantBuffer<PerObjectContantBuffer>();
+            _perFrameConstantBuffer = device.CreateConstantBuffer<PerFrameContantBuffer>(BufferUsage.Dynamic, BufferAccessFlags.Write);
+            _lightsConstantBuffer = device.CreateConstantBuffer<LightsConstantBuffer>(BufferUsage.Dynamic, BufferAccessFlags.Write);
+            _perObjectConstantBuffer = device.CreateConstantBuffer<PerObjectContantBuffer>(BufferUsage.Dynamic, BufferAccessFlags.Write);
             _sampler = device.CreateSampler();
         }
 
 
         public void SetCamera(IDeviceContext context, in Matrix4x4 viewProjection, in Matrix4x4 view)
         {
-            context.UpdateConstantBuffer(_perFrameConstantBuffer, new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
+            context.MapResource(_perFrameConstantBuffer, new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
             context.SetVertexShaderConstantBuffer(_perFrameConstantBuffer);
         }
 
         public void Begin(IDeviceContext context)
         {
             context.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
-            context.UpdateConstantBuffer(_lightsConstantBuffer, new LightsConstantBuffer());
+            context.MapResource(_lightsConstantBuffer, new LightsConstantBuffer());
             context.SetPixelShaderConstantBuffer(_lightsConstantBuffer);
             context.SetPixelShaderSampler(_sampler);
             context.SetInputLayout(_inputLayout);
@@ -55,7 +55,7 @@ namespace Titan.Graphics.Renderer.Passes
 
         public void Render(IDeviceContext context, IMesh mesh, in Matrix4x4 worldMatrix, ITexture2D texture)
         {
-            context.UpdateConstantBuffer(_perObjectConstantBuffer, new PerObjectContantBuffer { World = Matrix4x4.Transpose(worldMatrix) });
+            context.MapResource(_perObjectConstantBuffer, new PerObjectContantBuffer { World = Matrix4x4.Transpose(worldMatrix) });
             context.SetVertexShaderConstantBuffer(_perObjectConstantBuffer, 1);
 
             context.SetPixelShaderResource(texture);

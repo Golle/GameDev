@@ -166,5 +166,16 @@ namespace Titan.D3D11.Device
         {
             D3D11DeviceContextBindings.ExecuteCommandList_(Handle, commandList.Handle, restoreDeferredContextState);
         }
+
+        public void Map(IntPtr resource, D3D11Map mapType, out D3D11MappedSubresource mappedResource)
+        {
+            var result = D3D11DeviceContextBindings.Map_(Handle, resource, 0, mapType, 0, out mappedResource);
+            result.Check(nameof(D3D11DeviceContext));
+        }
+
+        public void Unmap(IntPtr resource)
+        {
+            D3D11DeviceContextBindings.Unmap_(Handle, resource, 0);
+        }
     }
 }

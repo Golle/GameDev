@@ -95,7 +95,6 @@ namespace Titan.Graphics.RendererOld
         {
             _device = device;
 
-
             using var blob = d3DCompiler.CompileShaderFromFile(@"F:\Git\GameDev\src\Titan.D3D11.Bindings\VertexShader.hlsl", "main", "vs_5_0");
             //D3D11CommonBindings.D3DWriteBlobToFile_(blob.Handle, @"c:\tmp\cache\vs.cso", true);
 
@@ -106,15 +105,15 @@ namespace Titan.Graphics.RendererOld
             _pixelShader = _device.CreatePixelShader(pixelShaderBlob);
 
             _inputLayout = device.CreateInputLayout(new VertexLayout(4).Append("Position", VertexLayoutTypes.Position3D).Append("Normal", VertexLayoutTypes.Position3D).Append("Texture", VertexLayoutTypes.Texture2D).Append("Color", VertexLayoutTypes.Float4Color), vertexShaderBlob);
-            _perFrameConstantBuffer = device.CreateConstantBuffer<PerFrameContantBuffer>();
-            _lightsConstantBuffer = device.CreateConstantBuffer<LightsConstantBuffer>();
-            _perObjectConstantBuffer = device.CreateConstantBuffer<PerObjectContantBuffer>();
+            _perFrameConstantBuffer = device.CreateConstantBuffer<PerFrameContantBuffer>(BufferUsage.Dynamic, BufferAccessFlags.Write);
+            _lightsConstantBuffer = device.CreateConstantBuffer<LightsConstantBuffer>(BufferUsage.Dynamic, BufferAccessFlags.Write);
+            _perObjectConstantBuffer = device.CreateConstantBuffer<PerObjectContantBuffer>(BufferUsage.Dynamic, BufferAccessFlags.Write);
             _sampler = device.CreateSampler();
         }
 
         public void SetCamera(in Matrix4x4 viewProjection, in Matrix4x4 view)
         {
-            _device.ImmediateContext.UpdateConstantBuffer(_perFrameConstantBuffer, new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
+            _device.ImmediateContext.MapResource(_perFrameConstantBuffer, new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
             _device.ImmediateContext.SetVertexShaderConstantBuffer(_perFrameConstantBuffer, PerFrameSlot);
         }
 
@@ -128,7 +127,7 @@ namespace Titan.Graphics.RendererOld
                 lights.SetLightColor(i, color);
                 lights.SetLightPosition(i, position);
             }
-            _device.ImmediateContext.UpdateConstantBuffer(_lightsConstantBuffer, lights);
+            _device.ImmediateContext.MapResource(_lightsConstantBuffer, lights);
             _device.ImmediateContext.SetPixelShaderConstantBuffer(_lightsConstantBuffer);
 
             _device.ImmediateContext.SetPixelShaderSampler(_sampler);
@@ -136,7 +135,6 @@ namespace Titan.Graphics.RendererOld
 
             _device.ImmediateContext.SetVertexShader(_vertexShader);
             _device.ImmediateContext.SetPixelShader(_pixelShader);
-
         }
 
 
@@ -145,7 +143,7 @@ namespace Titan.Graphics.RendererOld
 
         public void Render(IMesh mesh, in Matrix4x4 worldMatrix, ITexture2D texture)
         {
-            _device.ImmediateContext.UpdateConstantBuffer(_perObjectConstantBuffer, new PerObjectContantBuffer { World = Matrix4x4.Transpose(worldMatrix) });
+            _device.ImmediateContext.MapResource(_perObjectConstantBuffer, new PerObjectContantBuffer { World = Matrix4x4.Transpose(worldMatrix) });
             _device.ImmediateContext.SetVertexShaderConstantBuffer(_perObjectConstantBuffer, PerObjectSlot);
             
             _device.ImmediateContext.SetPixelShaderResource(texture);
@@ -226,8 +224,8 @@ namespace Titan.Graphics.RendererOld
 
         private readonly LineVertex[] _vertices = new LineVertex[8 * MaxBoxes];
         private readonly short[] _indices = new short[24 * MaxBoxes];
-        private int _numberOfVertices;
-        private int _numberOfIndices;
+        private uint _numberOfVertices;
+        private uint _numberOfIndices;
         private readonly IDeviceContext _context;
 
         public RendererDebug3Dv3(IDevice device, IBlobReader blobReader)
@@ -240,11 +238,11 @@ namespace Titan.Graphics.RendererOld
             _pixelShader = _device.CreatePixelShader(pixelShaderBlob);
 
             _inputLayout = device.CreateInputLayout(new VertexLayout(2).Append("Position", VertexLayoutTypes.Position3D).Append("Color", VertexLayoutTypes.Float4Color), vertexShaderBlob);
-            _perFrameConstantBuffer = device.CreateConstantBuffer<PerFrameContantBuffer>();
-            _perObjectConstantBuffer = device.CreateConstantBuffer<PerObjectContantBuffer>();
+            _perFrameConstantBuffer = device.CreateConstantBuffer<PerFrameContantBuffer>(BufferUsage.Dynamic, BufferAccessFlags.Write);
+            _perObjectConstantBuffer = device.CreateConstantBuffer<PerObjectContantBuffer>(BufferUsage.Dynamic, BufferAccessFlags.Write);
 
-            _indexBuffer = _device.CreateIndexBuffer((uint) _indices.Length);
-            _vertexBuffer = _device.CreateVertexBuffer<LineVertex>((uint) _vertices.Length);
+            _indexBuffer = _device.CreateIndexBuffer((uint) _indices.Length, BufferUsage.Dynamic, BufferAccessFlags.Write);
+            _vertexBuffer = _device.CreateVertexBuffer<LineVertex>((uint) _vertices.Length, BufferUsage.Dynamic, BufferAccessFlags.Write);
         }
 
         public void DrawBox(in Vector3 min, in Vector3 max, in Color color)
@@ -289,7 +287,7 @@ namespace Titan.Graphics.RendererOld
 
         public void SetCamera(in Matrix4x4 viewProjection, in Matrix4x4 view)
         {
-            _context.UpdateConstantBuffer(_perFrameConstantBuffer, new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
+            _context.MapResource(_perFrameConstantBuffer, new PerFrameContantBuffer { ViewProjection = Matrix4x4.Transpose(viewProjection), View = view });
             
         }
 
@@ -297,8 +295,9 @@ namespace Titan.Graphics.RendererOld
         {
             _context.SetVertexShaderConstantBuffer(_perFrameConstantBuffer);
             _context.SetPrimitiveTopology(PrimitiveTopology.LineList);
-            _context.UpdateVertexBuffer(_vertexBuffer, _vertices, _numberOfVertices);
-            _context.UpdateIndexBuffer(_indexBuffer, _indices, _numberOfIndices);
+            _context.MapResource(_vertexBuffer, _vertices, _numberOfVertices);
+            _context.MapResource(_indexBuffer, _indices, _numberOfIndices);
+
             _context.SetInputLayout(_inputLayout);
             _context.SetVertexShader(_vertexShader);
             _context.SetPixelShader(_pixelShader);

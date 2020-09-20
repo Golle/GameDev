@@ -27,6 +27,34 @@ namespace Titan.Graphics
             _canDispose = canDispose;
         }
 
+        public void MapResource<T>(IResource resource, in T data) where T : unmanaged
+        {
+            _context.Map(resource.NativeHandle, D3D11Map.WriteDiscard, out var subresource);
+            unsafe
+            {
+                var size = sizeof(T);
+                fixed (void* ptr = &data)
+                {
+                    Buffer.MemoryCopy(ptr, subresource.pData, size, size);
+                }
+            }
+            _context.Unmap(resource.NativeHandle);
+        }
+
+        public void MapResource<T>(IResource resource, in T[] data, uint count) where T : unmanaged
+        {
+            _context.Map(resource.NativeHandle, D3D11Map.WriteDiscard, out var subresource);
+            unsafe
+            {
+                var size = sizeof(T) * count;
+                fixed (void* ptr = data)
+                {
+                    Buffer.MemoryCopy(ptr, subresource.pData, size, size);
+                }
+            }
+            _context.Unmap(resource.NativeHandle);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetVertexBuffer(IVertexBuffer vertexBuffer, uint startSlot = 0) => _context.SetVertexBuffer(startSlot, vertexBuffer.NativeHandle, vertexBuffer.Strides, vertexBuffer.Offset);
 

@@ -17,6 +17,7 @@ using Titan.Graphics.RendererOld;
 using Titan.Scenes;
 using Titan.Sound;
 using Titan.Systems;
+using Titan.Systems.Debugging;
 using Titan.Systems.Rendering;
 using Titan.Systems.UI;
 using Titan.Windows;
@@ -174,12 +175,12 @@ namespace Titan
                 .WithSystem<Model3DRenderSystem>()
                 
 
-                //.WithSystem<SpriteRenderSystem>()
+                .WithSystem<SpriteRenderSystem>()
 
 
-                //.WithSystem<UIRenderSystem>()
-                //.WithSystem<UITextRenderSystem>()
-                //.WithSystem<BoundingBoxSystem>()
+                .WithSystem<UIRenderSystem>()
+                .WithSystem<UITextRenderSystem>()
+                .WithSystem<BoundingBoxSystem>()
                 .Build();
 
             return (world, systemsRunner);

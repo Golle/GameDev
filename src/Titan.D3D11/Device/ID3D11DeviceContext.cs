@@ -47,5 +47,7 @@ namespace Titan.D3D11.Device
         void OMSetBlendState(IntPtr blendState, in Color blendFactor, uint sampleMask);
         ID3D11CommandList FinishCommandList(bool restoreDeferredContextState = false);
         void ExecuteCommandList(ID3D11CommandList commandList, bool restoreDeferredContextState = false);
+        void Map(IntPtr resource, D3D11Map mapType, out D3D11MappedSubresource mappedResource);
+        void Unmap(IntPtr resource);
     }
 }

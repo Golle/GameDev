@@ -13,6 +13,8 @@ namespace Titan.Graphics
         void UpdateConstantBuffer<T>(IConstantBuffer<T> constantBuffer, in T data) where T : unmanaged;
         void UpdateVertexBuffer<T>(IVertexBuffer<T> vertexBuffer, in T[] data, int count) where T : unmanaged;
         void UpdateIndexBuffer(IIndexBuffer indexBuffer, in short[] data, int count);
+        void MapResource<T>(IResource resource, in T data) where T : unmanaged;
+        void MapResource<T>(IResource resource, in T[] data, uint count) where T : unmanaged;
         void SetVertexBuffer(IVertexBuffer vertexBuffer, uint startSlot = 0);
         void SetIndexBuffer(IIndexBuffer indexBuffer, uint offset = 0u);
         void DrawIndexed(uint numberOfIndices, uint startIndexLocation, int baseVertexLocation);
@@ -33,5 +35,6 @@ namespace Titan.Graphics
         void SetPixelShaderResources(IShaderResourceView[] shaderResourceViews);
         void SetVertexShaderResource(IShaderResourceView shaderResourceView);
         void SetVertexShaderResources(IShaderResourceView[] shaderResourceViews);
+        
     }
 }

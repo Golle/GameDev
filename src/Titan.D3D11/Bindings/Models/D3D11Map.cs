@@ -1,6 +1,6 @@
 namespace Titan.D3D11.Bindings.Models
 {
-    internal enum D3D11Map
+    public enum D3D11Map
     {
         Read = 1,
         Write = 2,

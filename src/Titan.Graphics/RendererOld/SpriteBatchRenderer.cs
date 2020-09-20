@@ -54,7 +54,7 @@ namespace Titan.Graphics.RendererOld
             _context = _device.ImmediateContext;
             _camera = cameraFactory.CreateOrhographicCamera();
 
-            _buffer = device.CreateVertexBuffer<Vertex2D>(MaxVertices);
+            _buffer = device.CreateVertexBuffer<Vertex2D>(MaxVertices, BufferUsage.Dynamic, BufferAccessFlags.Write);
             _indices = device.CreateIndexBuffer(CreateIndices());
             _sampler = device.CreateSampler(true);
             _blendState = device.CreateBlendState();
@@ -131,7 +131,7 @@ namespace Titan.Graphics.RendererOld
             return _numberOfTextures++;
         }
 
-        public void Flush() => _context.UpdateVertexBuffer(_buffer, _vertices, 0);
+        public void Flush() => _context.MapResource(_buffer, _vertices, _numberOfVertices);
 
         public void Render()
         {
