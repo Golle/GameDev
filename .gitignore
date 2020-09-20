@@ -30,6 +30,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+resources/sponza/**
 resources/sounds/**
 !**/resources/sounds
 
