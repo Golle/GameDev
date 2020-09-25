@@ -18,7 +18,7 @@ namespace Titan.Core.Assets.Angelfont
         public Angelfont ParseFromStream(StreamReader reader)
         {
             var result = new Angelfont();
-            string? line;
+            string line;
 
             var page = 0;
             var character = 0;

@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using System.Numerics;
 using Titan.D3D11.Compiler;
 using Titan.Graphics.Blobs;
@@ -42,11 +44,31 @@ namespace Titan.Graphics.Renderer.Passes
             context.SetVertexShaderConstantBuffer(_perFrameConstantBuffer);
         }
 
+
+        private int count = 1000;
         public void Begin(IDeviceContext context)
         {
             context.SetPrimitiveTopology(PrimitiveTopology.TriangleList);
-            context.MapResource(_lightsConstantBuffer, new LightsConstantBuffer());
-            context.SetPixelShaderConstantBuffer(_lightsConstantBuffer);
+
+            if (count-- == 0)
+            {
+                var s = Stopwatch.StartNew();
+                context.MapResource(_lightsConstantBuffer, new LightsConstantBuffer());
+                s.Stop();
+                Console.WriteLine($"Elapsed time for MapResource buffers: {s.Elapsed.Ticks}");
+
+                var a = Stopwatch.StartNew();
+                context.SetPixelShaderConstantBuffer(_lightsConstantBuffer);
+                a.Stop();
+                Console.WriteLine($"Elapsed time for PX buffers: {a.Elapsed.Ticks}");
+            }
+            else
+            {
+                context.MapResource(_lightsConstantBuffer, new LightsConstantBuffer());
+                context.SetPixelShaderConstantBuffer(_lightsConstantBuffer);
+            }
+
+            
             context.SetPixelShaderSampler(_sampler);
             context.SetInputLayout(_inputLayout);
             context.SetVertexShader(_vertexShader);

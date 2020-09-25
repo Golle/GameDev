@@ -29,7 +29,7 @@ namespace Titan.Core.Ioc
             Parameters = constructors.First().GetParameters();
         }
 
-        public object? CreateInstance(params object[] args)
+        public object CreateInstance(params object[] args)
         {
             return Activator.CreateInstance(ConcreteType, args);
         }

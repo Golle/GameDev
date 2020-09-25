@@ -34,9 +34,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Titan.Tools.FontGenerator",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Titan.Xaudio2.Bindings", "src\Titan.Xaudio2.Bindings\Titan.Xaudio2.Bindings.vcxproj", "{3C87D524-EFA5-4D65-9C20-746E0DB4D989}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.Xaudio2", "src\Titan.Xaudio2\Titan.Xaudio2.csproj", "{04E45AAA-3417-4D9B-90F2-A1E5E16E93C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Titan.Xaudio2", "src\Titan.Xaudio2\Titan.Xaudio2.csproj", "{04E45AAA-3417-4D9B-90F2-A1E5E16E93C8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3C87D524-EFA5-4D65-9C20-746E0DB4D989} = {3C87D524-EFA5-4D65-9C20-746E0DB4D989}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.Sound", "src\Titan.Sound\Titan.Sound.csproj", "{5478FE17-0853-44EA-844D-1CD010477FCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Titan.Sound", "src\Titan.Sound\Titan.Sound.csproj", "{5478FE17-0853-44EA-844D-1CD010477FCF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

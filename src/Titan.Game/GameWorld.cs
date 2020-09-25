@@ -149,6 +149,12 @@ namespace Titan.Game
 
             // set up game world
             {
+
+                //{
+                //    var sponza = world.CreateEntity();
+                //    sponza.AddComponent(new Resource<string, IMesh>(@"sponza/sponza.obj"));
+                //}
+
                 var random = new Random();
                 {
                     var sphere = world.CreateEntity();
@@ -156,6 +162,7 @@ namespace Titan.Game
                     sphere.AddComponent(new Resource<string, IMesh>(@"table.obj"));
                     sphere.AddComponent(new Resource<string, ITexture2D>(@"red.png"));
                 }
+
 
 
                 for (var i = 0; i < 600; ++i)
