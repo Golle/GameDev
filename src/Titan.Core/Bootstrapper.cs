@@ -3,7 +3,7 @@ using Titan.Core.Common;
 using Titan.Core.Configuration;
 using Titan.Core.EventSystem;
 using Titan.Core.GameLoop;
-using Titan.Core.Ioc;
+using Titan.IOC;
 using Titan.Core.Json;
 using Titan.Core.Logging;
 

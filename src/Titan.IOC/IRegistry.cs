@@ -1,4 +1,4 @@
-namespace Titan.Core.Ioc
+namespace Titan.IOC
 {
     public interface IRegistry
     {

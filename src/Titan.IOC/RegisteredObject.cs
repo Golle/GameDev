@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using Titan.Core.Ioc.Exceptions;
+using Titan.IOC.Exceptions;
 
-namespace Titan.Core.Ioc
+namespace Titan.IOC
 {
     internal class RegisteredObject
     {

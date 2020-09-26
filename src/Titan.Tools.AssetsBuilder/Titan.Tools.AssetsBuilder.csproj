@@ -16,4 +16,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Titan.IOC\Titan.IOC.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,4 @@
-using Titan.Core.Ioc;
+using Titan.IOC;
 using Titan.Windows.Input;
 using Titan.Windows.Window;
 

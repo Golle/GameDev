@@ -1,5 +1,5 @@
 using System.Runtime.CompilerServices;
-using Titan.Core.Ioc;
+using Titan.IOC;
 using Titan.ECS;
 using Titan.ECS.Runners;
 

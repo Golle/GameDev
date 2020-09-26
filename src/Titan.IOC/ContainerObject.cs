@@ -1,6 +1,6 @@
 using System;
 
-namespace Titan.Core.Ioc
+namespace Titan.IOC
 {
     internal class ContainerObject
     {

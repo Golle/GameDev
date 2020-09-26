@@ -1,6 +1,6 @@
 using System;
 
-namespace Titan.Core.Ioc.Exceptions
+namespace Titan.IOC.Exceptions
 {
     [Serializable]
     internal class TypeNotRegisteredException : Exception

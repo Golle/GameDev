@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Titan.Core.Ioc
+namespace Titan.IOC
 {
     public interface IContainer
     {

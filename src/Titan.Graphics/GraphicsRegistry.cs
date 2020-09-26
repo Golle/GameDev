@@ -1,4 +1,4 @@
-using Titan.Core.Ioc;
+using Titan.IOC;
 using Titan.D3D11;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Camera;

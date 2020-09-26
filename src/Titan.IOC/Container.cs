@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Titan.Core.Ioc.Exceptions;
+using Titan.IOC.Exceptions;
 
-namespace Titan.Core.Ioc
+namespace Titan.IOC
 {
-    internal class Container : IContainer
+    public class Container : IContainer
     {
         private readonly IContainer _parentContainer;
         private readonly IDictionary<Type, ContainerObject> _containerObjects = new Dictionary<Type, ContainerObject>();
-        public IEnumerable<RegisteredObject> RegisteredObjects => _containerObjects.Select(c => c.Value.RegisteredObject);
+        internal IEnumerable<RegisteredObject> RegisteredObjects => _containerObjects.Select(c => c.Value.RegisteredObject);
 
         public TTypeToResolve GetInstance<TTypeToResolve>()
         {

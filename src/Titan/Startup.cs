@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Titan.Core.Configuration;
-using Titan.Core.Ioc;
+using Titan.IOC;
 using Titan.Core.Logging;
 using Titan.Graphics;
 using Titan.Sound;

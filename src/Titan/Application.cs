@@ -5,7 +5,7 @@ using Titan.Core;
 using Titan.Core.EventSystem;
 using Titan.Core.GameLoop;
 using Titan.Core.GameLoop.Events;
-using Titan.Core.Ioc;
+using Titan.IOC;
 using Titan.Core.Logging;
 using Titan.D3D11;
 using Titan.D3D11.Compiler;
