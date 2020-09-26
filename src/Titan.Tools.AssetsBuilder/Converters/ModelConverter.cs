@@ -27,11 +27,6 @@ namespace Titan.Tools.AssetsBuilder.Converters
             foreach (var group in obj.Groups)
             {
                 var timer = Stopwatch.StartNew();
-                if (string.IsNullOrWhiteSpace(@group.Name))
-                {
-                    throw new InvalidOperationException("Well this didn't work");
-                }
-
                 var materialIndex = -1;
                 foreach (var face in group.Faces)
                 {

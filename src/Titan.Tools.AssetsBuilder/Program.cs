@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
+using System.IO;
 using Titan.IOC;
 using Titan.Tools.AssetsBuilder.Converters;
 using Titan.Tools.AssetsBuilder.Data;
@@ -15,57 +13,35 @@ namespace Titan.Tools.AssetsBuilder
         private static readonly IContainer Container = Bootstrapper.CreateContainer();
         static void Main(string[] args)
         {
-            var filename = @"F:\Git\GameDev\resources\data\test.dat";
+            var rootPath = FindRootPath(Environment.CurrentDirectory);
+            var resourceDirectory = Path.Combine(rootPath, "resources");
+            var outdirectory = Path.Combine(resourceDirectory, "models");
 
-            var result = Container
-                .GetInstance<IModelConverter>()
-                .ConvertFromObj(@"F:\Git\GameDev\resources\sponza\sponza.obj");
-            
-            
-            Container.GetInstance<IModelExporter>()
-                .Write(filename, result, true);
-
-
-            // Write the file
+            if (!Directory.Exists(outdirectory))
             {
-
-                
-                var vertices = GenerateVertices().ToArray();
-                var indices = new ushort[] {1, 2, 3, 4, 5, 6, 7, 8, 10};
-
-
+                Directory.CreateDirectory(outdirectory);
             }
-            // Read the file
+            
+            var converter = Container.GetInstance<IModelConverter>();
+            var exporter = Container.GetInstance<IModelExporter>();
+            foreach (var model in Directory.GetFiles(resourceDirectory, "*.obj", SearchOption.AllDirectories))
             {
-                //using var file = File.OpenRead(filename);
-                //byteReader.Read<Header>(file, out var header);
-                //var vertices = new Vertex[header.VertexCount];
-                //byteReader.Read(file, ref vertices);
-                ////var indices = new ushort[header.IndexCount];
-                ////byteReader.Read(file, ref indices);
-                //var handle = Marshal.AllocHGlobal(header.IndexCount * header.IndexSize);
-                //try
-                //{
-                //    byteReader.Read<ushort>(file, handle.ToPointer(), header.IndexCount);
-                //}
-                //finally
-                //{
-                //    Marshal.FreeHGlobal(handle);
-                //}
-                
+                var outputFileName = Path.Combine(outdirectory, Path.GetFileName(model).Replace(".obj", ".dat"));
+                exporter.Write(outputFileName, converter.ConvertFromObj(model), true);
             }
-
-            Console.WriteLine("Hello World!" + Environment.Version);
         }
 
-        private static IEnumerable<Vertex> GenerateVertices()
+        private static string FindRootPath(string currentDirectory)
         {
-            for (var i = 0; i < 1; ++i)
+            if (currentDirectory == null)
             {
-                yield return new Vertex { Normal = new Vector3(1, 2, 3), Position = new Vector3(3, 2, 1), Texture = new Vector2(4, 5) };
-                yield return new Vertex { Normal = new Vector3(10, 20, 30), Position = new Vector3(30, 20, 10), Texture = new Vector2(40, 50) };
-                yield return new Vertex { Normal = new Vector3(100, 200, 300), Position = new Vector3(300, 200, 100), Texture = new Vector2(400, 500) };
+                throw new InvalidOperationException("Well this was unexpected.");
             }
+            if (currentDirectory.EndsWith("src"))
+            {
+                return Directory.GetParent(currentDirectory)?.ToString();
+            }
+            return FindRootPath(Directory.GetParent(currentDirectory)?.ToString());
         }
     }
 }
