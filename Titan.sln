@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Titan.Xaudio2", "src\Titan.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Titan.Sound", "src\Titan.Sound\Titan.Sound.csproj", "{5478FE17-0853-44EA-844D-1CD010477FCF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.Tools.AssetsBuilder", "src\Titan.Tools.AssetsBuilder\Titan.Tools.AssetsBuilder.csproj", "{3A146BCB-C6E4-443E-915A-243BD0C36C03}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -203,6 +205,18 @@ Global
 		{5478FE17-0853-44EA-844D-1CD010477FCF}.Release|x64.Build.0 = Release|Any CPU
 		{5478FE17-0853-44EA-844D-1CD010477FCF}.Release|x86.ActiveCfg = Release|Any CPU
 		{5478FE17-0853-44EA-844D-1CD010477FCF}.Release|x86.Build.0 = Release|Any CPU
+		{3A146BCB-C6E4-443E-915A-243BD0C36C03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A146BCB-C6E4-443E-915A-243BD0C36C03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A146BCB-C6E4-443E-915A-243BD0C36C03}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3A146BCB-C6E4-443E-915A-243BD0C36C03}.Debug|x64.Build.0 = Debug|Any CPU
+		{3A146BCB-C6E4-443E-915A-243BD0C36C03}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3A146BCB-C6E4-443E-915A-243BD0C36C03}.Debug|x86.Build.0 = Debug|Any CPU
+		{3A146BCB-C6E4-443E-915A-243BD0C36C03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A146BCB-C6E4-443E-915A-243BD0C36C03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A146BCB-C6E4-443E-915A-243BD0C36C03}.Release|x64.ActiveCfg = Release|Any CPU
+		{3A146BCB-C6E4-443E-915A-243BD0C36C03}.Release|x64.Build.0 = Release|Any CPU
+		{3A146BCB-C6E4-443E-915A-243BD0C36C03}.Release|x86.ActiveCfg = Release|Any CPU
+		{3A146BCB-C6E4-443E-915A-243BD0C36C03}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -220,6 +234,7 @@ Global
 		{3C87D524-EFA5-4D65-9C20-746E0DB4D989} = {C95E5DE7-7997-4EAB-88D2-B2BE5DBFD8A2}
 		{04E45AAA-3417-4D9B-90F2-A1E5E16E93C8} = {C95E5DE7-7997-4EAB-88D2-B2BE5DBFD8A2}
 		{5478FE17-0853-44EA-844D-1CD010477FCF} = {C95E5DE7-7997-4EAB-88D2-B2BE5DBFD8A2}
+		{3A146BCB-C6E4-443E-915A-243BD0C36C03} = {3B0266CE-9843-4D61-9C81-E8402BA1DC7E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {63FB40CF-B9A1-402E-9660-B171715ACF71}
