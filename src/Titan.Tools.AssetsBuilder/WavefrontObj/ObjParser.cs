@@ -1,11 +1,18 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
+using Titan.Tools.AssetsBuilder.Logging;
 
 namespace Titan.Tools.AssetsBuilder.WavefrontObj
 {
-    public class ObjParser
+    internal class ObjParser
     {
+        private readonly ILogger _logger;
+        public ObjParser(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         public async Task<WavefrontObject> ReadFromFile(string filename)
         {
             var builder = new ObjBuilder();

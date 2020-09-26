@@ -1,11 +1,11 @@
-﻿namespace Titan.Tools.AssetsBuilder.WavefrontObj
+namespace Titan.Tools.AssetsBuilder.WavefrontObj
 {
     public class ObjFace
     {
         public int Material { get; }
         public int SmoothGroup { get; }
-        public Vertex[] Vertices { get; }  
-        public ObjFace(int material, int smoothGroup, in Vertex[] vertices)
+        public ObjVertex[] Vertices { get; }  
+        public ObjFace(int material, int smoothGroup, in ObjVertex[] vertices)
         {
             Material = material;
             SmoothGroup = smoothGroup;

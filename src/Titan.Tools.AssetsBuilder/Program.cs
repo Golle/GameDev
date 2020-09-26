@@ -1,83 +1,60 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Titan.IOC;
-using Titan.Tools.AssetsBuilder.Logging;
+using Titan.Tools.AssetsBuilder.Converters;
+using Titan.Tools.AssetsBuilder.Data;
 
 namespace Titan.Tools.AssetsBuilder
 {
-    [StructLayout(LayoutKind.Sequential, Size = 256)]
-    internal struct TehHeader
-    {
-        public ushort Version;
-        public int VertexSize;
-        public int VertexCount;
-    }
-
-
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct Vertex
-    {
-        public Vector3 Position;
-        public Vector3 Normal;
-        public Vector2 Texture;
-    }
+    
     
     internal class Program
     {
-
-        private static IContainer _container = Bootstrapper.CreateContainer();
+        private static readonly IContainer Container = Bootstrapper.CreateContainer();
         static unsafe void Main(string[] args)
         {
-
-            var logger = _container.GetInstance<ILogger>();
-            
-            logger.WriteLine("HEHEHE");
-
             var filename = @"F:\Git\GameDev\resources\data\test.dat";
+
+            var result = Container
+                .GetInstance<IModelConverter>()
+                .ConvertFromObj(@"F:\Git\GameDev\resources\sponza\sponza.obj");
+            
+            
+            Container.GetInstance<IModelExporter>()
+                .Write(filename, result, true);
+
 
             // Write the file
             {
+
                 
                 var vertices = GenerateVertices().ToArray();
-                using var file = File.OpenWrite(filename);
-                var header = new TehHeader
-                {
-                    Version = 1,
-                    VertexSize = sizeof(Vertex),
-                    VertexCount = vertices.Length,
-                };
+                var indices = new ushort[] {1, 2, 3, 4, 5, 6, 7, 8, 10};
 
-                file.Write(new ReadOnlySpan<byte>(&header, sizeof(TehHeader)));
-                
-                fixed (void* pointer = vertices)
-                {
-                    file.Write(new ReadOnlySpan<byte>(pointer, header.VertexCount * header.VertexSize));
-                }
+
             }
             // Read the file
             {
-                var timer = Stopwatch.StartNew();
-                using var file = File.OpenRead(filename);
-                var header = new TehHeader();
-                file.Read(new Span<byte>(&header, sizeof(TehHeader)));
-                var vertices = new Vertex[header.VertexCount];
-                fixed (void* pointer = vertices)
-                {
-                    file.Read(new Span<byte>(pointer, header.VertexCount * header.VertexSize));
-                }
-                
-                timer.Stop();
-                Console.WriteLine($"Finished reading data in: {timer.Elapsed.Milliseconds} ms");
-                Console.WriteLine($"Header.Version {header.Version} VertexCount: {header.VertexCount} VertexSize: {header.VertexSize}");
-                //foreach (var vertex in vertices)
+                //using var file = File.OpenRead(filename);
+                //byteReader.Read<Header>(file, out var header);
+                //var vertices = new Vertex[header.VertexCount];
+                //byteReader.Read(file, ref vertices);
+                ////var indices = new ushort[header.IndexCount];
+                ////byteReader.Read(file, ref indices);
+                //var handle = Marshal.AllocHGlobal(header.IndexCount * header.IndexSize);
+                //try
                 //{
-                //    Console.WriteLine($"Vertex: {vertex.Position} {vertex.Normal} {vertex.Texture}");
+                //    byteReader.Read<ushort>(file, handle.ToPointer(), header.IndexCount);
                 //}
+                //finally
+                //{
+                //    Marshal.FreeHGlobal(handle);
+                //}
+                
             }
 
             Console.WriteLine("Hello World!" + Environment.Version);
@@ -85,7 +62,7 @@ namespace Titan.Tools.AssetsBuilder
 
         private static IEnumerable<Vertex> GenerateVertices()
         {
-            for (var i = 0; i < 1_000_000; ++i)
+            for (var i = 0; i < 1; ++i)
             {
                 yield return new Vertex { Normal = new Vector3(1, 2, 3), Position = new Vector3(3, 2, 1), Texture = new Vector2(4, 5) };
                 yield return new Vertex { Normal = new Vector3(10, 20, 30), Position = new Vector3(30, 20, 10), Texture = new Vector2(40, 50) };

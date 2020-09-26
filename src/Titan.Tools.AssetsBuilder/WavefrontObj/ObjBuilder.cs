@@ -1,17 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using Titan.Tools.AssetsBuilder.Logging;
 
 namespace Titan.Tools.AssetsBuilder.WavefrontObj
 {
     internal class ObjBuilder
     {
-        private IList<Vector3> _vertices = new List<Vector3>();
-        private IList<Vector3> _normals = new List<Vector3>();
-        private IList<Vector2> _textures = new List<Vector2>();
+        private readonly IList<Vector3> _vertices = new List<Vector3>();
+        private readonly IList<Vector3> _normals = new List<Vector3>();
+        private readonly IList<Vector2> _textures = new List<Vector2>();
 
         private ObjMaterial[] _materials;
 
@@ -21,11 +22,6 @@ namespace Titan.Tools.AssetsBuilder.WavefrontObj
 
         private int _smoothGroup;
         private int _currentMaterialIndex;
-
-        public ObjBuilder()
-        {
-            _currentGroup = new ObjGroup();
-        }
 
         internal void AddPosition(in ReadOnlySpan<string> position)
         {
@@ -56,9 +52,7 @@ namespace Titan.Tools.AssetsBuilder.WavefrontObj
 
         internal void AddGroup(in ReadOnlySpan<string> group)
         {
-            _groups.Add(_currentGroup);
-
-            _currentGroup = new ObjGroup(group.Length > 0 ? group[0] : null);
+            _groups.Add(_currentGroup = new ObjGroup(group.Length > 0 ? group[0] : null));
         }
 
         internal void AddSmoothGroup(in ReadOnlySpan<string> smooth)
@@ -77,16 +71,21 @@ namespace Titan.Tools.AssetsBuilder.WavefrontObj
                 throw new FormatException("Face must be of format f {f1} {f2} {f3} [{f4...}]");
             }
             
-            var vertices = new Vertex[face.Length];
+            var vertices = new ObjVertex[face.Length];
 
             for (var i = 0; i < face.Length; ++i)
             {
                 var values = face[0].Split('/', StringSplitOptions.TrimEntries)
-                    .Select(int.Parse)
+                    .Select(x => int.Parse(x) - 1) // Subtract 1 since .obj file array index starts at 1
                     .ToArray();
-                vertices[i] = new Vertex(values[0], values[1], values[2]);
+                vertices[i] = new ObjVertex(values[0], values[1], values[2]);
             }
-            
+
+            if (_currentGroup == null)
+            {
+                // If there's no group, create a default unnamed group
+                _groups.Add(_currentGroup = new ObjGroup());
+            }
             _currentGroup.AddFace(new ObjFace(_currentMaterialIndex, _smoothGroup, vertices));
         }
 

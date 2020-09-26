@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Titan.Tools.AssetsBuilder.WavefrontObj
 {
     public class ObjGroup
     {
-        public IList<ObjFace> _faces = new List<ObjFace>();
+        public IList<ObjFace> Faces = new List<ObjFace>();
         public string Name { get; }
         public ObjGroup(string name = null)
         {
@@ -13,7 +13,7 @@ namespace Titan.Tools.AssetsBuilder.WavefrontObj
 
         public void AddFace(ObjFace face)
         {
-            _faces.Add(face);
+            Faces.Add(face);
         }
     }
 }

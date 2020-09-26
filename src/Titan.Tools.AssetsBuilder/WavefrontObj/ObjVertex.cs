@@ -1,11 +1,11 @@
-﻿namespace Titan.Tools.AssetsBuilder.WavefrontObj
+namespace Titan.Tools.AssetsBuilder.WavefrontObj
 {
-    public readonly struct Vertex
+    public readonly struct ObjVertex
     {
         public readonly int VertexIndex;
         public readonly int TextureIndex;
         public readonly int NormalIndex;
-        public Vertex(int vertexIndex, int textureIndex, int normalIndex)
+        public ObjVertex(int vertexIndex, int textureIndex, int normalIndex)
         {
             VertexIndex = vertexIndex;
             TextureIndex = textureIndex;
