@@ -19,6 +19,7 @@ namespace Titan.Tools.AssetsBuilder.Data
         public void Write(string filename, in Mesh[] meshes, bool overwrite)
         {
             using var file = File.OpenWrite(filename);
+            file.SetLength(0);
             unsafe
             {
                 var header = new Header
@@ -27,7 +28,7 @@ namespace Titan.Tools.AssetsBuilder.Data
                     MeshCount = meshes.Length,
                     IndexSize = sizeof(ushort)
                 };
-                _logger.WriteLine($"Writing header to '{filename}'");
+                _logger.WriteLine($"Writing header to '{filename}' with mesh count {meshes.Length}");
                 _byteWriter.Write(file, header);
             }
 
@@ -39,9 +40,9 @@ namespace Titan.Tools.AssetsBuilder.Data
                     IndexCount = mesh.Indices.Length,
                     VerticeCount = mesh.Vertices.Length
                 });
-                _logger.WriteLine("Writing vertices");
+                _logger.WriteLine($"Writing vertices {mesh.Vertices.Length}");
                 _byteWriter.Write(file, mesh.Vertices);
-                _logger.WriteLine("Writing indices");
+                _logger.WriteLine($"Writing indices {mesh.Indices.Length}");
                 _byteWriter.Write(file, mesh.Indices);
             }
         }

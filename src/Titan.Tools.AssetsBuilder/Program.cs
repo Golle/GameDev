@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using Titan.IOC;
 using Titan.Tools.AssetsBuilder.Converters;
 using Titan.Tools.AssetsBuilder.Data;
@@ -15,7 +13,7 @@ namespace Titan.Tools.AssetsBuilder
     internal class Program
     {
         private static readonly IContainer Container = Bootstrapper.CreateContainer();
-        static unsafe void Main(string[] args)
+        static void Main(string[] args)
         {
             var filename = @"F:\Git\GameDev\resources\data\test.dat";
 
