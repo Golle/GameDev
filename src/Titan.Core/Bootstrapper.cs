@@ -35,6 +35,8 @@ namespace Titan.Core
 
                     .Register<IJsonSerializer, JsonSerializerWrapper>()
 
+                    .Register<IByteReader, ByteReader>()
+
                 ;
 
         }

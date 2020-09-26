@@ -20,6 +20,7 @@ namespace Titan.Graphics.Buffers
 
         public IndexBuffer(ID3D11Buffer buffer, uint size)
         {
+            NumberOfIndices = size;
             _buffer = buffer ?? throw new ArgumentNullException(nameof(buffer));
         }
         public void Dispose()

@@ -36,6 +36,7 @@ namespace Titan.Core.Configuration
                 Paths = new ResourcePaths
                 {
                     Base = _enginePaths.ResourcesPath,
+                    Models = Path.Combine(_enginePaths.ResourcesPath, "models"),
                     Fonts = Path.Combine(_enginePaths.ResourcesPath, "fonts"),
                     Shaders = Path.Combine(_enginePaths.ResourcesPath, "shaders"),
                     Sounds = Path.Combine(_enginePaths.ResourcesPath, "sounds")

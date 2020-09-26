@@ -27,6 +27,10 @@
             {
                 "identifier":"System.String",
                 "type":"Titan.Sound.ISoundClip, Titan.Sound"
+            },
+            {
+                "identifier":"System.String",
+                "type":"Titan.Resources.MeshGroup, Titan"
             }
         ],
         "components": [

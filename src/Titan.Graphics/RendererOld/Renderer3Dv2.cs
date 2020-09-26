@@ -147,7 +147,7 @@ namespace Titan.Graphics.RendererOld
             _device.ImmediateContext.SetVertexShaderConstantBuffer(_perObjectConstantBuffer, PerObjectSlot);
             
             _device.ImmediateContext.SetPixelShaderResource(texture);
-            //mesh.IndexBuffer.Bind();
+              _device.ImmediateContext.SetIndexBuffer(mesh.IndexBuffer);
 
             if (mesh.VertexBuffer != _lastVertexBuffer)
             {
@@ -162,7 +162,8 @@ namespace Titan.Graphics.RendererOld
             }
 
 
-            _device.ImmediateContext.Draw(mesh.VertexBuffer.NumberOfVertices, 0);
+            //_device.ImmediateContext.Draw(mesh.VertexBuffer.NumberOfVertices, 0);
+            _device.ImmediateContext.DrawIndexed(mesh.IndexBuffer.NumberOfIndices, 0, 0);
         }
 
         public void End()

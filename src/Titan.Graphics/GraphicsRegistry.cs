@@ -24,8 +24,9 @@ namespace Titan.Graphics
                 .Register<ISpriteBatchRenderer, SpriteBatchRenderer>()
                 .Register<Renderer3Dv2>()
                 .Register<RendererDebug3Dv3>()
-                
-                .Register<IMeshLoader, MeshLoader>()
+
+                //.Register<IMeshLoader, MeshLoader>()
+                .Register<IMeshLoader, ModelLoader>()
                 .Register<ITextureLoader, TextureLoader>()
                 .Register<IFontLoader, FontLoader>()
 

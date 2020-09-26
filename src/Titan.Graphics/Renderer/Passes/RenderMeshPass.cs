@@ -83,8 +83,9 @@ namespace Titan.Graphics.Renderer.Passes
             context.SetPixelShaderResource(texture);
 
             context.SetVertexBuffer(mesh.VertexBuffer);
+            context.SetIndexBuffer(mesh.IndexBuffer);
 
-            context.Draw(mesh.VertexBuffer.NumberOfVertices, 0);
+            context.DrawIndexed(mesh.IndexBuffer.NumberOfIndices, 0, 0);
         }
 
         public void Dispose()

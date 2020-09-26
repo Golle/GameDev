@@ -6,7 +6,6 @@ using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
 using Titan.Graphics.Shaders;
 using Titan.Graphics.Textures;
-using Titan.Windows.Window;
 
 namespace Titan.Graphics.Renderer.Passes
 {
@@ -73,10 +72,10 @@ namespace Titan.Graphics.Renderer.Passes
             
             return new[]
             {
-                new BackbufferVertex{Position = new Vector2(-1,-1)/2, TextureCoordinates = new Vector2(0,1)},
-                new BackbufferVertex{Position = new Vector2(1,-1)/2, TextureCoordinates = new Vector2(1,1)},
-                new BackbufferVertex{Position = new Vector2(1,1)/2, TextureCoordinates = new Vector2(1,0) },
-                new BackbufferVertex{Position = new Vector2(-1,1)/2, TextureCoordinates = new Vector2(0,0) }
+                new BackbufferVertex{Position = new Vector2(-1,-1), TextureCoordinates = new Vector2(0,1)},
+                new BackbufferVertex{Position = new Vector2(1,-1), TextureCoordinates = new Vector2(1,1)},
+                new BackbufferVertex{Position = new Vector2(1,1), TextureCoordinates = new Vector2(1,0) },
+                new BackbufferVertex{Position = new Vector2(-1,1), TextureCoordinates = new Vector2(0,0) }
             };
         }
 

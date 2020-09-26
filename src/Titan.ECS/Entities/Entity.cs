@@ -34,6 +34,14 @@ namespace Titan.ECS.Entities
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Attach(in Entity entity) => Worlds.AttachEntity(WorldId, Id, entity.Id);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Entity CreateChild()
+        {
+            var entity = Worlds.CreateEntity(WorldId);
+            Attach(entity);
+            return entity;
+        }
         public void Destroy()
         {
             Debug.Assert(WorldId != 0, "Entity was not created in a World");

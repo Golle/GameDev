@@ -177,9 +177,9 @@ namespace Titan.Graphics.Rendering
             return new[]
             {
                 new FullScreenVertex{Position = new Vector2(-1,-1)/2, TextureCoordinates = new Vector2(0,1)},
-                new FullScreenVertex{Position = new Vector2(1,-1)/2, TextureCoordinates = new Vector2(1,1)},
-                new FullScreenVertex{Position = new Vector2(1,1)/2, TextureCoordinates = new Vector2(1,0) },
-                new FullScreenVertex{Position = new Vector2(-1,1)/2, TextureCoordinates = new Vector2(0,0) }
+                new FullScreenVertex{Position = new Vector2(1,-1), TextureCoordinates = new Vector2(1,1)},
+                new FullScreenVertex{Position = new Vector2(1,1), TextureCoordinates = new Vector2(1,0) },
+                new FullScreenVertex{Position = new Vector2(-1,1), TextureCoordinates = new Vector2(0,0) }
             };
         }
 

@@ -27,6 +27,18 @@ namespace Titan.Graphics
             _canDispose = canDispose;
         }
 
+
+        public unsafe void Map(IResource resource, out void* ptr)
+        {
+            _context.Map(resource.NativeHandle, D3D11Map.WriteDiscard, out var subresource);
+            ptr = subresource.pData;
+        }
+
+        public void Unmap(IResource resource)
+        {
+            _context.Unmap(resource.NativeHandle);
+        }
+
         public void MapResource<T>(IResource resource, in T data) where T : unmanaged
         {
             _context.Map(resource.NativeHandle, D3D11Map.WriteDiscard, out var subresource);

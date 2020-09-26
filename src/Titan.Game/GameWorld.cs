@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using Microsoft.Win32.SafeHandles;
 using Titan.Components;
 using Titan.Components.UI;
 using Titan.Core.Math;
@@ -10,6 +11,7 @@ using Titan.ECS.Systems;
 using Titan.Graphics.Fonts;
 using Titan.Graphics.Models;
 using Titan.Graphics.Textures;
+using Titan.Resources;
 using Titan.Sound;
 using Titan.Windows.Window;
 
@@ -49,7 +51,7 @@ namespace Titan.Game
                 player.AddComponent(new Player());
 
                 var camera = world.CreateEntity();
-                camera.AddComponent(new Camera { Up = Vector3.UnitY, Forward = Vector3.UnitZ, Width = 1f, Height = _window.Height / (float)_window.Width, NearPlane = 0.5f, FarPlane = 1000f });
+                camera.AddComponent(new Camera { Up = Vector3.UnitY, Forward = Vector3.UnitZ, Width = 1f, Height = _window.Height / (float)_window.Width, NearPlane = 0.5f, FarPlane = 10000f });
                 camera.AddComponent(new Transform3D());
                 camera.AddComponent(new Light { Color = new Color(1, 1f, 1f) });
                 player.Attach(camera);
@@ -156,13 +158,19 @@ namespace Titan.Game
                 //}
 
                 var random = new Random();
-                {
-                    var sphere = world.CreateEntity();
-                    sphere.AddComponent(new Transform3D { Position = new Vector3(-3f, 0, 2f), Scale = new Vector3(1f) });
-                    sphere.AddComponent(new Resource<string, IMesh>(@"table.obj"));
-                    sphere.AddComponent(new Resource<string, ITexture2D>(@"red.png"));
-                }
+                //{
+                //    var sphere = world.CreateEntity();
+                //    sphere.AddComponent(new Transform3D { Position = new Vector3(-3f, 0, 2f), Scale = new Vector3(1f) });
+                //    sphere.AddComponent(new Resource<string, IMesh>(@"table.dat"));
+                //    sphere.AddComponent(new Resource<string, ITexture2D>(@"red.png"));
+                //}
 
+                {
+                    var sponza = world.CreateEntity();
+                    sponza.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0f), Scale = Vector3.One });
+                    sponza.AddComponent(new Resource<string, MeshGroup>(@"sponza.dat"));
+                    sponza.AddComponent(new Resource<string, ITexture2D>(@"spnza_bricks_a_diff.png"));
+                }
 
 
                 for (var i = 0; i < 600; ++i)
@@ -173,9 +181,9 @@ namespace Titan.Game
                     sphere.AddComponent(new Velocity { Value = new Vector3(random.Next(-10000, 10000) / 1000f, random.Next(-10000, 10000) / 1000f, random.Next(-10000, 10000) / 1000f) });
                     switch (random.Next(10) % 3)
                     {
-                        case 0: sphere.AddComponent(new Resource<string, IMesh>(@"sphere1.obj")); break;
-                        case 1: sphere.AddComponent(new Resource<string, IMesh>(@"sphere.obj")); break;
-                        case 2: sphere.AddComponent(new Resource<string, IMesh>(@"cube.obj")); break;
+                        case 0: sphere.AddComponent(new Resource<string, IMesh>(@"sphere1.dat")); break;
+                        case 1: sphere.AddComponent(new Resource<string, IMesh>(@"sphere.dat")); break;
+                        case 2: sphere.AddComponent(new Resource<string, IMesh>(@"cube.dat")); break;
                     }
 
                     sphere.AddComponent(random.Next(10) % 2 == 0
@@ -186,14 +194,14 @@ namespace Titan.Game
                 {
                     var sphere = world.CreateEntity();
                     sphere.AddComponent(new Transform3D { Position = new Vector3(0, 3f, 2f), Scale = new Vector3(1f) });
-                    sphere.AddComponent(new Resource<string, IMesh>(@"cube.obj"));
+                    sphere.AddComponent(new Resource<string, IMesh>(@"cube.dat"));
                     sphere.AddComponent(new Resource<string, ITexture2D>(@"red.png"));
                 }
 
                 {
                     var sphere = world.CreateEntity();
                     sphere.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 7f), Scale = new Vector3(10f, 10f, 1f) });
-                    sphere.AddComponent(new Resource<string, IMesh>(@"cube.obj"));
+                    sphere.AddComponent(new Resource<string, IMesh>(@"cube.dat"));
                     sphere.AddComponent(new Resource<string, ITexture2D>(@"blue.png"));
                 }
 
@@ -201,7 +209,7 @@ namespace Titan.Game
                     var light = world.CreateEntity();
                     light.AddComponent(new Light { Color = new Color(1, 1f, 1f) });
                     light.AddComponent(new Transform3D { Position = new Vector3(1f, 1f, 0), Scale = new Vector3(0.3f) });
-                    light.AddComponent(new Resource<string, IMesh>(@"sphere.obj"));
+                    light.AddComponent(new Resource<string, IMesh>(@"sphere.dat"));
                     light.AddComponent(new Resource<string, ITexture2D>(@"white.png"));
                     light.AddComponent(new Velocity { Value = new Vector3 { X = -4.5f, Y = 6f } });
                 }
@@ -210,7 +218,7 @@ namespace Titan.Game
                     var light = world.CreateEntity();
                     light.AddComponent(new Light { Color = new Color(1, 1f, 1f) });
                     light.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0), Scale = new Vector3(0.3f) });
-                    light.AddComponent(new Resource<string, IMesh>(@"sphere.obj"));
+                    light.AddComponent(new Resource<string, IMesh>(@"sphere.dat"));
                     light.AddComponent(new Resource<string, ITexture2D>(@"white.png"));
                     light.AddComponent(new Velocity { Value = new Vector3 { X = 2.5f, Y = 3f } });
                 }
@@ -219,7 +227,7 @@ namespace Titan.Game
                     var light = world.CreateEntity();
                     light.AddComponent(new Light { Color = new Color(1, 1f, 1f) });
                     light.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0), Scale = new Vector3(0.3f) });
-                    light.AddComponent(new Resource<string, IMesh>(@"sphere.obj"));
+                    light.AddComponent(new Resource<string, IMesh>(@"sphere.dat"));
                     light.AddComponent(new Resource<string, ITexture2D>(@"white.png"));
                     light.AddComponent(new Velocity { Value = new Vector3 { X = 3.5f, Y = -8f, Z = 3f } });
                 }

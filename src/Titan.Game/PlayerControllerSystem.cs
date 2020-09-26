@@ -75,7 +75,7 @@ namespace Titan.Game
         private bool _mouseVisible = true;
         protected override void OnUpdate(float deltaTime, uint entityId)
         {
-            const float speed = 12f;
+            const float speed = 120f;
             const float maxRotation = (float)Math.PI / 2f - 0.01f;
 
             if (_inputManager.Keyboard.IsKeyReleased(KeyCode.Space))
