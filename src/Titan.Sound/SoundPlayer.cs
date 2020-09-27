@@ -96,7 +96,7 @@ namespace Titan.Sound
         {
             foreach (var player in _players)
             {
-                player.Dispose();
+                //player.Dispose();
             }
         }
     }
