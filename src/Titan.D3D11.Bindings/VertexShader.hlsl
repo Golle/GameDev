@@ -27,7 +27,6 @@ struct VS_INPUT
     float3 Position : Position;
     float3 Normal : Normal;
     float2 Texture : Texture;
-    float4 Color : Color;
 };
 
 
@@ -45,7 +44,7 @@ VS_OUTPUT main(VS_INPUT input)
     
     output.WorldPosition = mul(float4(input.Position, 1.0f), World);
     output.Pos = mul(output.WorldPosition, ViewProjection);
-    output.Color = input.Color;
+    output.Color = float4(1.0f,1.0f,1.0f,1.0f);
     output.Tex = input.Texture;
     output.Normal = mul(input.Normal, (float3x3) World);
     

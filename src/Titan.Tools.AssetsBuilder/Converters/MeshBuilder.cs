@@ -53,8 +53,7 @@ namespace Titan.Tools.AssetsBuilder.Converters
                 {
                     Normal = _obj.Normals[vertex.NormalIndex],
                     Position = _obj.Positions[vertex.VertexIndex],
-                    Texture = _obj.Textures[vertex.TextureIndex],
-                    Color = Color.White
+                    Texture = _obj.Textures[vertex.TextureIndex]
                 };
             }
             
