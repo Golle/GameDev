@@ -116,6 +116,26 @@ namespace Titan.Graphics
             }
         }
 
+        public unsafe IVertexBuffer<T> CreateVertexBuffer<T>(void* data, int count, BufferUsage usage = BufferUsage.Default, BufferAccessFlags flags = BufferAccessFlags.Default) where T : unmanaged
+        {
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+            var size = (uint)Marshal.SizeOf<T>();
+            D3D11BufferDesc desc = default;
+            desc.BindFlags = D3D11BindFlag.VertexBuffer;
+            desc.Usage = (D3D11Usage)usage;
+            desc.CpuAccessFlags = (D3D11CpuAccessFlag)flags;
+            desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
+            desc.ByteWidth = (uint)(count* size);
+            desc.StructureByteStride = size;
+         
+            D3D11SubresourceData subresourceData = default;
+            subresourceData.pSysMem = data;
+            return new VertexBuffer<T>(_device.CreateBuffer(desc, subresourceData), size, (uint)count);
+        }
+
         public IConstantBuffer<T> CreateConstantBuffer<T>(BufferUsage usage, BufferAccessFlags flags) where T : unmanaged
         {
             var size = (uint)Marshal.SizeOf<T>();

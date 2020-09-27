@@ -2,6 +2,7 @@ using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Titan.Core.Common;
+using Titan.Graphics.Buffers;
 
 namespace Titan.Graphics.Models
 {
@@ -31,14 +32,21 @@ namespace Titan.Graphics.Models
             for (var i = 0; i < header.MeshCount; ++i)
             {
                 _byteReader.Read<MeshHeader>(file, out var meshHeader);
-
-                var vertexBuffer = _device.CreateVertexBuffer<TexturedVertex>((uint) meshHeader.VerticesCount, BufferUsage.Dynamic,BufferAccessFlags.Write);
+                var memory = Marshal.AllocHGlobal(header.VertexSize * meshHeader.VerticesCount);
+                IVertexBuffer<TexturedVertex> vertexBuffer;
                 unsafe
                 {
-                    _device.ImmediateContext.Map(vertexBuffer, out var ptr);
-                    _byteReader.Read<TexturedVertex>(file, ptr, meshHeader.VerticesCount);
+                    _byteReader.Read<TexturedVertex>(file, memory.ToPointer(), meshHeader.VerticesCount);
+                    vertexBuffer = _device.CreateVertexBuffer<TexturedVertex>(memory.ToPointer(), meshHeader.VerticesCount);
                 }
-                _device.ImmediateContext.Unmap(vertexBuffer);
+                Marshal.FreeHGlobal(memory);
+                //var vertexBuffer = _device.CreateVertexBuffer<TexturedVertex>((uint)meshHeader.VerticesCount, BufferUsage.Dynamic, BufferAccessFlags.Write);
+                //unsafe
+                //{
+                //    _device.ImmediateContext.Map(vertexBuffer, out var ptr);
+                //    _byteReader.Read<TexturedVertex>(file, ptr, meshHeader.VerticesCount);
+                //}
+                //_device.ImmediateContext.Unmap(vertexBuffer);
 
                 var indexBuffer = _device.CreateIndexBuffer((uint) meshHeader.IndexCount, BufferUsage.Dynamic, BufferAccessFlags.Write);
                 unsafe
