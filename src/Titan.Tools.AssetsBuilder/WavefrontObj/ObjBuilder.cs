@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using Titan.Tools.AssetsBuilder.Logging;
 
 namespace Titan.Tools.AssetsBuilder.WavefrontObj
 {
@@ -78,7 +77,15 @@ namespace Titan.Tools.AssetsBuilder.WavefrontObj
                 var values = face[i].Split('/', StringSplitOptions.TrimEntries)
                     .Select(x => int.Parse(x) - 1) // Subtract 1 since .obj file array index starts at 1
                     .ToArray();
-                vertices[i] = new ObjVertex(values[0], values[1], values[2]);
+
+                vertices[i] = values.Length switch
+                {
+                    1 => new ObjVertex(values[0]),
+                    2 => new ObjVertex(values[0], values[1]),
+                    3 => new ObjVertex(values[0], values[1], values[2]),
+                    _ => throw new InvalidOperationException("The format of the face is wrong. Only 1, 2 or 3 parts are supported. V, V/T or V/T/N")
+                };
+                
             }
 
             if (_currentGroup == null)

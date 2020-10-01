@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 
 namespace Titan.Tools.AssetsBuilder.WavefrontObj
 {

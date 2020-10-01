@@ -9,7 +9,7 @@ namespace Titan
         public void Register(IContainer container)
         {
             container
-                .Register<TextureManager>()
+                .Register<TextureResourceManager>()
                 //.Register<PixelShaderManager>() // TODO: add support for this later
                 //.Register<VertexShaderManager>()
                 .Register<MeshManager>()

@@ -51,10 +51,16 @@ namespace Titan.Tools.AssetsBuilder.Converters
                 ref var vertex = ref _vertices[i];
                 vertices[i] = new Vertex
                 {
-                    Normal = _obj.Normals[vertex.NormalIndex],
-                    Position = _obj.Positions[vertex.VertexIndex],
-                    Texture = _obj.Textures[vertex.TextureIndex]
+                    Position = _obj.Positions[vertex.VertexIndex]
                 };
+                if (vertex.TextureIndex != -1)
+                {
+                    vertices[i].Texture = _obj.Textures[vertex.TextureIndex];
+                }
+                if (vertex.NormalIndex != -1)
+                {
+                    vertices[i].Normal = _obj.Normals[vertex.NormalIndex];
+                }
             }
             
             var mesh = new Mesh(vertices, new Span<ushort>(_indices, 0, _indexCount).ToArray());

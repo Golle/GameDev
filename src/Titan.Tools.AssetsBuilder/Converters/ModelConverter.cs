@@ -42,20 +42,26 @@ namespace Titan.Tools.AssetsBuilder.Converters
                     }
 
                     var vertices = face.Vertices;
-                    if (vertices.Length > 4)
-                    {
-                        throw new NotSupportedException("More than 4 vertices in a face is not supported");
-                    }
+
+
+                    // TODO: add support for Concave faces (triangles done this way might overlap)
+
+                    // 1st face => vertex 0, 1, 2
+                    // 2nd face => vertex 0, 2, 3
+                    // 3rd face => vertex 0, 4, 5
+                    // 4th face => ...
 
                     builder.AddVertex(vertices[0]);
                     builder.AddVertex(vertices[1]);
                     builder.AddVertex(vertices[2]);
-                    if (face.Vertices.Length == 4
-                    ) // 4 vertices per face, we need to triangulate the face to be able to use it in the engine.
+
+                    // more than 3 vertices per face, we need to triangulate the face to be able to use it in the engine.
+                    
+                    for (var i = 3; i < vertices.Length; ++i)
                     {
                         builder.AddVertex(vertices[0]);
-                        builder.AddVertex(vertices[2]);
-                        builder.AddVertex(vertices[3]);
+                        builder.AddVertex(vertices[i-1]);
+                        builder.AddVertex(vertices[i]);
                     }
                 }
 

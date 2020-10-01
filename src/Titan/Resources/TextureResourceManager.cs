@@ -10,13 +10,13 @@ using Titan.Graphics.Textures;
 
 namespace Titan.Resources
 {
-    internal class TextureManager : ResourceManager<string, ITexture2D>
+    internal class TextureResourceManager : ResourceManager<string, ITexture2D>
     {
         private readonly ITextureLoader _textureLoader;
         private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
 
-        public TextureManager(ITextureLoader textureLoader, IConfiguration configuration, ILogger logger)
+        public TextureResourceManager(ITextureLoader textureLoader, IConfiguration configuration, ILogger logger)
         {
             _textureLoader = textureLoader;
             _configuration = configuration;
@@ -26,10 +26,10 @@ namespace Titan.Resources
         protected override ITexture2D Load(in string identifier)
         {
             var filename = Path.Combine(_configuration.Paths.Base, identifier);
-            if (Path.GetExtension(filename) != ".png")
-            {
-                throw new NotSupportedException($"File format {Path.GetExtension(filename)} is not supported.");
-            }
+            //if (Path.GetExtension(filename) != ".png")
+            //{
+            //    throw new NotSupportedException($"File format {Path.GetExtension(filename)} is not supported.");
+            //}
 
             var timer = Stopwatch.StartNew();
             var texture = _textureLoader.LoadTexture(filename);
