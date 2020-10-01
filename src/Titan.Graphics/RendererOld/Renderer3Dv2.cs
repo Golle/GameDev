@@ -147,7 +147,7 @@ namespace Titan.Graphics.RendererOld
             _device.ImmediateContext.SetVertexShaderConstantBuffer(_perObjectConstantBuffer, PerObjectSlot);
             
             _device.ImmediateContext.SetPixelShaderResource(texture);
-              _device.ImmediateContext.SetIndexBuffer(mesh.IndexBuffer);
+            _device.ImmediateContext.SetIndexBuffer(mesh.IndexBuffer);
 
             if (mesh.VertexBuffer != _lastVertexBuffer)
             {
@@ -163,7 +163,19 @@ namespace Titan.Graphics.RendererOld
 
 
             //_device.ImmediateContext.Draw(mesh.VertexBuffer.NumberOfVertices, 0);
-            _device.ImmediateContext.DrawIndexed(mesh.IndexBuffer.NumberOfIndices, 0, 0);
+            if (mesh.SubSets.Length > 1)
+            {
+                for (var i = 0; i < mesh.SubSets.Length; ++i)
+                {
+                    ref var subset = ref mesh.SubSets[i];
+                    _device.ImmediateContext.DrawIndexed((uint)subset.Count, (uint)subset.StartIndex, 0);
+                }
+            }
+            else
+            {
+                _device.ImmediateContext.DrawIndexed(mesh.IndexBuffer.NumberOfIndices, 0, 0);
+            }
+            
         }
 
         public void End()

@@ -13,7 +13,6 @@ namespace Titan
                 //.Register<PixelShaderManager>() // TODO: add support for this later
                 //.Register<VertexShaderManager>()
                 .Register<MeshManager>()
-                .Register<MeshGroupManager>()
                 .Register<FontManager>()
                 .Register<SoundClipManager>()
                 .Register<ISceneParser, SceneParser>()

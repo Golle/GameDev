@@ -26,7 +26,7 @@ namespace Titan.Graphics.Renderer.Passes
             _backBuffer = device.BackBuffer;
             _depthStencil = device.DepthStencil;
 
-            _indexBuffer = device.CreateIndexBuffer(new short[] {0, 3, 1, 3, 2, 1});
+            _indexBuffer = device.CreateIndexBuffer(new int[] {0, 3, 1, 3, 2, 1});
             _vertexBuffer = device.CreateVertexBuffer(CreateCube());
 
             using var pixelShaderBlob = new Blob(compiler.CompileShaderFromFile(@"F:\Git\GameDev\resources\shaders\BackBufferPixelShader.hlsl", "main", "ps_5_0"));

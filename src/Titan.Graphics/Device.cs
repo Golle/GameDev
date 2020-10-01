@@ -6,7 +6,6 @@ using Titan.D3D11.Device;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
-using Titan.Graphics.Renderer.Passes;
 using Titan.Graphics.Shaders;
 using Titan.Graphics.Textures;
 
@@ -40,15 +39,15 @@ namespace Titan.Graphics
             return new DeviceContext(_device.CreateDeferredContext());
         }
 
-        public IIndexBuffer CreateIndexBuffer(in short[] indices, BufferUsage usage, BufferAccessFlags flags)
+        public IIndexBuffer CreateIndexBuffer(in int[] indices, BufferUsage usage, BufferAccessFlags flags)
         {
             D3D11BufferDesc desc = default;
             desc.BindFlags = D3D11BindFlag.IndexBuffer;
             desc.Usage = (D3D11Usage)usage;
             desc.CpuAccessFlags = (D3D11CpuAccessFlag)flags;
             desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
-            desc.ByteWidth = (uint) (indices.Length * sizeof(short));
-            desc.StructureByteStride = sizeof(short);
+            desc.ByteWidth = (uint) (indices.Length * sizeof(int));
+            desc.StructureByteStride = sizeof(int);
             unsafe
             {
                 fixed (void* indicesPointer = indices)
@@ -67,10 +66,26 @@ namespace Titan.Graphics
             desc.Usage = (D3D11Usage)usage;
             desc.CpuAccessFlags = (D3D11CpuAccessFlag)flags;
             desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
-            desc.ByteWidth = size * sizeof(short);
-            desc.StructureByteStride = sizeof(short);
+            desc.ByteWidth = size * sizeof(int);
+            desc.StructureByteStride = sizeof(int);
 
             return new IndexBuffer(_device.CreateBuffer(desc), size); 
+        }
+
+        public unsafe IIndexBuffer CreateIndexBuffer(void* data, int count, BufferUsage usage = BufferUsage.Default,  BufferAccessFlags flags = BufferAccessFlags.Default)
+        {
+            D3D11BufferDesc desc = default;
+            desc.BindFlags = D3D11BindFlag.IndexBuffer;
+            desc.Usage = (D3D11Usage)usage;
+            desc.CpuAccessFlags = (D3D11CpuAccessFlag)flags;
+            desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
+            desc.ByteWidth = (uint)(count * sizeof(int));
+            desc.StructureByteStride = sizeof(int);
+            {
+                D3D11SubresourceData subresourceData = default;
+                subresourceData.pSysMem = data;
+                return new IndexBuffer(_device.CreateBuffer(desc, subresourceData), (uint)count);
+            }
         }
 
         public IVertexBuffer<T> CreateVertexBuffer<T>(uint numberOfVertices, BufferUsage usage, BufferAccessFlags flags) where T : unmanaged

@@ -6,11 +6,6 @@ using Titan.Graphics.Buffers;
 
 namespace Titan.Graphics.Models
 {
-    internal interface IModelLoader
-    {
-        IMesh[] LoadModel(string filename);
-    }
-
     internal class ModelLoader : IMeshLoader
     {
         private readonly IByteReader _byteReader;
@@ -22,60 +17,89 @@ namespace Titan.Graphics.Models
             _device = device;
         }
 
-        public IMesh[] Load(string filename)
+        public IMesh Load(string filename)
         {
             using var file = File.OpenRead(filename);
 
             _byteReader.Read<Header>(file, out var header);
 
-            var meshes = new IMesh[header.MeshCount];
-            for (var i = 0; i < header.MeshCount; ++i)
-            {
-                _byteReader.Read<MeshHeader>(file, out var meshHeader);
-                var memory = Marshal.AllocHGlobal(header.VertexSize * meshHeader.VerticesCount);
-                IVertexBuffer<TexturedVertex> vertexBuffer;
-                unsafe
-                {
-                    _byteReader.Read<TexturedVertex>(file, memory.ToPointer(), meshHeader.VerticesCount);
-                    vertexBuffer = _device.CreateVertexBuffer<TexturedVertex>(memory.ToPointer(), meshHeader.VerticesCount);
-                }
-                Marshal.FreeHGlobal(memory);
-                //var vertexBuffer = _device.CreateVertexBuffer<TexturedVertex>((uint)meshHeader.VerticesCount, BufferUsage.Dynamic, BufferAccessFlags.Write);
-                //unsafe
-                //{
-                //    _device.ImmediateContext.Map(vertexBuffer, out var ptr);
-                //    _byteReader.Read<TexturedVertex>(file, ptr, meshHeader.VerticesCount);
-                //}
-                //_device.ImmediateContext.Unmap(vertexBuffer);
+            var submeshes = new SubMesh[header.SubMeshCount];
+            _byteReader.Read(file, ref submeshes);
 
-                var indexBuffer = _device.CreateIndexBuffer((uint) meshHeader.IndexCount, BufferUsage.Dynamic, BufferAccessFlags.Write);
+            IVertexBuffer<TexturedVertex> vertexBuffer;
+            {
+                var buffer = Marshal.AllocHGlobal(header.VertexSize * header.VertexCount);
                 unsafe
                 {
-                    _device.ImmediateContext.Map(indexBuffer, out var ptr);
-                    _byteReader.Read<ushort>(file, ptr, meshHeader.IndexCount);
+                    var bufferPointer = buffer.ToPointer();
+                    _byteReader.Read<TexturedVertex>(file, bufferPointer, header.VertexCount);
+                    vertexBuffer = _device.CreateVertexBuffer<TexturedVertex>(bufferPointer, header.VertexCount);
                 }
-                _device.ImmediateContext.Unmap(indexBuffer);
-                meshes[i] = new Mesh(vertexBuffer, indexBuffer, meshHeader.Min, meshHeader.Max);
+                Marshal.FreeHGlobal(buffer);
             }
-            return meshes;
+
+            IIndexBuffer indexBuffer;
+            {
+                var buffer = Marshal.AllocHGlobal(header.IndexSize * header.IndexCount);
+                unsafe
+                {
+                    var bufferPointer = buffer.ToPointer();
+                    _byteReader.Read<int>(file, bufferPointer, header.IndexCount);
+                    indexBuffer = _device.CreateIndexBuffer(bufferPointer, header.IndexCount);
+                }
+                Marshal.FreeHGlobal(buffer);
+            }
+            return new Mesh(vertexBuffer, indexBuffer, Vector3.Zero,Vector3.One, submeshes);
+
+
+
+            //for (var i = 0; i < header.MeshCount; ++i)
+            //{
+            //    _byteReader.Read<MeshHeader>(file, out var meshHeader);
+            //    var memory = Marshal.AllocHGlobal(header.VertexSize * meshHeader.VerticesCount);
+            //    IVertexBuffer<TexturedVertex> vertexBuffer;
+            //    unsafe
+            //    {
+            //        _byteReader.Read<TexturedVertex>(file, memory.ToPointer(), meshHeader.VerticesCount);
+            //        vertexBuffer = _device.CreateVertexBuffer<TexturedVertex>(memory.ToPointer(), meshHeader.VerticesCount);
+            //    }
+            //    Marshal.FreeHGlobal(memory);
+            //    //var vertexBuffer = _device.CreateVertexBuffer<TexturedVertex>((uint)meshHeader.VerticesCount, BufferUsage.Dynamic, BufferAccessFlags.Write);
+            //    //unsafe
+            //    //{
+            //    //    _device.ImmediateContext.Map(vertexBuffer, out var ptr);
+            //    //    _byteReader.Read<TexturedVertex>(file, ptr, meshHeader.VerticesCount);
+            //    //}
+            //    //_device.ImmediateContext.Unmap(vertexBuffer);
+
+            //    var indexBuffer = _device.CreateIndexBuffer((uint) meshHeader.IndexCount, BufferUsage.Dynamic, BufferAccessFlags.Write);
+            //    unsafe
+            //    {
+            //        _device.ImmediateContext.Map(indexBuffer, out var ptr);
+            //        _byteReader.Read<ushort>(file, ptr, meshHeader.IndexCount);
+            //    }
+            //    _device.ImmediateContext.Unmap(indexBuffer);
+            //    meshes[i] = new Mesh(vertexBuffer, indexBuffer, meshHeader.Min, meshHeader.Max);
+            //}
         }
     }
-
+    
     [StructLayout(LayoutKind.Sequential, Size = 256)]
     internal struct Header
     {
         public ushort Version;
         public int VertexSize;
+        public int VertexCount;
         public int IndexSize;
-        public int MeshCount;
+        public int IndexCount;
+        public int SubMeshCount;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct MeshHeader
+    public struct SubMesh
     {
-        public Vector3 Min;
-        public Vector3 Max;
-        public int VerticesCount;
-        public int IndexCount;
+        public int StartIndex;
+        public int Count;
+        public int MaterialIndex;
     }
 }

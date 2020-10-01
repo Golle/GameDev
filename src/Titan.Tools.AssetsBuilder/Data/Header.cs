@@ -7,7 +7,17 @@ namespace Titan.Tools.AssetsBuilder.Data
     {
         public ushort Version;
         public int VertexSize;
+        public int VertexCount;
         public int IndexSize;
-        public int MeshCount;
+        public int IndexCount;
+        public int SubMeshCount;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct SubMesh
+    {
+        public int StartIndex;
+        public int Count;
+        public int MaterialIndex;
     }
 }

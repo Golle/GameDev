@@ -8,7 +8,7 @@ namespace Titan.Graphics.Models
 {
     internal class MeshLoader : IMeshLoader
     {
-        public IMesh[] Load(string filename)
+        public IMesh Load(string filename)
         {
             throw new NotImplementedException();
         }

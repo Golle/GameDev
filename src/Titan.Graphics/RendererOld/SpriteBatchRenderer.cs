@@ -68,18 +68,18 @@ namespace Titan.Graphics.RendererOld
 
         }
 
-        private static short[] CreateIndices()
+        private static int[] CreateIndices()
         {
-            var indices = new short[MaxIndices];
+            var indices = new int[MaxIndices];
             var vertexIndex = 0;
             for (var i = 0; i < MaxIndices; i += 6)
             {
-                indices[i] = (short) vertexIndex;
-                indices[i+1] = (short) (3 + vertexIndex);
-                indices[i+2] = (short) (1 + vertexIndex);
-                indices[i+3] = (short) (3 + vertexIndex);
-                indices[i+4] = (short) (2 + vertexIndex);
-                indices[i+5] = (short) (1 + vertexIndex);
+                indices[i] = vertexIndex;
+                indices[i+1] = 3 + vertexIndex;
+                indices[i+2] = 1 + vertexIndex;
+                indices[i+3] = 3 + vertexIndex;
+                indices[i+4] = 2 + vertexIndex;
+                indices[i+5] = 1 + vertexIndex;
                 vertexIndex += 4;
             }
             return indices;

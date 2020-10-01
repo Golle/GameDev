@@ -75,7 +75,7 @@ namespace Titan.Game
         private bool _mouseVisible = true;
         protected override void OnUpdate(float deltaTime, uint entityId)
         {
-            const float speed = 120f;
+            const float speed = 12f;
             const float maxRotation = (float)Math.PI / 2f - 0.01f;
 
             if (_inputManager.Keyboard.IsKeyReleased(KeyCode.Space))
@@ -89,7 +89,7 @@ namespace Titan.Game
                 return;
             }
 
-            var multiplier = _inputManager.Keyboard.IsKeyDown(KeyCode.Shift) ? 3f : 1f;
+            var multiplier = _inputManager.Keyboard.IsKeyDown(KeyCode.Shift) ? 30f : 1f;
             var distance = speed * deltaTime * multiplier;
             ref var transform = ref _transform[entityId];
             

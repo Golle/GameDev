@@ -15,8 +15,9 @@ namespace Titan.Graphics
         IRenderTarget BackBuffer { get; }
         IDepthStencil DepthStencil { get; }
         IDeferredDeviceContext CreateDeferredContext();
-        IIndexBuffer CreateIndexBuffer(in short[] indices, BufferUsage usage = BufferUsage.Default, BufferAccessFlags flags = BufferAccessFlags.Default);
+        IIndexBuffer CreateIndexBuffer(in int[] indices, BufferUsage usage = BufferUsage.Default, BufferAccessFlags flags = BufferAccessFlags.Default);
         IIndexBuffer CreateIndexBuffer(uint size, BufferUsage usage = BufferUsage.Default, BufferAccessFlags flags = BufferAccessFlags.Default);
+        unsafe IIndexBuffer CreateIndexBuffer(void* data, int count, BufferUsage usage = BufferUsage.Default, BufferAccessFlags flags = BufferAccessFlags.Default);
         IVertexBuffer<T> CreateVertexBuffer<T>(uint numberOfVertices, BufferUsage usage = BufferUsage.Default, BufferAccessFlags flags = BufferAccessFlags.Default) where T : unmanaged;
         IVertexBuffer<T> CreateVertexBuffer<T>(in T[] initialData, BufferUsage usage = BufferUsage.Default, BufferAccessFlags flags = BufferAccessFlags.Default) where T : unmanaged;
         unsafe IVertexBuffer<T> CreateVertexBuffer<T>(void* data, int count, BufferUsage usage = BufferUsage.Default, BufferAccessFlags flags = BufferAccessFlags.Default) where T : unmanaged;

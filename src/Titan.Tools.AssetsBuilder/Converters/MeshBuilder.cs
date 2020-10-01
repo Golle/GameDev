@@ -8,12 +8,16 @@ namespace Titan.Tools.AssetsBuilder.Converters
     {
         private readonly WavefrontObject _obj;
 
-        private readonly ObjVertex[] _vertices = new ObjVertex[50000];
-        private readonly ushort[] _indices = new ushort[50000];
-
-
+        private readonly ObjVertex[] _vertices = new ObjVertex[200_000];
+        private readonly int[] _indices = new int[800_000];
+        private readonly SubMesh[] _meshes = new SubMesh[10000];
+        
         private int _indexCount = 0;
         private int _vertexCount = 0;
+        private int _submeshCount = 0;
+        
+        private int _currentMaterial = -1;
+
         public MeshBuilder(WavefrontObject obj)
         {
             _obj = obj;
@@ -34,17 +38,41 @@ namespace Titan.Tools.AssetsBuilder.Converters
 
             if (vertexIndex != -1)
             {
-                _indices[_indexCount++] = (ushort) vertexIndex;
+                _indices[_indexCount++] = vertexIndex;
             }
             else
             {
-                _indices[_indexCount++] = (ushort) _vertexCount;
+                _indices[_indexCount++] = _vertexCount;
                 _vertices[_vertexCount++] = objVertex;
+            }
+        }
+
+        public void SetMaterial(in int material)
+        {
+            if (_currentMaterial == material)
+            {
+                return;
+            }
+            _currentMaterial = material;
+            SetCountForCurrentMesh();
+            ref var mesh = ref _meshes[_submeshCount++];
+            mesh.StartIndex = _indexCount;
+            mesh.MaterialIndex = _currentMaterial;
+        }
+
+        private void SetCountForCurrentMesh()
+        {
+            if (_submeshCount > 0)
+            {
+                ref var prevMesh = ref _meshes[_submeshCount - 1];
+                prevMesh.Count = _indexCount - prevMesh.StartIndex;
             }
         }
 
         public Mesh Build()
         {
+            SetCountForCurrentMesh();
+
             var vertices = new Vertex[_vertexCount];
             for (var i = 0; i < _vertexCount; ++i)
             {
@@ -62,11 +90,7 @@ namespace Titan.Tools.AssetsBuilder.Converters
                     vertices[i].Normal = _obj.Normals[vertex.NormalIndex];
                 }
             }
-            
-            var mesh = new Mesh(vertices, new Span<ushort>(_indices, 0, _indexCount).ToArray());
-            _vertexCount = 0;
-            _indexCount = 0;
-            return mesh;
+            return new Mesh(vertices, new Span<int>(_indices, 0, _indexCount).ToArray(), new Span<SubMesh>(_meshes, 0, _submeshCount).ToArray());
         }
     }
 }

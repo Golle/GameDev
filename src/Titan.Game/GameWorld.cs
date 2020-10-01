@@ -168,12 +168,32 @@ namespace Titan.Game
                 {
                     var sponza = world.CreateEntity();
                     sponza.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0f), Scale = Vector3.One });
-                    sponza.AddComponent(new Resource<string, MeshGroup>(@"sponza.dat"));
-                    sponza.AddComponent(new Resource<string, ITexture2D>(@"spnza_bricks_a_diff.png"));
+                    sponza.AddComponent(new Resource<string, IMesh>(@"sponza.dat"));
+                    sponza.AddComponent(new Resource<string, ITexture2D>(@"temp_models/sponza/textures/spnza_bricks_a_diff.png")); // temp
                 }
 
+                //{
+                //    var stone = world.CreateEntity();
+                //    stone.AddComponent(new Transform3D { Position = new Vector3(0f, 10f, 10f), Scale = Vector3.One*3 });
+                //    stone.AddComponent(new Resource<string, MeshGroup>(@"stone.dat"));
+                //    stone.AddComponent(new Resource<string, ITexture2D>(@"stone/diffuso.tif"));
+                //}
+                //{
+                //    var door = world.CreateEntity();
+                //    door.AddComponent(new Transform3D { Position = new Vector3(0f, 10f, 10f), Scale = Vector3.One*3 });
+                //    door.AddComponent(new Resource<string, MeshGroup>(@"Door.dat"));
+                //    door.AddComponent(new Resource<string, ITexture2D>(@"door/WoodTexture.jpg"));
+                //}
 
-                for (var i = 0; i < 600; ++i)
+                //{
+                //    var clock = world.CreateEntity();
+                //    clock.AddComponent(new Transform3D { Position = new Vector3(0f, 10f, 10f), Scale = Vector3.One*3 });
+                //    clock.AddComponent(new Resource<string, MeshGroup>(@"Clock_obj.dat"));
+                //    clock.AddComponent(new Resource<string, ITexture2D>(@"Clock_Constraints_for_Animations\textures\Uhr_ohne_Zeiger.jpg"));
+                //}
+
+
+                for (var i = 0; i < 100; ++i)
                 {
                     var sphere = world.CreateEntity();
                     const float distaneConstant = 100f;
