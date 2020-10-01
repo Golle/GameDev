@@ -20,7 +20,7 @@ namespace Titan.Tools.AssetsBuilder.WavefrontObj
         private readonly IList<ObjGroup> _groups = new List<ObjGroup>();
 
         private int _smoothGroup;
-        private int _currentMaterialIndex;
+        private int _currentMaterialIndex = -1;
 
         internal void AddPosition(in ReadOnlySpan<string> position)
         {

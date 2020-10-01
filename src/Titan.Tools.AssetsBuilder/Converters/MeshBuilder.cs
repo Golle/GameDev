@@ -53,6 +53,7 @@ namespace Titan.Tools.AssetsBuilder.Converters
             {
                 return;
             }
+            Console.WriteLine($"[{material}] = @\"{_obj.Materials[material].DiffuseMap}\"");
             _currentMaterial = material;
             SetCountForCurrentMesh();
             ref var mesh = ref _meshes[_submeshCount++];
