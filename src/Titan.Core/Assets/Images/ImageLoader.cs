@@ -20,7 +20,7 @@ namespace Titan.Core.Assets.Images
                 using var bitmap = new Bitmap(image);
 
                 var bytes = new List<byte>(bitmap.Width * bitmap.Height * 4);
-                for (var y = 0; y < bitmap.Height; ++y)
+                for (var y = bitmap.Height - 1; y >= 0; --y)
                 {
                     for(var x = 0; x < bitmap.Width; ++x)
                     {

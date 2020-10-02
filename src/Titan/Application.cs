@@ -175,12 +175,12 @@ namespace Titan
                 .WithSystem<Model3DRenderSystem>()
                 
 
-                //.WithSystem<SpriteRenderSystem>()
+                .WithSystem<SpriteRenderSystem>()
 
 
-                //.WithSystem<UIRenderSystem>()
-                //.WithSystem<UITextRenderSystem>()
-                .WithSystem<BoundingBoxSystem>()
+                .WithSystem<UIRenderSystem>()
+                .WithSystem<UITextRenderSystem>()
+                //.WithSystem<BoundingBoxSystem>()
                 .Build();
 
             return (world, systemsRunner);

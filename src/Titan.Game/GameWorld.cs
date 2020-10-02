@@ -23,8 +23,8 @@ namespace Titan.Game
         private const string FontFilename = @"segoe_ui_light.fnt";
         private const string BackgroundMusic = @"speck_-_Hydrogen_Sky0.wav";
         private const string ClickSound = @"click_004.wav";
-        private static readonly TextureCoordinates ButtonCoordinates = new TextureCoordinates { BottomRight = new Vector2(1f / 8f, 1 / 16f), TopLeft = new Vector2(0, 0) };
-        private static readonly TextureCoordinates GrayBox = new TextureCoordinates { BottomRight = new Vector2(1f / 4f, 1 / 16f), TopLeft = new Vector2(1/8f, 0) };
+        private static readonly TextureCoordinates ButtonCoordinates = new TextureCoordinates { BottomRight = new Vector2(1f / 8f, 1f - 1 / 16f), TopLeft = new Vector2(0, 1f) };
+        private static readonly TextureCoordinates GrayBox = new TextureCoordinates { BottomRight = new Vector2(1f / 4f, 1f- 1 / 16f), TopLeft = new Vector2(1/8f, 1f) };
 
         private readonly IWindow _window;
 
@@ -165,12 +165,12 @@ namespace Titan.Game
                 //    sphere.AddComponent(new Resource<string, ITexture2D>(@"red.png"));
                 //}
 
-                {
-                    var sponza = world.CreateEntity();
-                    sponza.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0f), Scale = Vector3.One });
-                    sponza.AddComponent(new Resource<string, IMesh>(@"sponza.dat"));
-                    sponza.AddComponent(new Resource<string, ITexture2D>(@"temp_models/sponza/textures/spnza_bricks_a_diff.png")); // temp
-                }
+                //{
+                //    var sponza = world.CreateEntity();
+                //    sponza.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0f), Scale = Vector3.One });
+                //    sponza.AddComponent(new Resource<string, IMesh>(@"sponza.dat"));
+                //    sponza.AddComponent(new Resource<string, ITexture2D>(@"temp_models/sponza/textures/spnza_bricks_a_diff.png")); // temp
+                //}
 
                 //{
                 //    var stone = world.CreateEntity();

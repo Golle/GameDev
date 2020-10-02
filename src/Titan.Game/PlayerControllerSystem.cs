@@ -111,7 +111,16 @@ namespace Titan.Game
             {
                 movement.X -= distance;
             }
-            
+
+            if (keyboard.IsKeyDown(KeyCode.V))
+            {
+                movement.Y += distance;
+            }
+            if (keyboard.IsKeyDown(KeyCode.C))
+            {
+                movement.Y -= distance;
+            }
+
             var mousePos = _inputManager.Mouse.DeltaMovement;
             if (mousePos.Y != 0 || mousePos.X != 0)
             {

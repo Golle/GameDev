@@ -17,7 +17,7 @@ namespace Titan.Graphics
         private readonly ID3D11RenderTargetView _renderTarget;
         private readonly ID3D11DepthStencilView _depthStencilView;
 
-        private readonly bool _vSync = false;
+        private readonly bool _vSync = true;
 
         public ID3DCompiler TEMPORARYCompiler { get; }
         public IDeviceContext ImmediateContext { get; }
@@ -290,6 +290,10 @@ namespace Titan.Graphics
             desc.RenderTargets[0].SrcBlend = D3D11Blend.SrcAlpha;
             desc.RenderTargets[0].DestBlend = D3D11Blend.InvSrcAlpha;
 
+            desc.RenderTargets[0].SrcBlendAlpha = D3D11Blend.InvDestAlpha;
+            desc.RenderTargets[0].DestBlendAlpha = D3D11Blend.One;
+            desc.RenderTargets[0].BlendOpAlpha = D3D11BlendOp.Add;
+            
             return new BlendState(_device.CreateBlendState(desc));
         }
 

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Titan.D3D11;
 using Titan.D3D11.Compiler;
 using Titan.Graphics.Blobs;
@@ -112,6 +113,8 @@ namespace Titan.Graphics.RendererOld
             _perObjectConstantBuffer = device.CreateConstantBuffer<PerObjectContantBuffer>(BufferUsage.Dynamic, BufferAccessFlags.Write);
             _sampler = device.CreateSampler();
 
+
+            _blendState = device.CreateBlendState();
             _sponzaTextures = Textures();
         }
 
@@ -145,6 +148,7 @@ namespace Titan.Graphics.RendererOld
         private IVertexBuffer _lastVertexBuffer = null;
         private ITexture2D _lastTexture = null;
         private ITexture2D[] _sponzaTextures;
+        private IBlendState _blendState;
 
         public void Render(IMesh mesh, in Matrix4x4 worldMatrix, ITexture2D texture)
         {
@@ -166,11 +170,11 @@ namespace Titan.Graphics.RendererOld
                 _lastTexture = texture;
             }
 
-
+            _device.ImmediateContext.SetBlendstate(_blendState);
             //_device.ImmediateContext.Draw(mesh.VertexBuffer.NumberOfVertices, 0);
             if (mesh.SubSets.Length > 1)
             {
-                for (var i = 0; i < mesh.SubSets.Length; ++i)
+                for (var i = 0; i <mesh.SubSets.Length; ++i)
                 {
                     ref var subset = ref mesh.SubSets[i];
                     _device.ImmediateContext.SetPixelShaderResource(_sponzaTextures[subset.MaterialIndex]);
@@ -213,6 +217,7 @@ namespace Titan.Graphics.RendererOld
 
         private ITexture2D[] Textures()
         {
+            return new ITexture2D[0];
             var tex = new ITexture2D[27];
             tex[0] = _textureLoader.LoadTexture(@"F:\Git\GameDev\resources\temp_models\sponza\textures\sponza_thorn_diff.png");
             tex[1] = _textureLoader.LoadTexture(@"F:\Git\GameDev\resources\temp_models\sponza\textures\vase_round.png");
