@@ -49,7 +49,7 @@ namespace Titan.Graphics.Models
                 }
                 Marshal.FreeHGlobal(buffer);
             }
-            return new Mesh(vertexBuffer, indexBuffer, Vector3.Zero,Vector3.One, submeshes);
+            return new Mesh(vertexBuffer, indexBuffer, submeshes);
 
 
 
@@ -101,5 +101,7 @@ namespace Titan.Graphics.Models
         public int StartIndex;
         public int Count;
         public int MaterialIndex;
+        public Vector3 Min;
+        public Vector3 Max;
     }
 }

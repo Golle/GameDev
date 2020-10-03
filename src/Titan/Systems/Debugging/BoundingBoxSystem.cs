@@ -49,8 +49,11 @@ namespace Titan.Systems.Debugging
             }
             ref var transform = ref _transform[entityId];
             ref var model = ref _model[entityId];
-            
-            _renderer.DrawBox(Vector3.Transform(model.Mesh.Min, transform.WorldTransform), Vector3.Transform(model.Mesh.Max, transform.WorldTransform), new Color{A = 1f, B = 1f, G = 1f, R = 0});
+
+            foreach (var mesh in model.Mesh.SubSets)
+            {
+                _renderer.DrawBox(Vector3.Transform(mesh.Min, transform.WorldTransform), Vector3.Transform(mesh.Max, transform.WorldTransform), new Color { A = 1f, B = 1f, G = 1f, R = 0 });
+            }
         }
     }
 }

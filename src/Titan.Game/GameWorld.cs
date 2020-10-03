@@ -165,12 +165,12 @@ namespace Titan.Game
                 //    sphere.AddComponent(new Resource<string, ITexture2D>(@"red.png"));
                 //}
 
-                //{
-                //    var sponza = world.CreateEntity();
-                //    sponza.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0f), Scale = Vector3.One });
-                //    sponza.AddComponent(new Resource<string, IMesh>(@"sponza.dat"));
-                //    sponza.AddComponent(new Resource<string, ITexture2D>(@"temp_models/sponza/textures/spnza_bricks_a_diff.png")); // temp
-                //}
+                {
+                    var sponza = world.CreateEntity();
+                    sponza.AddComponent(new Transform3D { Position = new Vector3(0f, 0f, 0f), Scale = Vector3.One });
+                    sponza.AddComponent(new Resource<string, IMesh>(@"sponza.dat"));
+                    sponza.AddComponent(new Resource<string, ITexture2D>(@"temp_models/sponza/textures/spnza_bricks_a_diff.png")); // temp
+                }
 
                 //{
                 //    var stone = world.CreateEntity();

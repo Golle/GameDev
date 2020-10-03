@@ -1,4 +1,6 @@
 using System;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using Titan.Tools.AssetsBuilder.Data;
 using Titan.Tools.AssetsBuilder.WavefrontObj;
 
@@ -12,9 +14,9 @@ namespace Titan.Tools.AssetsBuilder.Converters
         private readonly int[] _indices = new int[800_000];
         private readonly SubMesh[] _meshes = new SubMesh[10000];
         
-        private int _indexCount = 0;
-        private int _vertexCount = 0;
-        private int _submeshCount = 0;
+        private int _indexCount;
+        private int _vertexCount;
+        private int _submeshCount;
         
         private int _currentMaterial = -1;
 
@@ -53,7 +55,7 @@ namespace Titan.Tools.AssetsBuilder.Converters
             {
                 return;
             }
-            Console.WriteLine($"[{material}] = @\"{_obj.Materials[material].DiffuseMap}\"");
+            //Console.WriteLine($"[{material}] = @\"{_obj.Materials[material].DiffuseMap}\"");
             _currentMaterial = material;
             SetCountForCurrentMesh();
             ref var mesh = ref _meshes[_submeshCount++];
@@ -65,8 +67,8 @@ namespace Titan.Tools.AssetsBuilder.Converters
         {
             if (_submeshCount > 0)
             {
-                ref var prevMesh = ref _meshes[_submeshCount - 1];
-                prevMesh.Count = _indexCount - prevMesh.StartIndex;
+                ref var mesh = ref _meshes[_submeshCount - 1];
+                mesh.Count = _indexCount - mesh.StartIndex;
             }
         }
 
@@ -78,9 +80,12 @@ namespace Titan.Tools.AssetsBuilder.Converters
             for (var i = 0; i < _vertexCount; ++i)
             {
                 ref var vertex = ref _vertices[i];
+                ref var position = ref _obj.Positions[vertex.VertexIndex];
+
+                // .obj file is RightHanded, the engine only supports LeftHanded coordinates so we flip position and normal Z coordinate
                 vertices[i] = new Vertex
                 {
-                    Position = _obj.Positions[vertex.VertexIndex]
+                    Position = new Vector3(position.X, position.Y, -position.Z)
                 };
                 if (vertex.TextureIndex != -1)
                 {
@@ -88,10 +93,38 @@ namespace Titan.Tools.AssetsBuilder.Converters
                 }
                 if (vertex.NormalIndex != -1)
                 {
-                    vertices[i].Normal = _obj.Normals[vertex.NormalIndex];
+                    ref var normal = ref _obj.Normals[vertex.NormalIndex];
+                    vertices[i].Normal = new Vector3(normal.X, normal.Y, -normal.Z);
                 }
             }
+
+            for (var i = 0; i < _submeshCount; ++i)
+            {
+                ref var submesh = ref _meshes[i];
+                SetBoundingBox(ref submesh, new Span<int>(_indices, submesh.StartIndex, submesh.Count), vertices);
+            }
+
             return new Mesh(vertices, new Span<int>(_indices, 0, _indexCount).ToArray(), new Span<SubMesh>(_meshes, 0, _submeshCount).ToArray());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+        private static void SetBoundingBox(ref SubMesh mesh, Span<int> indices, in Vertex[] vertices)
+        {
+            var min = new Vector3(float.MaxValue);
+            var max = new Vector3(float.MinValue);
+            foreach (var index in indices)
+            {
+                ref var position = ref vertices[index].Position;
+                if (position.X < min.X) min.X = position.X;
+                if (position.X > max.X) max.X = position.X;
+                if (position.Y < min.Y) min.Y = position.Y;
+                if (position.Y > max.Y) max.Y = position.Y;
+                if (position.Z < min.Z) min.Z = position.Z;
+                if (position.Z > max.Z) max.Z = position.Z;
+            }
+
+            mesh.Min = min;
+            mesh.Max = max;
         }
     }
 }

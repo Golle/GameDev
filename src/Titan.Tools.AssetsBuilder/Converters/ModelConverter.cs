@@ -27,18 +27,20 @@ namespace Titan.Tools.AssetsBuilder.Converters
                     builder.SetMaterial(face.Material);
                     // TODO: add support for Concave faces (triangles done this way might overlap)
 
+                    // RH
                     // 1st face => vertex 0, 1, 2
                     // 2nd face => vertex 0, 2, 3
                     // 3rd face => vertex 0, 4, 5
                     // 4th face => ...
                     
-                    var vertices = face.Vertices;
+                     var vertices = face.Vertices;
                     // more than 3 vertices per face, we need to triangulate the face to be able to use it in the engine.
                     for (var i = 2; i < vertices.Length; ++i)
                     {
                         builder.AddVertex(vertices[0]);
-                        builder.AddVertex(vertices[i - 1]);
+                        //Flip the order to convert from RH to LH (d3d) 
                         builder.AddVertex(vertices[i]);
+                        builder.AddVertex(vertices[i - 1]);
                     }
                 }
             }

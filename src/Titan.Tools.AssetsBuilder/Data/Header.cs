@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace Titan.Tools.AssetsBuilder.Data
@@ -19,5 +20,7 @@ namespace Titan.Tools.AssetsBuilder.Data
         public int StartIndex;
         public int Count;
         public int MaterialIndex;
+        public Vector3 Min;
+        public Vector3 Max;
     }
 }

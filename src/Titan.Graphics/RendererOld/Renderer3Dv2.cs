@@ -217,7 +217,7 @@ namespace Titan.Graphics.RendererOld
 
         private ITexture2D[] Textures()
         {
-            return new ITexture2D[0];
+            //return new ITexture2D[0];
             var tex = new ITexture2D[27];
             tex[0] = _textureLoader.LoadTexture(@"F:\Git\GameDev\resources\temp_models\sponza\textures\sponza_thorn_diff.png");
             tex[1] = _textureLoader.LoadTexture(@"F:\Git\GameDev\resources\temp_models\sponza\textures\vase_round.png");
@@ -280,7 +280,7 @@ namespace Titan.Graphics.RendererOld
 
 
         private readonly LineVertex[] _vertices = new LineVertex[8 * MaxBoxes];
-        private readonly short[] _indices = new short[24 * MaxBoxes];
+        private readonly int[] _indices = new int[24 * MaxBoxes];
         private uint _numberOfVertices;
         private uint _numberOfIndices;
         private readonly IDeviceContext _context;
@@ -317,29 +317,29 @@ namespace Titan.Graphics.RendererOld
 
 
             _indices[_numberOfIndices++] = offset;
-            _indices[_numberOfIndices++] = (short)(offset + 1);
+            _indices[_numberOfIndices++] = offset + 1;
             _indices[_numberOfIndices++] = offset;
-            _indices[_numberOfIndices++] = (short)(offset + 2);
+            _indices[_numberOfIndices++] = offset + 2;
             _indices[_numberOfIndices++] = offset;
-            _indices[_numberOfIndices++] = (short)(offset + 3);
-            _indices[_numberOfIndices++] = (short)(offset + 4);
-            _indices[_numberOfIndices++] = (short)(offset + 5);
-            _indices[_numberOfIndices++] = (short)(offset + 4);
-            _indices[_numberOfIndices++] = (short)(offset + 6);
-            _indices[_numberOfIndices++] = (short)(offset + 4);
-            _indices[_numberOfIndices++] = (short)(offset + 7);
-            _indices[_numberOfIndices++] = (short)(offset + 5);
-            _indices[_numberOfIndices++] = (short)(offset + 2);
-            _indices[_numberOfIndices++] = (short)(offset + 5);
-            _indices[_numberOfIndices++] = (short)(offset + 3);
-            _indices[_numberOfIndices++] = (short)(offset + 7);
-            _indices[_numberOfIndices++] = (short)(offset + 2);
-            _indices[_numberOfIndices++] = (short)(offset + 7);
-            _indices[_numberOfIndices++] = (short)(offset + 1);
-            _indices[_numberOfIndices++] = (short)(offset + 6);
-            _indices[_numberOfIndices++] = (short)(offset + 3);
-            _indices[_numberOfIndices++] = (short)(offset + 6);
-            _indices[_numberOfIndices++] = (short)(offset + 1);
+            _indices[_numberOfIndices++] = offset + 3;
+            _indices[_numberOfIndices++] = offset + 4;
+            _indices[_numberOfIndices++] = offset + 5;
+            _indices[_numberOfIndices++] = offset + 4;
+            _indices[_numberOfIndices++] = offset + 6;
+            _indices[_numberOfIndices++] = offset + 4;
+            _indices[_numberOfIndices++] = offset + 7;
+            _indices[_numberOfIndices++] = offset + 5;
+            _indices[_numberOfIndices++] = offset + 2;
+            _indices[_numberOfIndices++] = offset + 5;
+            _indices[_numberOfIndices++] = offset + 3;
+            _indices[_numberOfIndices++] = offset + 7;
+            _indices[_numberOfIndices++] = offset + 2;
+            _indices[_numberOfIndices++] = offset + 7;
+            _indices[_numberOfIndices++] = offset + 1;
+            _indices[_numberOfIndices++] = offset + 6;
+            _indices[_numberOfIndices++] = offset + 3;
+            _indices[_numberOfIndices++] = offset + 6;
+            _indices[_numberOfIndices++] = offset + 1;
         }
 
         public void SetCamera(in Matrix4x4 viewProjection, in Matrix4x4 view)
