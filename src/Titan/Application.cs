@@ -1,19 +1,19 @@
 using System;
-using System.Threading.Tasks;
+using System.IO;
 using Titan.Components;
-using Titan.Configuration;
 using Titan.Core;
 using Titan.Core.EventSystem;
 using Titan.Core.GameLoop;
 using Titan.Core.GameLoop.Events;
-using Titan.Core.Ioc;
+using Titan.IOC;
 using Titan.Core.Logging;
 using Titan.D3D11;
+using Titan.D3D11.Compiler;
 using Titan.ECS;
 using Titan.ECS.Runners;
 using Titan.ECS.Systems;
 using Titan.Graphics;
-using Titan.Graphics.Renderer;
+using Titan.Graphics.RendererOld;
 using Titan.Scenes;
 using Titan.Sound;
 using Titan.Systems;
@@ -42,13 +42,6 @@ namespace Titan
                 .Register<GameEngine>()
             ;
 
-        private readonly ILogger _logger;
-        
-        public Application()
-        {
-            _logger = _container.GetInstance<ILogger>();
-        }
-
         public static void Start()
         {
             var application = new T() as Application<T> ?? throw new InvalidOperationException("Failed to Create Application class");
@@ -59,69 +52,26 @@ namespace Titan
 
         private void Run()
         {
-            _container.GetInstance<IEventManager>()
-                .Subscribe<UpdateEvent>((in UpdateEvent @event) =>
-                {
-                    _fps = 1f / @event.ElapsedTime;
-                });
-            _container.GetInstance<IEventManager>()
-                .Subscribe<FixedUpdateEvent>((in FixedUpdateEvent @event) =>
-                {
-                    _container.GetInstance<IWindow>().SetTitle($"FPS: {_fps}");
-                });
+            SetFpsCounter();
 
-
-            _logger.Debug("Initialize EngineConfiguration");
-            _container
-                .GetInstance<IEngineConfigurationHandler>()
-                .Initialize();
-
+            using var startup = _container.CreateInstance<Startup>();
+            
             RegisterServices(_container);
             
-            _logger.Debug("Initialize Window and D3D11Device");
+            startup.InitializeEngine(_container);
 
-            using var display = GetInstance<IDisplayFactory>()
-                .Create("Donkey box", 1920, 1080);
 
-            _logger.Debug("Register D3D11Device and Win32Window as singletons");
-            _container
-                .RegisterSingleton(display.Device)
-                .RegisterSingleton(display.Window);
+            var logger = _container.GetInstance<ILogger>();
 
-            using var soundSystem = GetInstance<ISoundSystemFactory>()
-                .Create();
+            /*******Test compile shaders*******/
+            TextCompileShaders();
 
-            _container.RegisterSingleton(soundSystem);
 
-            soundSystem.AddPlayer("Music",
-                new SoundPlayerConfiguration
-                {
-                    NumberOfPlayers = 2,
-                    AverageBytesPerSecond = 176_400,
-                    SamplesPerSecond = 44100,
-                    BlockAlign = 4,
-                    BitsPerSample = 16,
-                    NumberOfChannels = 2
-                });
-            soundSystem.AddPlayer("SoundEffects",
-                new SoundPlayerConfiguration
-                {
-                    NumberOfPlayers = 50,
-                    AverageBytesPerSecond = 176_400,
-                    SamplesPerSecond = 44100,
-                    BlockAlign = 4,
-                    BitsPerSample = 16,
-                    NumberOfChannels = 2
-                });
-
-            _logger.Debug("Initialize Sandbox");
+            logger.Debug("Initialize Sandbox");
             OnInitialize(_container);
 
             var descriptor = GetInstance<ISceneParser>()
                 .Parse(@"F:\Git\GameDev\src\Titan.Game\Scenes\scene01.json");
-
-            //var font = GetInstance<IFontAssetLoader>().LoadFromFile(@"F:\Git\GameDev\resources\fonts\menlo_bold.meta");
-            //var font = GetInstance<IAngelfontLoader>().LoadFromPath(@"F:\Git\GameDev\resources\fonts\segoe_ui_light.fnt");
 
             var (world, systemsRummer) = CreateWorld(descriptor.Configuration);
 
@@ -133,34 +83,30 @@ namespace Titan
 
             // Call the virual method to build the world
             BuildWorld(world);
-
+            var device = GetInstance<IDevice>();
             _container.GetInstance<IEventManager>()
                 .Subscribe((in UpdateEvent @event) =>
                 {
-
-                    var device = display.Device;
                     var context = device.ImmediateContext;
                     context.ClearRenderTarget(device.BackBuffer, new Color { B = 0.1f});
                     context.ClearDepthStencil(device.DepthStencil);
 
                     systemsRummer.Update(@event.ElapsedTime);
 
-                    display.Device.EndRender();
+                    device.EndRender();
                 });
 
             var engine = _container.GetInstance<GameEngine>();
             
             OnStart();
-            _logger.Debug("Start main loop");
-            
-            //world.WriteToStream();
+            logger.Debug("Start main loop");
 
-            GetInstance<IGameLoop>().Run(engine.Execute);
+            GetInstance<IGameLoop>()
+                .Run(engine.Execute);
 
-            _logger.Debug("Main loop ended");
+            logger.Debug("Main loop ended");
 
             OnQuit();
-
             
             world.Dispose();
             world = null; 
@@ -169,7 +115,28 @@ namespace Titan
             GetInstance<Renderer3Dv2>().Dispose();
             GetInstance<RendererDebug3Dv3>().Dispose();
             GetInstance<ISpriteBatchRenderer>().Dispose();
-            _logger.Debug("Ending application");
+            logger.Debug("Ending application");
+        }
+
+        private void TextCompileShaders()
+        {
+            var d3dCompiler = GetInstance<ID3DCompiler>();
+            foreach (var file in Directory.GetFiles(@"F:\Git\GameDev\resources\shaders\"))
+            {
+                using var blob =
+                    d3dCompiler.CompileShaderFromFile(file, "main", file.Contains("VertexShader") ? "vs_5_0" : "ps_5_0");
+            }
+        }
+
+        private void SetFpsCounter()
+        {
+            _container.GetInstance<IEventManager>()
+                .Subscribe<UpdateEvent>((in UpdateEvent @event) => { _fps = 1f / @event.ElapsedTime; });
+            _container.GetInstance<IEventManager>()
+                .Subscribe<FixedUpdateEvent>((in FixedUpdateEvent @event) =>
+                {
+                    _container.GetInstance<IWindow>().SetTitle($"FPS: {_fps}");
+                });
         }
 
 
@@ -208,11 +175,11 @@ namespace Titan
                 .WithSystem<Model3DRenderSystem>()
                 
 
-                .WithSystem<SpriteRenderSystem>()
+                //.WithSystem<SpriteRenderSystem>()
 
 
-                .WithSystem<UIRenderSystem>()
-                .WithSystem<UITextRenderSystem>()
+                //.WithSystem<UIRenderSystem>()
+                //.WithSystem<UITextRenderSystem>()
                 .WithSystem<BoundingBoxSystem>()
                 .Build();
 

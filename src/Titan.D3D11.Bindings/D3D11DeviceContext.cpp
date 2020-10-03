@@ -119,6 +119,16 @@ EXPORT void VSSetShader_(
 	context->VSSetShader(pVertexShader, ppClassInstances, NumClassInstances);
 }
 
+EXPORT void VSSetShaderResources_(
+	ID3D11DeviceContext* context,
+	UINT startSlot,
+	UINT numViews,
+	ID3D11ShaderResourceView* const* ppShaderResourceViews
+)
+{
+	context->VSSetShaderResources(startSlot, numViews, ppShaderResourceViews);
+}
+
 /////////////////////////////////////////////
 ///// PixelShaders
 /////////////////////////////////////////////

@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using Titan.D3D11.Bindings.Models;
+using Titan.D3D11.Compiler;
 using Titan.D3D11.Device;
 using Titan.Graphics.Blobs;
 using Titan.Graphics.Buffers;
@@ -16,12 +17,13 @@ namespace Titan.Graphics
         private readonly ID3D11RenderTargetView _renderTarget;
         private readonly ID3D11DepthStencilView _depthStencilView;
 
-        private readonly bool _vSync = false;
+        private readonly bool _vSync = true;
 
+        public ID3DCompiler TEMPORARYCompiler { get; }
         public IDeviceContext ImmediateContext { get; }
         public IRenderTarget BackBuffer { get; }
         public IDepthStencil DepthStencil { get; }
-        public Device(ID3D11Device device, ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencilView)
+        public Device(ID3D11Device device, ID3D11RenderTargetView renderTarget, ID3D11DepthStencilView depthStencilView, ID3DCompiler compiler)
         {
             _device = device ?? throw new ArgumentNullException(nameof(device));
             _renderTarget = renderTarget ?? throw new ArgumentNullException(nameof(renderTarget));
@@ -29,6 +31,7 @@ namespace Titan.Graphics
             ImmediateContext = new DeviceContext(device.Context, false);
             BackBuffer = new RenderTarget(renderTarget);
             DepthStencil = new DepthStencil(depthStencilView);
+            TEMPORARYCompiler = compiler;
         }
 
         public IDeferredDeviceContext CreateDeferredContext()
@@ -36,15 +39,15 @@ namespace Titan.Graphics
             return new DeviceContext(_device.CreateDeferredContext());
         }
 
-        public IIndexBuffer CreateIndexBuffer(in short[] indices)
+        public IIndexBuffer CreateIndexBuffer(in int[] indices, BufferUsage usage, BufferAccessFlags flags)
         {
             D3D11BufferDesc desc = default;
             desc.BindFlags = D3D11BindFlag.IndexBuffer;
-            desc.Usage = D3D11Usage.Default;
-            desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified;
+            desc.Usage = (D3D11Usage)usage;
+            desc.CpuAccessFlags = (D3D11CpuAccessFlag)flags;
             desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
-            desc.ByteWidth = (uint) (indices.Length * sizeof(short));
-            desc.StructureByteStride = sizeof(short);
+            desc.ByteWidth = (uint) (indices.Length * sizeof(int));
+            desc.StructureByteStride = sizeof(int);
             unsafe
             {
                 fixed (void* indicesPointer = indices)
@@ -56,20 +59,36 @@ namespace Titan.Graphics
             }
         }
 
-        public IIndexBuffer CreateIndexBuffer(uint size)
+        public IIndexBuffer CreateIndexBuffer(uint size, BufferUsage usage, BufferAccessFlags flags)
         {
             D3D11BufferDesc desc = default;
             desc.BindFlags = D3D11BindFlag.IndexBuffer;
-            desc.Usage = D3D11Usage.Default;
-            desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified;
+            desc.Usage = (D3D11Usage)usage;
+            desc.CpuAccessFlags = (D3D11CpuAccessFlag)flags;
             desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
-            desc.ByteWidth = size * sizeof(short);
-            desc.StructureByteStride = sizeof(short);
+            desc.ByteWidth = size * sizeof(int);
+            desc.StructureByteStride = sizeof(int);
 
             return new IndexBuffer(_device.CreateBuffer(desc), size); 
         }
 
-        public IVertexBuffer<T> CreateVertexBuffer<T>(uint numberOfVertices) where T : unmanaged
+        public unsafe IIndexBuffer CreateIndexBuffer(void* data, int count, BufferUsage usage = BufferUsage.Default,  BufferAccessFlags flags = BufferAccessFlags.Default)
+        {
+            D3D11BufferDesc desc = default;
+            desc.BindFlags = D3D11BindFlag.IndexBuffer;
+            desc.Usage = (D3D11Usage)usage;
+            desc.CpuAccessFlags = (D3D11CpuAccessFlag)flags;
+            desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
+            desc.ByteWidth = (uint)(count * sizeof(int));
+            desc.StructureByteStride = sizeof(int);
+            {
+                D3D11SubresourceData subresourceData = default;
+                subresourceData.pSysMem = data;
+                return new IndexBuffer(_device.CreateBuffer(desc, subresourceData), (uint)count);
+            }
+        }
+
+        public IVertexBuffer<T> CreateVertexBuffer<T>(uint numberOfVertices, BufferUsage usage, BufferAccessFlags flags) where T : unmanaged
         {
             if (numberOfVertices == 0)
             {
@@ -78,8 +97,8 @@ namespace Titan.Graphics
             var size = (uint)Marshal.SizeOf<T>();
             D3D11BufferDesc desc = default;
             desc.BindFlags = D3D11BindFlag.VertexBuffer;
-            desc.Usage = D3D11Usage.Default;
-            desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified;
+            desc.Usage = (D3D11Usage)usage;
+            desc.CpuAccessFlags = (D3D11CpuAccessFlag)flags;
             desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
             desc.ByteWidth = (numberOfVertices * size);
             desc.StructureByteStride = size;
@@ -87,7 +106,7 @@ namespace Titan.Graphics
             return new VertexBuffer<T>(_device.CreateBuffer(desc), size, 0);
         }
 
-        public IVertexBuffer<T> CreateVertexBuffer<T>(in T[] initialData) where T : unmanaged
+        public IVertexBuffer<T> CreateVertexBuffer<T>(in T[] initialData, BufferUsage usage, BufferAccessFlags flags) where T : unmanaged
         {
             if (initialData == null)
             {
@@ -96,8 +115,8 @@ namespace Titan.Graphics
             var size = (uint)Marshal.SizeOf<T>();
             D3D11BufferDesc desc = default;
             desc.BindFlags = D3D11BindFlag.VertexBuffer;
-            desc.Usage = D3D11Usage.Default;
-            desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified;
+            desc.Usage = (D3D11Usage)usage;
+            desc.CpuAccessFlags = (D3D11CpuAccessFlag) flags; 
             desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
             desc.ByteWidth = (uint) (initialData.Length * size);
             desc.StructureByteStride = size;
@@ -112,28 +131,48 @@ namespace Titan.Graphics
             }
         }
 
-        public IConstantBuffer<T> CreateConstantBuffer<T>() where T : unmanaged
+        public unsafe IVertexBuffer<T> CreateVertexBuffer<T>(void* data, int count, BufferUsage usage = BufferUsage.Default, BufferAccessFlags flags = BufferAccessFlags.Default) where T : unmanaged
+        {
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+            var size = (uint)Marshal.SizeOf<T>();
+            D3D11BufferDesc desc = default;
+            desc.BindFlags = D3D11BindFlag.VertexBuffer;
+            desc.Usage = (D3D11Usage)usage;
+            desc.CpuAccessFlags = (D3D11CpuAccessFlag)flags;
+            desc.MiscFlags = D3D11ResourceMiscFlag.Unspecified;
+            desc.ByteWidth = (uint)(count* size);
+            desc.StructureByteStride = size;
+         
+            D3D11SubresourceData subresourceData = default;
+            subresourceData.pSysMem = data;
+            return new VertexBuffer<T>(_device.CreateBuffer(desc, subresourceData), size, (uint)count);
+        }
+
+        public IConstantBuffer<T> CreateConstantBuffer<T>(BufferUsage usage, BufferAccessFlags flags) where T : unmanaged
         {
             var size = (uint)Marshal.SizeOf<T>();
             CheckAlignment(size);
 
             D3D11BufferDesc desc = default;
             desc.BindFlags = D3D11BindFlag.ConstantBuffer;
-            desc.Usage = D3D11Usage.Default; // not sure about this one
-            desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified; // not sure about this one
+            desc.Usage = (D3D11Usage)usage;
+            desc.CpuAccessFlags = (D3D11CpuAccessFlag)flags;
             desc.ByteWidth = size;
             return new ConstantBuffer<T>(_device.CreateBuffer(desc));
         }
 
-        public IConstantBuffer<T> CreateConstantBuffer<T>(in T initialData) where T : unmanaged
+        public IConstantBuffer<T> CreateConstantBuffer<T>(in T initialData, BufferUsage usage, BufferAccessFlags flags) where T : unmanaged
         {
             var size = (uint)Marshal.SizeOf<T>();
             CheckAlignment(size);
 
             D3D11BufferDesc desc = default;
             desc.BindFlags = D3D11BindFlag.ConstantBuffer;
-            desc.Usage = D3D11Usage.Default; // not sure about this one
-            desc.CpuAccessFlags = D3D11CpuAccessFlag.Unspecified; // not sure about this one
+            desc.Usage = (D3D11Usage)usage;
+            desc.CpuAccessFlags = (D3D11CpuAccessFlag)flags;
             desc.ByteWidth = size;
 
             unsafe
@@ -202,7 +241,35 @@ namespace Titan.Graphics
 
             var textureView = _device.CreateShaderResourceView(texture, resourceViewDesc);
 
-            return new Texture2D(_device.Context, texture, textureView, width, height);
+            return new Texture2D(texture, textureView, width, height);
+        }
+
+        public ITexture2D CreateTexture2DRENDERTARGETPROTOTYPE(uint width, uint height)
+        {
+            D3D11Texture2DDesc desc = default;
+            desc.Height = height;
+            desc.Width = width;
+            desc.Usage = D3D11Usage.Default;
+            desc.BindFlags = D3D11BindFlag.ShaderResource | D3D11BindFlag.RenderTarget;
+            desc.MipLevels = 1; // TODO: add support for this
+            desc.ArraySize = 1; // TODO: add support for this
+            desc.Format = DxgiFormat.R32G32B32A32Float;
+            desc.SampleDesc.Count = 1;
+            desc.SampleDesc.Quality = 0;
+            desc.CPUAccessFlags = D3D11CpuAccessFlag.Unspecified;
+            desc.MiscFlags = 0;
+            
+            var texture = _device.CreateTexture2D(desc);
+
+            D3D11ShaderResourceViewDesc resourceViewDesc = default;
+            resourceViewDesc.Format = desc.Format;
+            resourceViewDesc.ViewDimension = D3D11SrvDimension.Texture2D;
+            resourceViewDesc.Texture2D.MostDetailedMip = 0;
+            resourceViewDesc.Texture2D.MipLevels = 1;
+
+            var textureView = _device.CreateShaderResourceView(texture, resourceViewDesc);
+
+            return new Texture2D(texture, textureView, width, height);
         }
 
         public ISampler CreateSampler(bool point = false)
@@ -223,12 +290,21 @@ namespace Titan.Graphics
             desc.RenderTargets[0].SrcBlend = D3D11Blend.SrcAlpha;
             desc.RenderTargets[0].DestBlend = D3D11Blend.InvSrcAlpha;
 
+            desc.RenderTargets[0].SrcBlendAlpha = D3D11Blend.InvDestAlpha;
+            desc.RenderTargets[0].DestBlendAlpha = D3D11Blend.One;
+            desc.RenderTargets[0].BlendOpAlpha = D3D11BlendOp.Add;
+            
             return new BlendState(_device.CreateBlendState(desc));
         }
 
         public void EndRender()
         {
             _device.SwapChain.Present(_vSync);
+        }
+
+        public IRenderTarget CreateRenderTarget(IntPtr resource)
+        {
+            return new RenderTarget(_device.CreateRenderTargetView(resource));
         }
 
         private static void CheckAlignment(uint bytes)

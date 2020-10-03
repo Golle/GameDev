@@ -1,4 +1,4 @@
-﻿using Titan.Core.Ioc;
+using Titan.IOC;
 
 namespace Titan.Xaudio2
 {

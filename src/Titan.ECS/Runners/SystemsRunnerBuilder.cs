@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Titan.Core.Ioc;
+using Titan.IOC;
 using Titan.ECS.Systems;
 
 namespace Titan.ECS.Runners

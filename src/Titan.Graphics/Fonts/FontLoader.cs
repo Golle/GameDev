@@ -29,8 +29,8 @@ namespace Titan.Graphics.Fonts
                 var size = asset.Size;
                 return new TextureCoordinates
                 {
-                    TopLeft = new Vector2(position.X / width, position.Y / height),
-                    BottomRight = new Vector2((position.X + size.Width) / width, (position.Y + size.Height) / height)
+                    TopLeft = new Vector2(position.X / width, 1f - position.Y / height),
+                    BottomRight = new Vector2((position.X + size.Width) / width, 1f - (position.Y + size.Height) / height)
                 };
             }
 

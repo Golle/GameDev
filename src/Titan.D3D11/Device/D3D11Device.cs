@@ -33,6 +33,26 @@ namespace Titan.D3D11.Device
             return new D3D11RenderTargetView(renderTargetView);
         }
 
+        public ID3D11RenderTargetView CreateRenderTargetView(IntPtr resource)
+        {
+            HRESULT result;
+            IntPtr renderTargetView;
+            unsafe
+            {
+
+                // Setup the description of the render target view.
+                D3D11RenderTargetViewDesc renderTargetViewDesc;
+                renderTargetViewDesc.Format = DxgiFormat.R32G32B32A32Float;
+                renderTargetViewDesc.ViewDimension = D3D11RtvDimension.Texture2D;
+                renderTargetViewDesc.Texture2D.MipSlice = 0;
+                
+                result = D3D11DeviceBindings.CreateRenderTargetView_(_handle, resource, &renderTargetViewDesc, out renderTargetView);
+                
+            }
+            result.Check(nameof(D3D11Device));
+            return new D3D11RenderTargetView(renderTargetView);
+        }
+
         public ID3D11InfoQueue CreateInfoQueue()
         {
             var result = D3D11CommonBindings.QueryInterface_(_handle, D3D11Resources.D3D11InfoQueue, out var infoQueue);

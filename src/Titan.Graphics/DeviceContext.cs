@@ -5,6 +5,7 @@ using Titan.D3D11.Bindings.Models;
 using Titan.D3D11.Device;
 using Titan.Graphics.Buffers;
 using Titan.Graphics.Layout;
+using Titan.Graphics.Renderer.Passes;
 using Titan.Graphics.Shaders;
 using Titan.Graphics.Textures;
 
@@ -26,11 +27,51 @@ namespace Titan.Graphics
             _canDispose = canDispose;
         }
 
+
+        public unsafe void Map(IResource resource, out void* ptr)
+        {
+            _context.Map(resource.NativeHandle, D3D11Map.WriteDiscard, out var subresource);
+            ptr = subresource.pData;
+        }
+
+        public void Unmap(IResource resource)
+        {
+            _context.Unmap(resource.NativeHandle);
+        }
+
+        public void MapResource<T>(IResource resource, in T data) where T : unmanaged
+        {
+            _context.Map(resource.NativeHandle, D3D11Map.WriteDiscard, out var subresource);
+            unsafe
+            {
+                var size = sizeof(T);
+                fixed (void* ptr = &data)
+                {
+                    Buffer.MemoryCopy(ptr, subresource.pData, size, size);
+                }
+            }
+            _context.Unmap(resource.NativeHandle);
+        }
+
+        public void MapResource<T>(IResource resource, in T[] data, uint count) where T : unmanaged
+        {
+            _context.Map(resource.NativeHandle, D3D11Map.WriteDiscard, out var subresource);
+            unsafe
+            {
+                var size = sizeof(T) * count;
+                fixed (void* ptr = data)
+                {
+                    Buffer.MemoryCopy(ptr, subresource.pData, size, size);
+                }
+            }
+            _context.Unmap(resource.NativeHandle);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetVertexBuffer(IVertexBuffer vertexBuffer, uint startSlot = 0) => _context.SetVertexBuffer(startSlot, vertexBuffer.NativeHandle, vertexBuffer.Strides, vertexBuffer.Offset);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetIndexBuffer(IIndexBuffer indexBuffer, uint offset) => _context.SetIndexBuffer(indexBuffer.NativeHandle, DxgiFormat.R16Uint, 0);
+        public void SetIndexBuffer(IIndexBuffer indexBuffer, uint offset) => _context.SetIndexBuffer(indexBuffer.NativeHandle, DxgiFormat.R32Uint, 0);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void DrawIndexed(uint numberOfIndices, uint startIndexLocation, int baseVertexLocation) => _context.DrawIndexed(numberOfIndices, startIndexLocation, baseVertexLocation);
@@ -59,6 +100,67 @@ namespace Titan.Graphics
         public void ClearRenderTarget(IRenderTarget renderTarget, in Color color) => _context.ClearRenderTargetView(renderTarget.NativeHandle, color);
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ClearDepthStencil(IDepthStencil depthStencil) => _context.ClearDepthStencilView(depthStencil.NativeHandle, D3D11ClearFlag.Depth, 1, 0);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetRenderTarget(IRenderTarget renderTarget, IDepthStencil depthStencil)
+        {
+            unsafe
+            {
+                var renderTargets = stackalloc IntPtr[1];
+                renderTargets[0] = renderTarget.NativeHandle;
+                _context.OMSetRenderTargets(renderTargets, 1, depthStencil.NativeHandle);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public void SetRenderTargets(IRenderTarget[] renderTargets, IDepthStencil depthStencil)
+        {
+            unsafe
+            {
+                var renderTargets1 = stackalloc IntPtr[renderTargets.Length];
+                for (var i = 0; i < renderTargets.Length; ++i)
+                {
+                    renderTargets1[i] = renderTargets[i].NativeHandle;
+                }
+                _context.OMSetRenderTargets(renderTargets1, (uint) renderTargets.Length, depthStencil.NativeHandle);
+            }
+        }
+
+        public void SetPixelShaderResource(IShaderResourceView shaderResourceView)
+        {
+            _context.PSSetShaderResources(0, shaderResourceView.NativeHandle);
+        }
+
+        public void SetPixelShaderResources(IShaderResourceView[] shaderResourceViews)
+        {
+            unsafe
+            {
+                var resources = stackalloc IntPtr[shaderResourceViews.Length];
+                for (var i = 0; i < shaderResourceViews.Length; ++i)
+                {
+                    resources[i] = shaderResourceViews[i].NativeHandle;
+                }
+                _context.PSSetShaderResources(0, resources, (uint) shaderResourceViews.Length);
+            }
+        }
+
+        public void SetVertexShaderResource(IShaderResourceView shaderResourceView)
+        {
+            _context.VSSetShaderResources(0, shaderResourceView.NativeHandle);
+        }
+
+        public void SetVertexShaderResources(IShaderResourceView[] shaderResourceViews)
+        {
+            unsafe
+            {
+                var resources = stackalloc IntPtr[shaderResourceViews.Length];
+                for (var i = 0; i < shaderResourceViews.Length; ++i)
+                {
+                    resources[i] = shaderResourceViews[i].NativeHandle;
+                }
+                _context.VSSetShaderResources(0, resources, (uint)shaderResourceViews.Length);
+            }
+        }
 
         public void Finialize(IDeviceContext context)
         {

@@ -1,4 +1,3 @@
-using System;
 using Titan.ECS.Components;
 
 namespace Titan.ECS.Systems

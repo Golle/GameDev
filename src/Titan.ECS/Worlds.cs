@@ -9,6 +9,8 @@ namespace Titan.ECS
         private static readonly World[] _worlds = new World[20];
         private static readonly IdDispatcher IdDispatcher = new IdDispatcher();
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static Entity CreateEntity(uint worldId) => _worlds[worldId].CreateEntity();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static void AttachEntity(uint worldId, uint parent, uint child) => _worlds[worldId].AttachEntity(parent, child);

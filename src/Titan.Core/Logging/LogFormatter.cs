@@ -10,7 +10,7 @@ namespace Titan.Core.Logging
         {
             _dateTime = dateTime;
         }
-        public string Format(string tag, string message, object?[] arguments)
+        public string Format(string tag, string message, object[] arguments)
         {
             return $"{_dateTime.Now.ToShortTimeString()} [{tag}] {string.Format(message, arguments)}";
         }

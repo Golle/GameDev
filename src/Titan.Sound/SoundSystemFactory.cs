@@ -1,3 +1,4 @@
+using Titan.Core.Configuration;
 using Titan.Core.Logging;
 using Titan.Xaudio2;
 
@@ -8,7 +9,7 @@ namespace Titan.Sound
         private readonly IXAudioDeviceFactory _xAudioDeviceFactory;
         private readonly ILogger _logger;
 
-        public SoundSystemFactory(IXAudioDeviceFactory xAudioDeviceFactory, ILogger logger)
+        public SoundSystemFactory(IXAudioDeviceFactory xAudioDeviceFactory, IConfiguration configuration, ILogger logger)
         {
             _xAudioDeviceFactory = xAudioDeviceFactory;
             _logger = logger;
@@ -18,7 +19,8 @@ namespace Titan.Sound
             var xAudio2 = _xAudioDeviceFactory.CreateDevice();
             var masteringVoice = xAudio2.CreateMasteringVoice();
 
-            return new SoundSystem(xAudio2, masteringVoice, _logger);
+            var soundSystem = new SoundSystem(xAudio2, masteringVoice, _logger);
+            return soundSystem;
         }
     }
 }

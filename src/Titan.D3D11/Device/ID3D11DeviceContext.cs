@@ -27,10 +27,15 @@ namespace Titan.D3D11.Device
         void DrawIndexed(uint indexCount, uint startIndexLocation, int baseVertexLocation);
         void VSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer);
         void VSSetConstantBuffer(uint startSlot, IntPtr constantBuffer);
+        void VSSetShaderResource(uint startSlot, ID3D11ShaderResourceView resourceView);
+        void VSSetShaderResources(uint startSlot, IntPtr resourceView);
+        void VSSetShaderResources(uint startSlot, ID3D11ShaderResourceView[] resourceViews);
+        unsafe void VSSetShaderResources(uint startSlot, IntPtr* resources, uint count);
         void PSSetConstantBuffer(uint startSlot, ID3D11Buffer constantBuffer);
         void PSSetConstantBuffer(uint startSlot, IntPtr constantBuffer);
         void PSSetShaderResources(uint startSlot, ID3D11ShaderResourceView resourceView);
         void PSSetShaderResources(uint startSlot, IntPtr resourceView);
+        unsafe void PSSetShaderResources(uint startSlot, IntPtr* resources, uint count);
         void PSSetSamplers(uint startSlot, ID3D11SamplerState sampler);
         void PSSetSamplers(uint startSlot, IntPtr sampler);
         void OMSetDepthStencilState(ID3D11DepthStencilState stencilState, uint stencilRef);
@@ -42,5 +47,7 @@ namespace Titan.D3D11.Device
         void OMSetBlendState(IntPtr blendState, in Color blendFactor, uint sampleMask);
         ID3D11CommandList FinishCommandList(bool restoreDeferredContextState = false);
         void ExecuteCommandList(ID3D11CommandList commandList, bool restoreDeferredContextState = false);
+        void Map(IntPtr resource, D3D11Map mapType, out D3D11MappedSubresource mappedResource);
+        void Unmap(IntPtr resource);
     }
 }

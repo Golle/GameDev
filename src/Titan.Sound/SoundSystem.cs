@@ -39,7 +39,7 @@ namespace Titan.Sound
                 player.Dispose();
             }
             _players.Clear();
-            _masteringVoice.Dispose();
+            //_masteringVoice.Dispose();
             _xAudio2.Dispose();
         }
     }

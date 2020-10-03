@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using Titan.Tools.FontGenerator.Angelfont;
-using Titan.Tools.FontGenerator.Models;
 
 namespace Titan.Tools.FontGenerator
 {

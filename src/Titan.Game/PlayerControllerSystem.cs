@@ -89,7 +89,7 @@ namespace Titan.Game
                 return;
             }
 
-            var multiplier = _inputManager.Keyboard.IsKeyDown(KeyCode.Shift) ? 3f : 1f;
+            var multiplier = _inputManager.Keyboard.IsKeyDown(KeyCode.Shift) ? 30f : 1f;
             var distance = speed * deltaTime * multiplier;
             ref var transform = ref _transform[entityId];
             
@@ -111,7 +111,16 @@ namespace Titan.Game
             {
                 movement.X -= distance;
             }
-            
+
+            if (keyboard.IsKeyDown(KeyCode.V))
+            {
+                movement.Y += distance;
+            }
+            if (keyboard.IsKeyDown(KeyCode.C))
+            {
+                movement.Y -= distance;
+            }
+
             var mousePos = _inputManager.Mouse.DeltaMovement;
             if (mousePos.Y != 0 || mousePos.X != 0)
             {

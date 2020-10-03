@@ -14,7 +14,7 @@ namespace Titan.Core.Logging
             _debug = configuration.Debug;
         }
         
-        public void Debug(string message, params object?[] arguments)
+        public void Debug(string message, params object[] arguments)
         {
             if (_debug)
             {
@@ -22,12 +22,12 @@ namespace Titan.Core.Logging
             }
         }
 
-        public void Info(string message, params object?[] arguments)
+        public void Info(string message, params object[] arguments)
         {
             Console.WriteLine(_logFormatter.Format("INFO", message, arguments));
         }
 
-        public void Error(string message, params object?[] arguments)
+        public void Error(string message, params object[] arguments)
         {
             Console.WriteLine(_logFormatter.Format("ERROR", message, arguments));
         }

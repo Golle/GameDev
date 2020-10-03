@@ -4,7 +4,7 @@ using Titan.Core.Assets.Images;
 using Titan.Core.Assets.Wave;
 using Titan.Core.Assets.WavefrontObj;
 using Titan.Core.Assets.WavefrontObj.Parsers;
-using Titan.Core.Ioc;
+using Titan.IOC;
 
 namespace Titan.Core.Assets
 {
@@ -12,10 +12,8 @@ namespace Titan.Core.Assets
     {
         public void Register(IContainer container)
         {
-
             container
                 
-                .Register<IAssetLoader, AssetLoader>()
                 .Register<IImageLoader, ImageLoader>()
 
                 .Register<IFontAssetLoader, FontAssetLoader>()

@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Windows;
 using Titan.Tools.FontGenerator.Models;
 
 namespace Titan.Tools.FontGenerator
