@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Numerics;
-using Titan.Core.Assets.WavefrontObj;
-using Titan.D3D11;
 
 namespace Titan.Graphics.Models
 {

@@ -1,10 +1,8 @@
-using System;
 using System.Numerics;
 using Titan.D3D11;
 using Titan.D3D11.Compiler;
 using Titan.Graphics.Models;
 using Titan.Graphics.Renderer.Passes;
-using Titan.Graphics.RendererOld;
 using Titan.Graphics.Textures;
 using Titan.Windows.Window;
 

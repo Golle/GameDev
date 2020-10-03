@@ -1,4 +1,3 @@
-using System.Numerics;
 using Titan.Graphics.Buffers;
 
 namespace Titan.Graphics.Models

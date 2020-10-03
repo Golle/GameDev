@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using Titan.D3D11;
 using Titan.D3D11.Compiler;
 using Titan.Graphics.Blobs;

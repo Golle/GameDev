@@ -1,6 +1,5 @@
 using System;
 using System.Numerics;
-using Microsoft.Win32.SafeHandles;
 using Titan.Components;
 using Titan.Components.UI;
 using Titan.Core.Math;
@@ -11,7 +10,6 @@ using Titan.ECS.Systems;
 using Titan.Graphics.Fonts;
 using Titan.Graphics.Models;
 using Titan.Graphics.Textures;
-using Titan.Resources;
 using Titan.Sound;
 using Titan.Windows.Window;
 
