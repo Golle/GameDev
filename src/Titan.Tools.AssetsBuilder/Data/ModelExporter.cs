@@ -1,6 +1,7 @@
 using System.IO;
 using System.Numerics;
 using Titan.Tools.AssetsBuilder.Converters;
+using Titan.Tools.AssetsBuilder.Converters.Models;
 using Titan.Tools.AssetsBuilder.Files;
 using Titan.Tools.AssetsBuilder.Logging;
 

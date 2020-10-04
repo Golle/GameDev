@@ -1,6 +1,6 @@
 using Titan.Tools.AssetsBuilder.WavefrontObj;
 
-namespace Titan.Tools.AssetsBuilder.Converters
+namespace Titan.Tools.AssetsBuilder.Converters.Models
 {
     internal class ModelConverter : IModelConverter
     {

@@ -1,5 +1,6 @@
 namespace Titan.Core.Assets.Images
 {
+
     public class ImageAsset
     {
         public uint Height { get; }

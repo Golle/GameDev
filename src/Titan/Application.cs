@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Titan.Components;
 using Titan.Core;
+using Titan.Core.Assets.Images;
 using Titan.Core.EventSystem;
 using Titan.Core.GameLoop;
 using Titan.Core.GameLoop.Events;
@@ -52,6 +53,11 @@ namespace Titan
 
         private void Run()
         {
+
+            //var loader = GetInstance<IImageLoader>();
+            //loader.LoadFromFileUnsafe(@"F:\Git\GameDev\resources\temp_models\sponza\textures\sponza_curtain_green_diff.png");
+            //return;
+
             SetFpsCounter();
 
             using var startup = _container.CreateInstance<Startup>();
@@ -59,7 +65,7 @@ namespace Titan
             RegisterServices(_container);
             
             startup.InitializeEngine(_container);
-
+            
 
             var logger = _container.GetInstance<ILogger>();
 

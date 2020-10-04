@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using Titan.Tools.AssetsBuilder.Data;
 using Titan.Tools.AssetsBuilder.WavefrontObj;
 
-namespace Titan.Tools.AssetsBuilder.Converters
+namespace Titan.Tools.AssetsBuilder.Converters.Models
 {
     internal class MeshBuilder
     {

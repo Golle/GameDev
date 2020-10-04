@@ -27,6 +27,7 @@ namespace Titan.Graphics
         IPixelShader CreatePixelShader(IBlob pixelShaderBlob);
         IInputLayout CreateInputLayout(VertexLayout vertexLayout, IBlob vertexShaderBlob);
         ITexture2D CreateTexture2D(uint width, uint height, in byte[] pixels);
+        ITexture2D CreateTexture2D(uint width, uint height, IntPtr pixels);
         ITexture2D CreateTexture2DRENDERTARGETPROTOTYPE(uint width, uint height);
         ISampler CreateSampler(bool point = false);
         IBlendState CreateBlendState();

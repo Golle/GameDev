@@ -215,6 +215,7 @@ namespace Titan.Graphics
             desc.MipLevels = 1; // TODO: add support for this
             desc.ArraySize = 1; // TODO: add support for this
             desc.Format = DxgiFormat.R8G8B8A8Unorm;
+            //desc.Format = DxgiFormat.R8G8B8A8Unorm;
             desc.SampleDesc.Count = 1;
             desc.SampleDesc.Quality = 0;
             desc.CPUAccessFlags = D3D11CpuAccessFlag.Unspecified;
@@ -231,6 +232,41 @@ namespace Titan.Graphics
                     texture = _device.CreateTexture2D(desc, data);
                     
                 }
+            }
+
+            D3D11ShaderResourceViewDesc resourceViewDesc = default;
+            resourceViewDesc.Format = desc.Format;
+            resourceViewDesc.ViewDimension = D3D11SrvDimension.Texture2D;
+            resourceViewDesc.Texture2D.MostDetailedMip = 0;
+            resourceViewDesc.Texture2D.MipLevels = 1;
+
+            var textureView = _device.CreateShaderResourceView(texture, resourceViewDesc);
+
+            return new Texture2D(texture, textureView, width, height);
+        }
+
+        public ITexture2D CreateTexture2D(uint width, uint height, IntPtr pixels)
+        {
+            D3D11Texture2DDesc desc = default;
+            desc.Height = height;
+            desc.Width = width;
+            desc.BindFlags = D3D11BindFlag.ShaderResource;
+            desc.MipLevels = 1; // TODO: add support for this
+            desc.ArraySize = 1; // TODO: add support for this
+            desc.Format = DxgiFormat.R8G8B8A8Unorm;
+            //desc.Format = DxgiFormat.R8G8B8A8Unorm;
+            desc.SampleDesc.Count = 1;
+            desc.SampleDesc.Quality = 0;
+            desc.CPUAccessFlags = D3D11CpuAccessFlag.Unspecified;
+            desc.MiscFlags = 0;
+
+            ID3D11Texture2D texture;
+            unsafe
+            {
+                D3D11SubresourceData data = default;
+                data.SysMemPitch = width * 4; // Width * size of R8G8B8A8Uint
+                data.pSysMem = pixels.ToPointer();
+                texture = _device.CreateTexture2D(desc, data);
             }
 
             D3D11ShaderResourceViewDesc resourceViewDesc = default;

@@ -1,4 +1,5 @@
 using Titan.Tools.AssetsBuilder.Converters;
+using Titan.Tools.AssetsBuilder.Converters.Models;
 
 namespace Titan.Tools.AssetsBuilder.Data
 {

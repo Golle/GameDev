@@ -1,4 +1,4 @@
-namespace Titan.Tools.AssetsBuilder.Converters
+namespace Titan.Tools.AssetsBuilder.Converters.Models
 {
     internal interface IModelConverter
     {

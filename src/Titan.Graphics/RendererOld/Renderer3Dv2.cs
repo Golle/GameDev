@@ -349,7 +349,7 @@ namespace Titan.Graphics.RendererOld
 
         public void Render()
         {
-            _context.SetVertexShaderConstantBuffer(_perFrameConstantBuffer);
+             _context.SetVertexShaderConstantBuffer(_perFrameConstantBuffer);
             _context.SetPrimitiveTopology(PrimitiveTopology.LineList);
             _context.MapResource(_vertexBuffer, _vertices, _numberOfVertices);
             _context.MapResource(_indexBuffer, _indices, _numberOfIndices);
